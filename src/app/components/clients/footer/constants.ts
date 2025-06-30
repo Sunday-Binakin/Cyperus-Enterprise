@@ -1,6 +1,6 @@
 import { FaFacebookF, FaInstagram, FaWhatsapp } from "react-icons/fa";
 import { FaLocationDot, FaCarSide } from "react-icons/fa6";
-import { MdEmail, MdCall } from "react-icons/md";
+import { MdEmail } from "react-icons/md";
 
 export const SOCIAL_ICONS = [FaFacebookF, FaInstagram, FaWhatsapp];
 

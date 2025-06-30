@@ -1,6 +1,6 @@
 'use client'
 import { FEATURED_PRODUCTS } from './constants';
-import { TiShoppingCart } from "react-icons/ti";
+// import { TiShoppingCart } from "react-icons/ti";
 
 import ProductCard from './ProductCard';
 

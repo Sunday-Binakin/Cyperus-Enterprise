@@ -11,7 +11,8 @@ interface NavItemProps {
   href?: string;
 }
 
-export default function NavItem({ label, dropdownItems, href }: NavItemProps) {
+export default function NavItem({ label, dropdownItems }: NavItemProps) {
+// export default function NavItem({ label, dropdownItems, href }: NavItemProps) {
   const hasDropdown = dropdownItems && dropdownItems.length > 0;
   
   return (

@@ -3,19 +3,19 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { SLIDES } from './constants';
 
-interface Slide {
-  image: string;
-  title: string;
-  subtitle: string;
-  primaryButton: {
-    text: string;
-    link: string;
-  };
-  secondaryButton: {
-    text: string;
-    link: string;
-  };
-}
+// interface Slide {
+//   image: string;
+//   title: string;
+//   subtitle: string;
+//   primaryButton: {
+//     text: string;
+//     link: string;
+//   };
+//   secondaryButton: {
+//     text: string;
+//     link: string;
+//   };
+// }
 
 export default function Slideshow() {
   const [currentSlide, setCurrentSlide] = useState(0);
