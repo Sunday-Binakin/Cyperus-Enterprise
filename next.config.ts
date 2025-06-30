@@ -1,7 +1,51 @@
-import type { NextConfig } from "next";
+// next.config.js
+const path = require('path');
 
-const nextConfig: NextConfig = {
-  /* config options here */
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // Webpack alias configuration
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': path.resolve(__dirname, 'src'),
+    };
+    return config;
+  },
+
+  // Production optimizations
+  productionBrowserSourceMaps: true,
+  optimizeFonts: true,
+  compress: true,
+
+  // React Strict Mode
+  reactStrictMode: true,
+
+  // Image optimization
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 60,
+  },
+
+  // Enable SWC minification
+  swcMinify: true,
+
+  // Headers for security
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: securityHeaders,
+      }
+    ];
+  },
 };
 
-export default nextConfig;
+// Security headers configuration
+const securityHeaders = [
+  { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+];
+
+module.exports = nextConfig;
