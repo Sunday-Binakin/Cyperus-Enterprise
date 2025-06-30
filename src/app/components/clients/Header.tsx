@@ -1,10 +1,13 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { Menu } from 'lucide-react';
 import NavItem from './header/NavItem';
 import SearchBar from './header/SearchBar';
 import CartIndicator from './header/CartIndicator';
-import { NAV_ITEMS, THEME } from './header/constants';
+import { NAV_ITEMS } from './header/constants';
+ 
+import Logo from './header/Logo';
+
+import MobileMenuButton from './header/MobileMenuButton';
 
 export default function Header() {
   const [showSearch, setShowSearch] = useState(true);
@@ -38,11 +41,7 @@ export default function Header() {
         <div className='flex flex-row justify-between items-center p-4 bg-[#55006F] text-white'>
           {/* Logo */}
           <div>
-            <img
-              src="/images/clients/logo.png"
-              alt="Cyprus Logo"
-              className="w-[100px] h-[100px] max-w-[150px] md:max-w-[200px] lg:max-w-[250px] -mt-5"
-            />
+            <Logo />
           </div>
 
           {/* Nav links - hidden on mobile */}
@@ -68,9 +67,7 @@ export default function Header() {
             </button>
             
             {/* Menu icon - only on mobile */}
-            <button className='flex md:hidden'>
-              <Menu className='w-7 h-7 text-white' />
-            </button>
+            <MobileMenuButton />
           </div>
         </div>
 
