@@ -1,6 +1,6 @@
 export const SLIDES = [
   {
-    image: '/images/clients/hero/slider1.jpg',
+    image: '/images/clients/hero/slider1.JPG',
     title: "We're Nuts",
     subtitle: 'About Tigernuts',
     primaryButton: {
@@ -13,7 +13,7 @@ export const SLIDES = [
     }
   },
   {
-    image: '/images/clients/hero/slider2.png',
+    image: '/images/clients/hero/slider2.PNG',
     title: 'Natural Goodness',
     subtitle: 'In Every Sip',
     primaryButton: {
