@@ -52,6 +52,7 @@ export default function Header() {
                   key={index}
                   label={item.label}
                   dropdownItems={item.dropdownItems}
+                  href={item.href}
                 />
               ))}
             </ul>
