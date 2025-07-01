@@ -14,10 +14,10 @@ export const RESOURCE_ITEMS = [
 
 export const NAV_ITEMS = [
   { label: 'SHOP', dropdownItems: SHOP_ITEMS },
-  { label: 'WELLNESS CLUB' },
+  { label: 'EXPORT DEPARTMENT' },
   { label: 'ABOUT US' },
   { label: 'RESOURCE', dropdownItems: RESOURCE_ITEMS },
-  { label: 'CONTACT' },
+  { label: 'CONTACT', href: '/contact-us' },
 ];
 
 export const THEME = {

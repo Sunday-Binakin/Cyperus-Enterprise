@@ -10,22 +10,25 @@ export default function Categories() {
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsPerView = 3;
 
-  const slideToIndex = (index: number) => {
+  // Define slideToIndex with useCallback to maintain referential equality
+  const slideToIndex = useCallback((index: number) => {
     if (isAnimating) return;
     setIsAnimating(true);
     setCurrentIndex(index);
     setTimeout(() => setIsAnimating(false), 500);
-  };
+  }, [isAnimating]);
 
-  const nextSlide = () => {
+  // Memoize nextSlide with only the dependencies that can change
+  const nextSlide = useCallback(() => {
     if (currentIndex + itemsPerView < PRODUCT_CATEGORIES.length) {
       slideToIndex(currentIndex + 1);
     } else {
       slideToIndex(0); // Loop back to start
     }
-  };
+  }, [currentIndex, slideToIndex]);
 
-  const prevSlide = () => {
+  // Memoize prevSlide with only the dependencies that can change
+  const prevSlide = useCallback(() => {
     if (currentIndex > 0) {
       slideToIndex(currentIndex - 1);
     } else {
@@ -33,15 +36,13 @@ export default function Categories() {
       const lastPossibleIndex = Math.max(0, PRODUCT_CATEGORIES.length - itemsPerView);
       slideToIndex(lastPossibleIndex);
     }
-  };
+  }, [currentIndex, slideToIndex]);
 
-  // Memoize nextSlide to prevent it from changing on every render
-  const nextSlideCallback = useCallback(nextSlide, [currentIndex, isAnimating, PRODUCT_CATEGORIES.length]);
-
+  // Set up auto-rotation
   useEffect(() => {
-    const timer = setInterval(nextSlideCallback, 5000);
+    const timer = setInterval(nextSlide, 5000);
     return () => clearInterval(timer);
-  }, [nextSlideCallback]);
+  }, [nextSlide]);
 
   return (
     <div className="w-full bg-black py-16 px-4 md:px-8 lg:px-16 relative overflow-hidden">

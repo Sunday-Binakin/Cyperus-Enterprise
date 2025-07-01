@@ -1,4 +1,8 @@
+'use client';
+
 import { ChevronDown } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 interface DropdownItem {
   label: string;
@@ -11,25 +15,35 @@ interface NavItemProps {
   href?: string;
 }
 
-export default function NavItem({ label, dropdownItems }: NavItemProps) {
-// export default function NavItem({ label, dropdownItems, href }: NavItemProps) {
+export default function NavItem({ label, dropdownItems, href }: NavItemProps) {
+  const pathname = usePathname();
   const hasDropdown = dropdownItems && dropdownItems.length > 0;
+  const isActive = href ? pathname === href : false;
   
   return (
-    <li className={`relative group ${hasDropdown ? 'cursor-pointer' : ''}`}>
-      <span className="flex">
-        {label}
-        {hasDropdown && <ChevronDown />}
-      </span>
+    <li className={`relative group ${hasDropdown ? 'cursor-pointer' : ''} ${isActive ? 'text-[#EFE554]' : 'hover:text-[#EFE554]'} transition-colors`}>
+      {href ? (
+        <Link href={href} className="flex items-center">
+          {label}
+          {hasDropdown && <ChevronDown className="ml-1" size={16} />}
+        </Link>
+      ) : (
+        <span className="flex items-center">
+          {label}
+          {hasDropdown && <ChevronDown className="ml-1" size={16} />}
+        </span>
+      )}
       {hasDropdown && (
-        <ul className="absolute left-0 mt-2 w-[15rem] bg-black text-white rounded shadow-lg opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto pointer-events-none transition-opacity z-10">
+        <ul className="absolute left-0 mt-2 w-[15rem] bg-black text-white rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10">
           {dropdownItems.map((item, index) => (
-            <li key={index} className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-              {item.label}
+            <li key={index} className="px-4 py-2 hover:text-[#EFE554]">
+              <Link href={item.href || '#'} className="block w-full">
+                {item.label}
+              </Link>
             </li>
           ))}
         </ul>
       )}
     </li>
   );
-} 
+}
