@@ -1,5 +1,5 @@
 'use client'
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { PRODUCT_CATEGORIES } from './constants';
 import CategoryCard from './CategoryCard';
@@ -35,10 +35,13 @@ export default function Categories() {
     }
   };
 
+  // Memoize nextSlide to prevent it from changing on every render
+  const nextSlideCallback = useCallback(nextSlide, [currentIndex, isAnimating, PRODUCT_CATEGORIES.length]);
+
   useEffect(() => {
-    const timer = setInterval(nextSlide, 5000);
+    const timer = setInterval(nextSlideCallback, 5000);
     return () => clearInterval(timer);
-  }, [currentIndex]);
+  }, [nextSlideCallback]);
 
   return (
     <div className="w-full bg-black py-16 px-4 md:px-8 lg:px-16 relative overflow-hidden">

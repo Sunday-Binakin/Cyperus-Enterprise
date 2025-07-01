@@ -2,39 +2,6 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-const blogPosts = [
-  {
-    id: 1,
-    title: 'The Health Benefits of Tigernut Milk',
-    excerpt: 'Discover why tigernut milk is becoming a popular dairy-free alternative...',
-    date: 'June 15, 2023',
-    category: 'Health & Wellness',
-    image: '/images/clients/products/footer/ginger.jpg',
-    // author: 'Dr. Sarah Johnson',
-    readTime: '5 min read'
-  },
-  {
-    id: 2,
-    title: '5 Delicious Ways to Use Tigernut Flour',
-    excerpt: 'Explore creative recipes using tigernut flour in your baking...',
-    date: 'June 10, 2023',
-    category: 'Recipes',
-    image: '/images/clients/products/footer/lemon-grass.jpg',
-    // author: 'Chef Michael Chen',
-    readTime: '4 min read'
-  },
-  {
-    id: 3,
-    title: 'The Sustainable Future of Tigernut Farming',
-    excerpt: 'How tigernut farming is helping communities and the environment...',
-    date: 'June 5, 2023',
-    category: 'Sustainability',
-    image: '/images/clients/products/footer/choconut.jpg',
-    // author: 'Emma Rodriguez',
-    readTime: '6 min read'
-  }
-];
-
 export default function BlogSection() {
   return (
     <section className="py-16 px-4 bg-black">

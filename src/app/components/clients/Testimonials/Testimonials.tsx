@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { FaGoogle, FaStar, FaQuoteLeft } from 'react-icons/fa';
+import { FaStar, FaQuoteLeft } from 'react-icons/fa';
 
 const testimonials = [
   {
