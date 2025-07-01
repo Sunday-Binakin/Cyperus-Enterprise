@@ -72,14 +72,19 @@ export default function Header() {
         </div>
 
         {/* Account and search - hidden on mobile */}
-        <div className={`hidden md:flex flex-col items-center bg-[#55006F] py-4 transition-all duration-300 ${showSearch ? 'opacity-100 max-h-[200px]' : 'opacity-0 max-h-0 overflow-hidden'}`}>
+        <div className="hidden md:flex flex-col items-center bg-[#55006F] py-4">
           <p className="text-white font-semibold -mt-16 mb-8">MY ACCOUNT</p>
-          <SearchBar />
+          <div className={`transition-all duration-300 ${showSearch ? 'opacity-100 max-h-[200px]' : 'opacity-0 max-h-0 overflow-hidden'}`}>
+            <SearchBar />
+          </div>
         </div>
 
         {/* Mobile search bar */}
-        <div className={`md:hidden transition-all duration-300 bg-[#55006F] ${showSearch ? 'opacity-100 max-h-[200px] py-4' : 'opacity-0 max-h-0 overflow-hidden'}`}>
-          <SearchBar isMobile />
+        <div className="md:hidden bg-[#55006F]">
+          <p className="text-white font-semibold px-4 mb-2">MY ACCOUNT</p>
+          <div className={`transition-all duration-300 ${showSearch ? 'opacity-100 max-h-[200px] py-4' : 'opacity-0 max-h-0 overflow-hidden'}`}>
+            <SearchBar isMobile />
+          </div>
         </div>
       </div>
       {/* Spacer div to prevent content from going under fixed header */}
@@ -87,4 +92,3 @@ export default function Header() {
     </>
   );
 }
-
