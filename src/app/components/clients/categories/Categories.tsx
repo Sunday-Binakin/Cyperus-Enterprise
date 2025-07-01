@@ -1,5 +1,5 @@
 'use client'
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { PRODUCT_CATEGORIES } from './constants';
 import CategoryCard from './CategoryCard';
@@ -8,6 +8,7 @@ export default function Categories() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const itemsPerView = 3;
 
   const slideToIndex = (index: number) => {
     if (isAnimating) return;
@@ -17,19 +18,30 @@ export default function Categories() {
   };
 
   const nextSlide = () => {
-    const newIndex = (currentIndex + 1) % PRODUCT_CATEGORIES.length;
-    slideToIndex(newIndex);
+    if (currentIndex + itemsPerView < PRODUCT_CATEGORIES.length) {
+      slideToIndex(currentIndex + 1);
+    } else {
+      slideToIndex(0); // Loop back to start
+    }
   };
 
   const prevSlide = () => {
-    const newIndex = (currentIndex - 1 + PRODUCT_CATEGORIES.length) % PRODUCT_CATEGORIES.length;
-    slideToIndex(newIndex);
+    if (currentIndex > 0) {
+      slideToIndex(currentIndex - 1);
+    } else {
+      // If at the start and going back, show the last possible set
+      const lastPossibleIndex = Math.max(0, PRODUCT_CATEGORIES.length - itemsPerView);
+      slideToIndex(lastPossibleIndex);
+    }
   };
 
+  // Memoize nextSlide to prevent it from changing on every render
+  const nextSlideCallback = useCallback(nextSlide, [currentIndex, isAnimating, PRODUCT_CATEGORIES.length]);
+
   useEffect(() => {
-    const timer = setInterval(nextSlide, 5000);
+    const timer = setInterval(nextSlideCallback, 5000);
     return () => clearInterval(timer);
-  }, [currentIndex]);
+  }, [nextSlideCallback]);
 
   return (
     <div className="w-full bg-black py-16 px-4 md:px-8 lg:px-16 relative overflow-hidden">
@@ -51,35 +63,43 @@ export default function Categories() {
         </button>
 
         {/* Categories Grid */}
-        <div 
-          ref={containerRef}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 transition-transform duration-500 ease-in-out"
-          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-        >
-          {PRODUCT_CATEGORIES.map((category) => (
-            <CategoryCard
-              key={category.id}
-              name={category.name}
-              image={category.image}
-              link={category.link}
-            />
-          ))}
+        <div className="relative overflow-hidden">
+          <div
+            ref={containerRef}
+            className="flex items-center gap-8 transition-transform duration-500 ease-in-out"
+            style={{ transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)` }}
+          >
+            {PRODUCT_CATEGORIES.map((category, index) => (
+              <div
+                key={category.id}
+                className={`flex-shrink-0 w-1/3 px-2 transition-transform duration-300 hover:scale-105 ${
+                  index >= currentIndex * itemsPerView && index < (currentIndex + 1) * itemsPerView ? 'opacity-100' : 'opacity-0 absolute'
+                }`}
+              >
+                <CategoryCard
+                  name={category.name}
+                  image={category.image}
+                  link={category.link}
+                />
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Dots Indicator */}
         <div className="flex justify-center gap-2 mt-8">
-          {PRODUCT_CATEGORIES.map((_, index) => (
+          {Array.from({ length: Math.max(1, Math.ceil(PRODUCT_CATEGORIES.length / itemsPerView)) }).map((_, index) => (
             <button
               key={index}
               onClick={() => slideToIndex(index)}
-              className={`w-2 h-2 rounded-full transition-colors ${
-                currentIndex === index ? 'bg-[#EFE554]' : 'bg-gray-500'
+              className={`w-3 h-3 rounded-full transition-all ${
+                index === currentIndex ? 'bg-[#EFE554] w-6' : 'bg-gray-600'
               }`}
-              aria-label={`Go to category ${index + 1}`}
+              aria-label={`View categories ${index * itemsPerView + 1} to ${Math.min((index + 1) * itemsPerView, PRODUCT_CATEGORIES.length)}`}
             />
           ))}
         </div>
       </div>
     </div>
   );
-} 
+}
