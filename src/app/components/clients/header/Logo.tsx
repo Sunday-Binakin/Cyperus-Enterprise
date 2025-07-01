@@ -1,9 +1,9 @@
 import React from 'react';
+import Image from 'next/image';
 
 const Logo: React.FC = () => (
   <div className="font-bold text-2xl">
-    {/* Replace with your logo image or SVG if needed */}
-    Cyperus
+    <Image src="/images/clients/logo.png" alt="Cyperus Logo" width={120} height={30} />
   </div>
 );
 
