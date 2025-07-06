@@ -110,7 +110,7 @@ export default function Header() {
 
         {/* Account and search - hidden on mobile */}
         <div className="hidden md:flex flex-col items-center bg-[#55006F] py-4 z-50">
-          <p className="text-white font-semibold -mt-16 mb-8">MY ACCOUNT</p>
+          {/* <p className="text-white font-semibold -mt-16 mb-8">MY ACCOUNT</p> */}
           {/* Search Bar */}
           <div className={`transition-all duration-300 ${showSearch ? 'opacity-100' : 'opacity-0'} bg-white shadow-md`}>
             <SearchBar />

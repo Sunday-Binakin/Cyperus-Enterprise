@@ -6,7 +6,7 @@ interface SearchBarProps {
 
 export default function SearchBar({ isMobile = false }: SearchBarProps) {
   return (
-    <div className={`relative ${isMobile ? 'w-full px-4 max-w-md' : 'w-[1000px] max-w-full'} `}>
+    <div className={`relative -mt-10 ${isMobile ? 'w-full px-4 max-w-md' : 'w-[1000px] max-w-full'} `}>
       <input
         type="text"
         placeholder="Search For Products..."
