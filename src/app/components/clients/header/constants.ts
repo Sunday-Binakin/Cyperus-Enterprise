@@ -33,7 +33,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'ABOUT US', href: '/about-us' },
   { label: 'RESOURCE', dropdownItems: RESOURCE_ITEMS },
   { label: 'CONTACT', href: '/contact-us' },
-  { label: 'MY ACCOUNT', href: '/account' },
+  { label: 'MY ACCOUNT', href: '/my-account' },
 
 ];
 

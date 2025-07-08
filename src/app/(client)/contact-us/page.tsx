@@ -1,11 +1,11 @@
 "use client";
 
 import React from 'react';
-import { HeroSection } from '@/app/components/clients/contact/HeroSection';
-import ContactInfoCards from '@/app/components/clients/contact/ContactCards';
-import ContactForm from '@/app/components/clients/contact/ContactForm';
-import ContactMap from '@/app/components/clients/contact/ContactMap';
-import InstagramGallery from '@/app/components/clients/contact/InstagramGallery';
+import { HeroSection } from '@/app/components/clients/contact-us/HeroSection';
+import ContactInfoCards from '@/app/components/clients/contact-us/ContactCards';
+import ContactForm from '@/app/components/clients/contact-us/ContactForm';
+import ContactMap from '@/app/components/clients/contact-us/ContactMap';
+import InstagramGallery from '@/app/components/clients/contact-us/InstagramGallery';
 
 export default function ContactPage() {
   const breadcrumbItems = [
