@@ -37,7 +37,7 @@ export default function Slideshow() {
   };
 
   return (
-    <div className="relative w-full h-[calc(80vh-80px)] md:h-[calc(100vh-80px)] overflow-hidden">
+    <div className="relative w-full h-[calc(100vh-60px)] md:h-[calc(100vh-60px)] overflow-hidden mt-[80px]">
       {/* Slides */}
       <div 
         className="relative w-full h-full flex transition-transform duration-500 ease-in-out"
@@ -51,7 +51,7 @@ export default function Slideshow() {
           >
             {/* Background Image with Overlay */}
             <div 
-              className="absolute inset-0 bg-cover bg-center"
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat h-[100vh]"
               style={{ 
                 backgroundImage: `url(${slide.image})`,
               }}
@@ -60,8 +60,8 @@ export default function Slideshow() {
             </div>
 
             {/* Content */}
-            <div className="relative h-full flex flex-col items-start justify-start text-white px-4 md:px-16 lg:px-24">
-              <p className="text-lg md:text-xl mb-4 tracking-wider mt-4">WELCOME TO TIGERNUTS REPUBLIC</p>
+            <div className="relative h-full flex flex-col items-start justify-center text-white px-4 md:px-16 lg:px-24 pt-20">
+              {/* <p className="text-lg md:text-xl mb-4 tracking-wider mt-4">WELCOME TO TIGERNUTS REPUBLIC</p> */}
               <h1 className="text-6xl md:text-8xl font-bold mb-4 tracking-tight">{slide.title}</h1>
               <h2 className="text-5xl md:text-7xl mb-12 font-light">{slide.subtitle}</h2>
               <div className="flex flex-col sm:flex-row gap-6">
@@ -114,4 +114,4 @@ export default function Slideshow() {
       </div>
     </div>
   );
-} 
+}
