@@ -11,6 +11,7 @@ export default function Header() {
   const [showSearch, setShowSearch] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isAnyDropdownHovered, setIsAnyDropdownHovered] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Close menu when clicking outside
@@ -37,7 +38,7 @@ export default function Header() {
     };
   }, []);
 
-  const controlSearchBar = () => {
+  const controlSearchBar = React.useCallback(() => {
     const currentScrollY = window.scrollY;
     
     // Hide search bar when scrolling down, show when scrolling up
@@ -48,12 +49,12 @@ export default function Header() {
     }
     
     setLastScrollY(currentScrollY);
-  };
+  }, [lastScrollY]);
 
   useEffect(() => {
     window.addEventListener('scroll', controlSearchBar);
     return () => window.removeEventListener('scroll', controlSearchBar);
-  }, [lastScrollY]);
+  }, [controlSearchBar]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -73,11 +74,16 @@ export default function Header() {
             <ul className='flex flex-row gap-10 font-semibold'>
               {NAV_ITEMS.map((item, index) => (
                 isNavItemWithDropdown(item) ? (
-                  <NavItem
+                  <div 
                     key={index}
-                    label={item.label}
-                    dropdownItems={item.dropdownItems}
-                  />
+                    onMouseEnter={() => setIsAnyDropdownHovered(true)}
+                    onMouseLeave={() => setIsAnyDropdownHovered(false)}
+                  >
+                    <NavItem
+                      label={item.label}
+                      dropdownItems={item.dropdownItems}
+                    />
+                  </div>
                 ) : (
                   <NavItem
                     key={index}
@@ -109,11 +115,13 @@ export default function Header() {
         </div>
 
         {/* Account and search - hidden on mobile */}
-        <div className="hidden md:flex flex-col items-center bg-[#55006F] py-4 z-50">
+        <div className="hidden md:flex flex-col items-center bg-[#55006F] py-4 relative z-10">
           {/* <p className="text-white font-semibold -mt-16 mb-8">MY ACCOUNT</p> */}
           {/* Search Bar */}
-          <div className={`transition-all duration-300 ${showSearch ? 'opacity-100' : 'opacity-0'} bg-white shadow-md`}>
-            <SearchBar />
+          <div className={`transition-all duration-300 ${showSearch && !isAnyDropdownHovered ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+            <div className="bg-white shadow-md">
+              <SearchBar />
+            </div>
           </div>
         </div>
 

@@ -2,7 +2,6 @@
 
 import React, { ReactNode, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { ChevronRight } from 'lucide-react';
 
 type BreadcrumbItem = {

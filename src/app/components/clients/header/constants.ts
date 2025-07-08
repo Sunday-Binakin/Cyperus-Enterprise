@@ -14,12 +14,12 @@ export function isNavItemWithDropdown(item: NavItem): item is NavItemWithDropdow
 }
 
 export const SHOP_ITEMS: NavItemBase[] = [
-  { label: 'Bitter Kola Variant', href: '/shop/bitter-kola' },
-  { label: 'Choconuts', href: '/shop/choconuts' },
-  { label: 'Citrus Lemon & Clove Variant', href: '/shop/citrus-lemon-clove' },
-  { label: 'Ginger Variant', href: '/shop/ginger' },
-  { label: 'Lemon Grass Variant', href: '/shop/lemon-grass' },
-  { label: 'Original', href: '/shop/original' },
+  { label: 'Bitter Kola  ', href: '/bitter-kola' },
+  { label: 'Choconuts', href: '/choconuts' },
+  { label: 'Citrus Lemon & Clove  ', href: '/citrus-lemon-clove' },
+  { label: 'Ginger', href: '/ginger' },
+  { label: 'Lemon Grass', href: '/lemon-grass' },
+  { label: 'Original', href: '/original' },
 ];
 
 export const RESOURCE_ITEMS: NavItemBase[] = [

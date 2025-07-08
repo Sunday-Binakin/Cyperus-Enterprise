@@ -34,7 +34,7 @@ export default function NavItem({ label, dropdownItems, href }: NavItemProps) {
         </span>
       )}
       {hasDropdown && (
-        <ul className="absolute left-0 mt-2 w-[15rem] bg-black text-white rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-10">
+        <ul className="absolute left-0 mt-2 w-[15rem] bg-black text-white rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-50">
           {dropdownItems.map((item, index) => (
             <li key={index} className="px-4 py-2 hover:text-[#EFE554]">
               <Link href={item.href || '#'} className="block w-full">

@@ -1,0 +1,84 @@
+export interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+  category: string;
+  stock: number;
+}
+
+export const BITTER_KOLA_PRODUCTS: Product[] = [
+  {
+    id: '1',
+    name: 'Choconut',
+    description: 'Premium quality choconut with rich flavor and aroma.',
+    price: 24.99,
+    image: '/images/clients/products/footer/choconut.jpg',
+    category: 'Bitter Kola',
+    stock: 50,
+  },
+  {
+    id: '2',
+    name: 'Clove',
+    description: 'Finely selected cloves with intense flavor and fragrance.',
+    price: 19.99,
+    image: '/images/clients/products/footer/clove.jpg',
+    category: 'Bitter Kola',
+    stock: 35,
+  },
+  {
+    id: '3',
+    name: 'Ginger',
+    description: 'Fresh and spicy ginger with numerous health benefits.',
+    price: 15.99,
+    image: '/images/clients/products/footer/ginger.jpg',
+    category: 'Bitter Kola',
+    stock: 40,
+  },
+  {
+    id: '4',
+    name: 'Lemon Grass',
+    description: 'Aromatic lemon grass perfect for teas and culinary uses.',
+    price: 12.99,
+    image: '/images/clients/products/footer/lemon-grass.jpg',
+    category: 'Bitter Kola',
+    stock: 30,
+  },
+  {
+    id: '5',
+    name: 'Turmeric Latte',
+    description: 'Aromatic turmeric latte with unique flavor and aroma.',
+    price: 10.99,
+    image: '/images/clients/products/footer/clove.jpg',
+    category: 'Bitter Kola',
+    stock: 25,
+  },
+  {
+    id: '6',
+    name: 'Turmeric Latte',
+    description: 'Aromatic turmeric latte with unique flavor and aroma.',
+    price: 10.99,
+    image: '/images/clients/products/footer/ginger.jpg',
+    category: 'Bitter Kola',
+    stock: 25,
+  },
+  {
+    id: '7',
+    name: 'Turmeric Latte',
+    description: 'Aromatic turmeric latte with unique flavor and aroma.',
+    price: 10.99,
+    image: '/images/clients/products/footer/lemon-grass.jpg',
+    category: 'Bitter Kola',
+    stock: 25,
+  },
+  {
+    id: '8',
+    name: 'Turmeric Latte',
+    description: 'Aromatic turmeric latte with unique flavor and aroma.',
+    price: 10.99,
+    image: '/images/clients/products/footer/choconut.jpg',
+    category: 'Bitter Kola',
+    stock: 25,
+  },
+];

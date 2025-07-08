@@ -6,7 +6,7 @@ export const PeopleMayAsk = () => {
         <div className='flex flex-col bg-black'>
             <div className='flex flex-col items-center'>
                 <p className='text-2xl font-bold text-[#EFE554]'>PEOPLE ASK WHY TIGERNUTS?</p>
-                <p className='text-xl text-white mt-2 mb-2'>Here's What Makes It Special</p>
+                <p className='text-xl text-white mt-2 mb-2'>Here&apos;s What Makes It Special</p>
             </div>
             <div className='relative  flex p-16'>
                 <div className='flex flex-row justify-between items-center gap-6'>

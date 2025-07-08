@@ -24,9 +24,9 @@ export const MeetOurCeo = () => {
                 <div className='w-full md:w-[55%] text-white space-y-4 px-6'>
                     <p>Our CEO, Temitope Oriola, graduated from the University of Lagos, Akoka BSC. Banking and Finance with Second Class Upper in 2007, she has a Diploma in Finance and second level of ACCA.</p>             
                     <p>She was a Financial Advisor who resigned as an Associate with one of the leading Investment Banking firms in Lagos, Nigeria after 9 years of service in 2019.</p>
-                    <p>With intense passion for cooking, continuous research and quest to learn complex dishes, she stumbled across Tigernut milk on YouTube in February 2017. After making Tigernut milk, the curious part of her felt that the chaff from the milk couldn't be ignored.</p>
-                    <p>Through extensive research, she realized Tigernut wasn't just good for milk but is currently 1 of the top 10 Super foods in the world, perfect for diabetics, weight watchers, good guts, fertility, heart and general wellness.</p>
-                    <p>That was the start of Behealthyng now TIGERNUTS REPUBLIC first in her thoughts, her kitchen, amongst family/friends and to the world. It can simply be said that 'Her passion for cooking led her to the discovery of the wonders of Tigernut".</p>
+                    <p>With intense passion for cooking, continuous research and quest to learn complex dishes, she stumbled across Tigernut milk on YouTube in February 2017. After making Tigernut milk, the curious part of her felt that the chaff from the milk couldn&apos;t be ignored.</p>
+                    <p>Through extensive research, she realized Tigernut wasn&apos;t just good for milk but is currently 1 of the top 10 Super foods in the world, perfect for diabetics, weight watchers, good guts, fertility, heart and general wellness.</p>
+                    <p>That was the start of Behealthyng now TIGERNUTS REPUBLIC first in her thoughts, her kitchen, amongst family/friends and to the world. It can simply be said that &apos;Her passion for cooking led her to the discovery of the wonders of Tigernut&ldquo;.</p>
                     <p>She incorporated her company in May 2017, an indigenous company with 100% focus on Tigernut.</p>
                     <p>This is an endless journey of continuous research, improvements and addition to the existing Tigernut range of products from Tigernuts Republic till Tigernuts Republic becomes a household name Globally.</p>
                 </div>
