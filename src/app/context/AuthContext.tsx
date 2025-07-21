@@ -3,10 +3,22 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Initialize Supabase client with fallback handling
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+let supabase: any = null;
+
+if (supabaseUrl && supabaseKey) {
+  try {
+    supabase = createClient(supabaseUrl, supabaseKey);
+  } catch (error) {
+    console.error('Failed to initialize Supabase client:', error);
+  }
+} else {
+  console.warn('Supabase configuration missing. Please check your environment variables.');
+  console.warn('Required: NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY');
+}
 
 type User = {
   id: string;
@@ -37,16 +49,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!supabase) {
+      console.warn('Supabase not available, user will remain null');
+      setLoading(false);
+      return;
+    }
+
     // Check active session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session } }: any) => {
       setUser(session?.user ?? null);
+      setLoading(false);
+    }).catch((error: any) => {
+      console.error('Error getting session:', error);
       setLoading(false);
     });
 
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
       setUser(session?.user ?? null);
       setLoading(false);
     });
@@ -55,26 +76,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signIn = async (email: string, password: string) => {
+    if (!supabase) {
+      throw new Error('Authentication service not available. Please check your configuration.');
+    }
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
   };
 
   const signUp = async (email: string, password: string) => {
+    if (!supabase) {
+      throw new Error('Authentication service not available. Please check your configuration.');
+    }
     const { error } = await supabase.auth.signUp({ email, password });
     if (error) throw error;
   };
 
   const signOut = async () => {
+    if (!supabase) {
+      throw new Error('Authentication service not available. Please check your configuration.');
+    }
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
   };
 
   const resetPassword = async (email: string) => {
+    if (!supabase) {
+      throw new Error('Authentication service not available. Please check your configuration.');
+    }
     const { error } = await supabase.auth.resetPasswordForEmail(email);
     if (error) throw error;
   };
 
   const signInWithProvider = async (provider: Provider) => {
+    if (!supabase) {
+      throw new Error('Authentication service not available. Please check your configuration.');
+    }
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
@@ -85,6 +121,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updateProfile = async (profile: { full_name?: string; avatar_url?: string }) => {
+    if (!supabase) {
+      throw new Error('Authentication service not available. Please check your configuration.');
+    }
     const { error } = await supabase.auth.updateUser({
       data: profile
     });

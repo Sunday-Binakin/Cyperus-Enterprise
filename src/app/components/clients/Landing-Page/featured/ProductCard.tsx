@@ -19,6 +19,12 @@ export default function ProductCard({ id, name, price, image }: ProductCardProps
   const [isInCart, setIsInCart] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   
+  // Add safety check for id
+  if (!id || !name || !price || !image) {
+    console.error('ProductCard: Missing required props', { id, name, price, image });
+    return null;
+  }
+  
   const formattedPrice = new Intl.NumberFormat('en-NG', {
     style: 'currency',
     currency: 'GHS',
