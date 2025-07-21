@@ -27,9 +27,16 @@ export const RESOURCE_ITEMS: NavItemBase[] = [
   { label: 'Recipes', href: '/recipes' },
 ];
 
+export const storesItems: NavItemBase[] = [
+  { label: 'Local Distributors', href: '/local-distributors' },
+  { label: 'International Distributor', href: '/international-distributor' },
+];
+
 export const NAV_ITEMS: NavItem[] = [
   { label: 'SHOP', dropdownItems: SHOP_ITEMS },
-  { label: 'EXPORT DEPARTMENT', href: '/export' },
+  { label: 'EXPORTS', href: '/export-with-us' },
+  { label: 'STORES', dropdownItems: storesItems },
+  { label: 'OUR STORY', href: '/our-story' },
   { label: 'ABOUT US', href: '/about-us' },
   { label: 'RESOURCE', dropdownItems: RESOURCE_ITEMS },
   { label: 'CONTACT', href: '/contact-us' },

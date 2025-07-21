@@ -8,6 +8,8 @@ import { NAV_ITEMS, isNavItemWithDropdown } from "./header/constants";
 import Logo from "./header/Logo";
 import MobileMenuButton from "./header/MobileMenuButton";
 import { useCart } from "@/app/context/CartContext";
+import { useAuth } from "@/app/context/AuthContext";
+import Link from "next/link";
 
 export default function Header() {
   const [showSearch, setShowSearch] = useState(true);
@@ -18,6 +20,7 @@ export default function Header() {
   const menuRef = useRef<HTMLDivElement>(null);
   const cartRef = useRef<HTMLDivElement>(null);
   const { getTotalItems } = useCart();
+  const { user, signOut } = useAuth();
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -77,7 +80,8 @@ export default function Header() {
           {/* Nav links - hidden on mobile */}
           <div className="hidden md:block">
             <ul className="flex flex-row gap-4 lg:gap-6 font-semibold whitespace-nowrap">
-              {NAV_ITEMS.map((item, index: number) =>
+              {/* Standard nav items */}
+              {NAV_ITEMS.filter(item => item.label !== 'MY ACCOUNT').map((item, index: number) =>
                 isNavItemWithDropdown(item) ? (
                   <div
                     key={index}
@@ -92,6 +96,36 @@ export default function Header() {
                 ) : (
                   <NavItem key={index} label={item.label} href={item.href} />
                 )
+              )}
+              
+              {/* Auth-based nav items */}
+              {user ? (
+                <div className="flex items-center gap-4">
+                  <Link href="/account" className="text-white hover:text-[#EFE554] transition-colors">
+                    My Account
+                  </Link>
+                  <button 
+                    onClick={() => signOut()}
+                    className="bg-[#EFE554] text-[#55006F] px-4 py-2 rounded hover:bg-[#55006F] hover:text-[#EFE554] transition-colors"
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-4">
+                  <Link 
+                    href="/auth/login" 
+                    className="text-white hover:text-[#EFE554] transition-colors"
+                  >
+                    Login
+                  </Link>
+                  <Link 
+                    href="/auth/register" 
+                    className="bg-[#EFE554] text-[#55006F] px-4 py-2 rounded hover:bg-[#55006F] hover:text-[#EFE554] transition-colors"
+                  >
+                    Register
+                  </Link>
+                </div>
               )}
             </ul>
           </div>
@@ -171,7 +205,8 @@ export default function Header() {
             </div>
 
             <ul className="space-y-6">
-              {NAV_ITEMS.map((item, index: number) => (
+              {/* Standard nav items */}
+              {NAV_ITEMS.filter(item => item.label !== 'MY ACCOUNT').map((item, index: number) => (
                 <li key={index} className="border-b border-white/20 pb-2">
                   {!isNavItemWithDropdown(item) && item.href ? (
                     <a
@@ -205,8 +240,55 @@ export default function Header() {
                   )}
                 </li>
               ))}
+              
+              {/* Auth-based nav items */}
+              {user ? (
+                <>
+                  <li className="border-b border-white/20 pb-2">
+                    <Link
+                      href="/account"
+                      className="block py-2 text-lg font-semibold hover:text-[#EFE554] transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      My Account
+                    </Link>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        signOut();
+                        setIsMenuOpen(false);
+                      }}
+                      className="w-full bg-[#EFE554] text-[#55006F] py-3 px-4 rounded font-semibold hover:bg-[#55006F] hover:text-[#EFE554] transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li className="border-b border-white/20 pb-2">
+                    <Link
+                      href="/auth/login"
+                      className="block py-2 text-lg font-semibold hover:text-[#EFE554] transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Login
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/auth/register"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block w-full text-center bg-[#EFE554] text-[#55006F] py-3 px-4 rounded font-semibold hover:bg-[#55006F] hover:text-[#EFE554] transition-colors"
+                    >
+                      Register
+                    </Link>
+                  </li>
+                </>
+              )}
               <li className="pt-4">
-                <button className="w-full bg-[#EFE554] text-black font-semibold py-3 px-4 rounded">
+                <button className="w-full bg-[#EFE554] text-white font-semibold py-3 px-4 rounded">
                   SUBSCRIBE & SAVE
                 </button>
               </li>
@@ -227,4 +309,7 @@ export default function Header() {
       <div className="h-[80px] md:h-[100px]"></div>
     </>
   );
-} 
+}
+
+
+// https://wisdilabqkzupdungoan.supabase.co/auth/v1/callback

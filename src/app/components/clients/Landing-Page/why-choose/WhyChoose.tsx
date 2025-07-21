@@ -3,17 +3,23 @@ import { ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import { GiHut } from 'react-icons/gi';
 import { GiMuscleUp } from 'react-icons/gi';
+import { GiHerbsBundle } from "react-icons/gi";
+import { TbBottleFilled } from "react-icons/tb";
+
+
 
 const benefits = [
   {
-    icon: GiHut,
-    title: 'Freshly Sourced Tigernuts',
-    description: 'Our tigernut are gotten straight from the farm to ensure freshness and quality, delivering the best natural flavor and nutrients in every product.'
+    icon: GiHerbsBundle,
+    title: 'Farm-to-factory sourcing',
+    // description: 'Our tigernut are gotten straight from the farm to ensure freshness and quality, delivering the best natural flavor and nutrients in every product.'
+  
   },
   {
-    icon: GiMuscleUp,
-    title: 'Energy Boost',
-    description: 'Filled with nourishing energy, these tigernut products will keep you fueled throughout the day, whether it\'s a quick snack or a full meal.'
+    icon: TbBottleFilled,
+    title: 'Attractive retail-ready Packaging',
+    // description: 'Filled with nourishing energy, these tigernut products will keep you fueled throughout the day, whether it\'s a quick snack or a full meal.'
+    
   }
 ];
 
@@ -53,7 +59,7 @@ export default function WhyChoose() {
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold mb-2">{benefit.title}</h3>
-                  <p className="text-gray-300">{benefit.description}</p>
+                  {/* <p className="text-gray-300">{benefit.description}</p> */}
                 </div>
               </div>
             ))}
