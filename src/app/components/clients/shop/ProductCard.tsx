@@ -1,7 +1,12 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { Product } from '@/app/types/product';
 import { TiShoppingCart } from 'react-icons/ti';
+import { useCart } from '@/app/context/CartContext';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface ProductCardProps {
   product: Product;
@@ -9,7 +14,40 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, categoryPath = 'bitter-kola' }: ProductCardProps) {
+  const { addItem } = useCart();
+  const [isAdding, setIsAdding] = useState(false);
   const formattedPrice = `GH₵${product.price.toFixed(2)}`;
+
+  const handleAddToCart = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (product.stock === 0) return;
+    
+    setIsAdding(true);
+    
+    try {
+      addItem({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+      });
+      
+      toast.success(`${product.name} added to cart!`, {
+        duration: 2000,
+        style: {
+          background: '#4A651F',
+          color: 'white',
+          border: '1px solid #EFE554',
+        },
+      });
+    } catch (error) {
+      toast.error('Failed to add item to cart');
+    } finally {
+      setTimeout(() => setIsAdding(false), 500);
+    }
+  };
 
   return (
     <div className="bg-gray-900 rounded-lg shadow-lg border border-gray-800 hover:border-[#EFE554] transition-colors duration-300 transform hover:scale-105 group relative overflow-hidden">
@@ -40,16 +78,17 @@ export default function ProductCard({ product, categoryPath = 'bitter-kola' }: P
           {formattedPrice}
         </p>
         <button 
-          className={`w-full flex flex-row justify-center relative py-3 rounded font-semibold overflow-hidden group border transition-colors duration-300 ${
+          onClick={handleAddToCart}
+          disabled={product.stock === 0 || isAdding}
+          className={`w-full flex flex-row justify-center relative py-3 rounded font-semibold overflow-hidden group border transition-all duration-300 ${
             product.stock > 0 
-              ? 'border-[#EFE554] text-white hover:bg-[#EFE554] hover:text-black' 
+              ? 'border-[#EFE554] text-white hover:bg-[#EFE554] hover:text-black active:scale-95' 
               : 'border-gray-600 text-gray-500 cursor-not-allowed'
-          }`}
-          disabled={product.stock === 0}
+          } ${isAdding ? 'scale-95 bg-[#4A651F] text-white' : ''}`}
         >
           <span className="flex items-center justify-center gap-2">
-            <TiShoppingCart className="text-xl" />
-            {product.stock > 0 ? 'ADD TO BASKET' : 'OUT OF STOCK'}
+            <TiShoppingCart className={`text-xl transition-transform duration-300 ${isAdding ? 'scale-110' : ''}`} />
+            {isAdding ? 'ADDING...' : product.stock > 0 ? 'ADD TO BASKET' : 'OUT OF STOCK'}
           </span>
         </button>
       </div>

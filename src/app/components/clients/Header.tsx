@@ -135,11 +135,11 @@ export default function Header() {
             <div
               className="hidden md:block relative"
               ref={cartRef}
-              onMouseEnter={() => setShowCartPopover(true)}
+              onMouseEnter={() => getTotalItems() > 0 && setShowCartPopover(true)}
               onMouseLeave={() => setShowCartPopover(false)}
             >
               <CartIndicator itemCount={getTotalItems()} />
-              {showCartPopover && <CartPopover />}
+              {showCartPopover && getTotalItems() > 0 && <CartPopover />}
             </div>
 
             {/* Subscribe button - hidden on mobile */}
@@ -149,7 +149,19 @@ export default function Header() {
 
             {/* Menu icon - only on mobile */}
             <div className="md:hidden flex items-center gap-4">
-              <CartIndicator itemCount={getTotalItems()} />
+              <div
+                className="relative"
+                onClick={() => getTotalItems() > 0 && setShowCartPopover(!showCartPopover)}
+              >
+                <CartIndicator itemCount={getTotalItems()} />
+                {showCartPopover && getTotalItems() > 0 && (
+                  <div className="fixed inset-0 z-40 bg-black bg-opacity-50" onClick={() => setShowCartPopover(false)}>
+                    <div className="absolute top-20 right-4 w-80" onClick={(e) => e.stopPropagation()}>
+                      <CartPopover />
+                    </div>
+                  </div>
+                )}
+              </div>
               <MobileMenuButton onClick={toggleMenu} isOpen={isMenuOpen} />
             </div>
           </div>
