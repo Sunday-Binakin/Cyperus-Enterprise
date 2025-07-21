@@ -1,3 +1,5 @@
+"use client";
+
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { useAuth } from '@/app/context/AuthContext';
@@ -122,4 +124,4 @@ export default function Login() {
     </div>
   );
 }
-}
+

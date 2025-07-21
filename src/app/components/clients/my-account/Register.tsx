@@ -1,3 +1,5 @@
+"use client";
+
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -28,7 +30,7 @@ export const Register = () => {
     };
 
     return (
-        <div className='text-white space-y-8 bg-black -mt-[17rem]'>
+        <div className='text-white space-y-8 bg-black -mt-[10rem]'>
             <h2 className="mt-6 text-3xl font-semibold ml-[36rem] mx-5">
                 Register
             </h2>
