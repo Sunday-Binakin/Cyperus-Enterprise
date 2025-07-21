@@ -15,7 +15,7 @@ export function isNavItemWithDropdown(item: NavItem): item is NavItemWithDropdow
 
 export const SHOP_ITEMS: NavItemBase[] = [
   { label: 'Bitter Kola  ', href: '/bitter-kola' },
-  { label: 'Choconuts', href: '/choconuts' },
+  { label: 'Choconut', href: '/choconut' },
   { label: 'Citrus Lemon & Clove  ', href: '/citrus-lemon-clove' },
   { label: 'Ginger', href: '/ginger' },
   { label: 'Lemon Grass', href: '/lemon-grass' },

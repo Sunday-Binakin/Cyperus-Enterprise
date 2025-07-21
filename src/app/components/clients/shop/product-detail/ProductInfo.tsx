@@ -1,4 +1,4 @@
-import { Product } from '@/app/data/products/bitterKola';
+import { Product } from '@/app/types/product';
 import { QuantitySelector } from './QuantitySelector';
 import { ProductDetails } from './ProductDetails';
 

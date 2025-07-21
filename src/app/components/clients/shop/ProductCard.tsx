@@ -1,18 +1,19 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Product } from '@/app/data/products/bitterKola';
+import { Product } from '@/app/types/product';
 import { TiShoppingCart } from 'react-icons/ti';
 
 interface ProductCardProps {
   product: Product;
+  categoryPath?: string;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, categoryPath = 'bitter-kola' }: ProductCardProps) {
   const formattedPrice = `GH₵${product.price.toFixed(2)}`;
 
   return (
-    <div className="bg-gray-900 rounded-lg overflow-hidden group border border-gray-800 p-3 hover:border-[#EFE554] transition-colors duration-300">
-      <Link href={`/bitter-kola/${product.id}`}>
+    <div className="bg-gray-900 rounded-lg shadow-lg border border-gray-800 hover:border-[#EFE554] transition-colors duration-300 transform hover:scale-105 group relative overflow-hidden">
+      <Link href={`/${categoryPath}/${product.id}`}>
         <div className="relative h-[200px] w-full rounded-lg overflow-hidden bg-gray-800">
           <Image
             src={product.image}

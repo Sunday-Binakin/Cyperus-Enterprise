@@ -1,14 +1,15 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Product } from '@/app/data/products/bitterKola';
+import { Product } from '@/app/types/product';
 import { TiShoppingCart } from 'react-icons/ti';
 
 type RelatedProductsProps = {
   products: Product[];
   currentProductId: string;
+  categoryPath?: string;
 };
 
-export function RelatedProducts({ products, currentProductId }: RelatedProductsProps) {
+export function RelatedProducts({ products, currentProductId, categoryPath = 'bitter-kola' }: RelatedProductsProps) {
   // Filter out the current product and get up to 4 related products
   const relatedProducts = products
     .filter(product => product.id !== currentProductId)
@@ -24,7 +25,7 @@ export function RelatedProducts({ products, currentProductId }: RelatedProductsP
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {relatedProducts.map((product) => (
             <div key={product.id} className="bg-gray-900 rounded-lg overflow-hidden border border-gray-800 hover:border-[#EFE554] transition-colors duration-300">
-              <Link href={`/bitter-kola/${product.id}`} className="block">
+              <Link href={`/${categoryPath}/${product.id}`} className="block">
                 <div className="relative h-[200px] w-full rounded-lg overflow-hidden">
                   <Image
                     src={product.image}
