@@ -35,12 +35,12 @@ export default function SubscribeSection() {
                     <input
                       type="email"
                       placeholder="Enter your email"
-                      className="flex-1 px-4 py-3 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white"
+                      className="flex-1 px-4 py-3 border border-gray-600 rounded-lg focus:ring-2 focus:border-transparent text-white focus:ring-[#4A651F]"
                       required
                     />
                     <button
                       type="submit"
-                      className="px-6 py-3 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition-colors"
+                      className="px-6 py-3 text-white font-medium rounded-lg transition-colors" style={{backgroundColor: '#4A651F'}}
                     >
                       Subscribe
                     </button>
@@ -59,7 +59,7 @@ export default function SubscribeSection() {
                         href={`https://www.${social}.com/cyperusenterprise`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-white hover:bg-purple-800 hover:text-purple-100 transition-colors"
+                        className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-white transition-colors hover:bg-[#4A651F] hover:text-[#4A651F]"
                         aria-label={social}
                       >
                         <span className="sr-only">{social}</span>

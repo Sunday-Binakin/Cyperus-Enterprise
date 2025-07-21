@@ -21,14 +21,14 @@ export default function NavItem({ label, dropdownItems, href }: NavItemProps) {
   const isActive = href ? pathname === href : false;
   
   return (
-    <li className={`relative group ${hasDropdown ? 'cursor-pointer' : ''} ${isActive ? 'text-[#EFE554]' : 'hover:text-[#EFE554]'} transition-colors`}>
+    <li className={`relative group ${hasDropdown ? 'cursor-pointer' : ''} text-white ${isActive ? 'text-[#EFE554]' : 'hover:text-[#EFE554]'} transition-colors duration-200`}>
       {href ? (
-        <Link href={href} className="flex items-center">
+        <Link href={href} className="flex items-center font-medium">
           {label}
           {hasDropdown && <ChevronDown className="ml-1" size={16} />}
         </Link>
       ) : (
-        <span className="flex items-center">
+        <span className="flex items-center font-medium">
           {label}
           {hasDropdown && <ChevronDown className="ml-1" size={16} />}
         </span>
