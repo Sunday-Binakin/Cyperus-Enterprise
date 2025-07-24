@@ -66,7 +66,7 @@ export default function InquiryForm() {
     try {
       // Convert interests object to array of selected interests
       const selectedInterests = Object.entries(formData.interests)
-        .filter(([_, isSelected]) => isSelected)
+        .filter(([, isSelected]) => isSelected)
         .map(([interest]) => interest);
 
       // Insert into Supabase

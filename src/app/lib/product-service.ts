@@ -1,7 +1,6 @@
 import { createSupabaseClient } from './supabase';
 import type { Database } from './supabase';
 
-type Product = Database['public']['Tables']['products']['Row'];
 type ProductInsert = Database['public']['Tables']['products']['Insert'];
 type ProductUpdate = Database['public']['Tables']['products']['Update'];
 

@@ -68,7 +68,6 @@ export default function OrderTrackingPage() {
   const router = useRouter();
   const [order, setOrder] = useState<Order | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'timeline' | 'details'>('timeline');
 
   const orderId = params.id as string;
 
@@ -270,7 +269,7 @@ export default function OrderTrackingPage() {
         <div className="text-center text-white">
           <Package className="w-24 h-24 text-gray-600 mx-auto mb-4" />
           <h1 className="text-2xl font-bold mb-4">Order not found</h1>
-          <p className="text-gray-400 mb-6">The order you're looking for doesn't exist or has been removed.</p>
+          <p className="text-gray-400 mb-6">The order you&apos;re looking for doesn&apos;t exist or has been removed.</p>
           <Link 
             href="/" 
             className="inline-flex items-center gap-2 text-[#EFE554] hover:underline"

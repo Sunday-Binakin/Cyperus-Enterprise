@@ -17,6 +17,7 @@ export default function Header() {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isAnyDropdownHovered, setIsAnyDropdownHovered] = useState(false);
   const [showCartPopover, setShowCartPopover] = useState(false);
+  const [showAccountDropdown, setShowAccountDropdown] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const cartRef = useRef<HTMLDivElement>(null);
   const { getTotalItems } = useCart();
@@ -102,7 +103,7 @@ export default function Header() {
               {user ? (
                 <div className="flex items-center gap-4">
                   <Link href="/account" className="text-white hover:text-[#EFE554] transition-colors">
-                    My Account
+                    MY ACCOUNT
                   </Link>
                   <button 
                     onClick={() => signOut()}
@@ -112,19 +113,33 @@ export default function Header() {
                   </button>
                 </div>
               ) : (
-                <div className="flex items-center gap-4">
-                  <Link 
-                    href="/auth/login" 
-                    className="text-white hover:text-[#EFE554] transition-colors"
-                  >
-                    Login
-                  </Link>
-                  <Link 
-                    href="/auth/register" 
-                    className="bg-[#EFE554] text-[#55006F] px-4 py-2 rounded hover:bg-[#55006F] hover:text-[#EFE554] transition-colors"
-                  >
-                    Register
-                  </Link>
+                <div className="relative group">
+                  <button className="text-white hover:text-[#EFE554] transition-colors flex items-center gap-1 font-medium">
+                    MY ACCOUNT
+                    <svg 
+                      className="w-4 h-4 transition-transform group-hover:rotate-180" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  
+                  <div className="absolute right-0 mt-2 w-[12rem] bg-black text-white rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                    <Link 
+                      href="/auth/login" 
+                      className="block px-4 py-2 hover:text-[#EFE554] transition-colors"
+                    >
+                      Login
+                    </Link>
+                    <Link 
+                      href="/auth/register" 
+                      className="block px-4 py-2 hover:text-[#EFE554] transition-colors"
+                    >
+                      Register
+                    </Link>
+                  </div>
                 </div>
               )}
             </ul>
@@ -143,7 +158,7 @@ export default function Header() {
             </div>
 
             {/* Subscribe button - hidden on mobile */}
-            <button className="bg-[#C2A83E] text-[#4A651F] font-semibold border border-[#C2A83E] hover:bg-[#4A651F] hover:text-[#C2A83E] hover:border-[#4A651F] transition-colors duration-300 ease-in-out transform hover:scale-105 py-3 px-6 rounded-md hidden md:block">
+            <button className="bg-[#C2A83E] text-white font-semibold border border-[#C2A83E] hover:bg-[#55006F] hover:text-white hover:border-[#55006F] transition-colors duration-300 ease-in-out transform hover:scale-105 py-3 px-6 rounded-md hidden md:block">
               SUBSCRIBE & SAVE
             </button>
 
@@ -262,7 +277,7 @@ export default function Header() {
                       className="block py-2 text-lg font-semibold hover:text-[#EFE554] transition-colors"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      My Account
+                      MY ACCOUNT
                     </Link>
                   </li>
                   <li>
@@ -280,27 +295,45 @@ export default function Header() {
               ) : (
                 <>
                   <li className="border-b border-white/20 pb-2">
-                    <Link
-                      href="/auth/login"
-                      className="block py-2 text-lg font-semibold hover:text-[#EFE554] transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
+                    <button
+                      onClick={() => setShowAccountDropdown(!showAccountDropdown)}
+                      className="flex items-center justify-between w-full py-2 text-lg font-semibold hover:text-[#EFE554] transition-colors"
                     >
-                      Login
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/auth/register"
-                      onClick={() => setIsMenuOpen(false)}
-                      className="block w-full text-center bg-[#EFE554] text-[#55006F] py-3 px-4 rounded font-semibold hover:bg-[#55006F] hover:text-[#EFE554] transition-colors"
-                    >
-                      Register
-                    </Link>
+                      MY ACCOUNT
+                      <svg 
+                        className={`w-4 h-4 transition-transform ${showAccountDropdown ? 'rotate-180' : ''}`} 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    
+                    {showAccountDropdown && (
+                      <div className="mt-2 pl-4 space-y-2">
+                        <Link
+                          href="/auth/login"
+                          className="block py-2 text-base text-gray-300 hover:text-[#EFE554] transition-colors"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          Login
+                        </Link>
+                        <Link
+                          href="/auth/register"
+                          className="block py-2 text-base text-gray-300 hover:text-[#EFE554] transition-colors"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          Register
+                        </Link>
+                      </div>
+                    )}
                   </li>
                 </>
               )}
+              
               <li className="pt-4">
-                <button className="w-full bg-[#EFE554] text-white font-semibold py-3 px-4 rounded">
+                <button className="w-full bg-[#C2A83E] text-white font-semibold py-3 px-4 rounded hover:bg-[#55006F] transition-colors duration-300">
                   SUBSCRIBE & SAVE
                 </button>
               </li>

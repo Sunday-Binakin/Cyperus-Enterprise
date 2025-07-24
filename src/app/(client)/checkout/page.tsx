@@ -142,7 +142,7 @@ export default function CheckoutPage() {
         customer_name: shippingAddress.full_name,
         customer_phone: shippingAddress.phone,
       },
-      onSuccess: (response: any) => {
+      onSuccess: (response: unknown) => {
         console.log('Payment successful:', response);
       },
       onCancel: () => {
@@ -162,16 +162,20 @@ export default function CheckoutPage() {
 
       if (paymentMethod === 'paystack') {
         // Initialize Paystack payment
-        const paymentResponse = await handlePaystackPayment(orderId) as any;
+        const paymentResponse = await handlePaystackPayment(orderId);
         
-        if (paymentResponse && paymentResponse.status === 'success') {
+        if (paymentResponse && typeof paymentResponse === 'object' && 'status' in paymentResponse && paymentResponse.status === 'success') {
           // Clear cart on successful payment
           clearCart();
           
           // Redirect to success page
-          router.push(`/order-success?order_id=${orderId}&reference=${paymentResponse.reference}`);
+          const reference = (typeof paymentResponse === 'object' && 'reference' in paymentResponse) ? paymentResponse.reference : 'unknown';
+          router.push(`/order-success?order_id=${orderId}&reference=${reference}`);
         } else {
-          throw new Error(paymentResponse?.message || 'Payment failed');
+          const message = (typeof paymentResponse === 'object' && paymentResponse && 'message' in paymentResponse && typeof paymentResponse.message === 'string') 
+            ? paymentResponse.message 
+            : 'Payment failed';
+          throw new Error(message);
         }
       } else {
         // Cash on delivery
@@ -179,9 +183,9 @@ export default function CheckoutPage() {
         router.push(`/order-success?order_id=${orderId}&payment_method=cash`);
       }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Checkout error:', error);
-      toast.error(error.message || 'Failed to process order. Please try again.');
+      toast.error(error instanceof Error ? error.message : 'Failed to process order. Please try again.');
     } finally {
       setIsLoading(false);
     }

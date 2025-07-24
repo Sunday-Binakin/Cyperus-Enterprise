@@ -28,7 +28,7 @@ export default function CartPopover() {
             </div>
             
             <div className="max-h-80 overflow-y-auto space-y-4 mb-6">
-              {items.map((item, index) => (
+              {items.map((item) => (
                 <div
                   key={item.id}
                   className="flex items-center gap-4 p-3 bg-gray-900 rounded-lg border border-gray-800 hover:border-gray-700 transition-colors"

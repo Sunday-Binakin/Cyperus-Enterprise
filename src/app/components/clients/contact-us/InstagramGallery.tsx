@@ -1,143 +1,75 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
 import { InstagramPost } from './InstagramPost';
 import { INSTAGRAM_POSTS } from './types/instagram';
 
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
+
 export const InstagramGallery = () => {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-
-  // Get the current set of 5 posts (left-half, center-3, right-half)
-  const getDisplayedPosts = useCallback(() => {
-    const length = INSTAGRAM_POSTS.length;
-    return {
-      leftHalf: INSTAGRAM_POSTS[(currentIndex - 1 + length) % length],
-      center: [
-        INSTAGRAM_POSTS[currentIndex % length],
-        INSTAGRAM_POSTS[(currentIndex + 1) % length],
-        INSTAGRAM_POSTS[(currentIndex + 2) % length]
-      ],
-      rightHalf: INSTAGRAM_POSTS[(currentIndex + 3) % length]
-    };
-  }, [currentIndex]);
-
-  const { leftHalf, center, rightHalf } = getDisplayedPosts();
-
-  // Auto-rotate images every 10 seconds
-  useEffect(() => {
-    if (isPaused) return;
-    
-    const interval = setInterval(() => {
-      setCurrentIndex(prev => (prev + 1) % INSTAGRAM_POSTS.length);
-    }, 10000);
-
-    return () => clearInterval(interval);
-  }, [isPaused]);
-
-  const handleMouseEnter = (index: number) => {
-    setHoveredIndex(index);
-    setIsPaused(true);
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredIndex(null);
-    setIsPaused(false);
-  };
+  // Take first 6 posts for consistent display
+  const displayPosts = INSTAGRAM_POSTS.slice(0, 6);
 
   return (
-    <div className="w-full py-16 bg-black overflow-hidden">
+    <div className="w-full py-16 bg-black">
       <div className="max-w-6xl mx-auto px-4">
-        <h2 className="text-4xl font-bold mb-12 text-white text-center">
+        {/* Heading */}
+        <h2 className="text-3xl md:text-4xl font-bold mb-8 md:mb-12 text-white text-center">
           Follow Us on Instagram
         </h2>
         
-        <div className="relative w-full">
-          {/* Mobile horizontal scroll container */}
-          <div className="md:hidden overflow-x-auto pb-4 -mx-4 px-4">
-            <div className="flex space-x-4 w-max">
-              {INSTAGRAM_POSTS.map((post, index) => (
-                <div 
-                  key={`mobile-${post.id}-${index}`}
-                  className="w-[85vw] flex-shrink-0"
-                >
+        {/* Mobile Carousel - Swipeable with 1 image at a time */}
+        <div className="block md:hidden">
+          <Swiper
+            modules={[Pagination]}
+            spaceBetween={16}
+            slidesPerView={1.2}
+            centeredSlides={true}
+            pagination={{
+              clickable: true,
+              bulletClass: 'swiper-pagination-bullet !bg-white !opacity-50',
+              bulletActiveClass: 'swiper-pagination-bullet-active !bg-white !opacity-100',
+            }}
+            className="!pb-12"
+          >
+            {displayPosts.map((post, index) => (
+              <SwiperSlide key={`mobile-${post.id}-${index}`}>
+                <div className="w-[90vw] h-[300px] overflow-hidden rounded-xl border-2 border-white mx-auto">
                   <InstagramPost
                     {...post}
                     index={index}
-                    isHovered={false} // Disable hover on mobile
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-          
-          {/* Desktop layout */}
-          <div className="hidden lg:block relative w-full max-w-[2800px] mx-auto px-16">
-            <div className="flex items-stretch h-[600px] gap-8">
-              {/* Left half image - made slightly wider */}
-              <div className="w-[15%] overflow-hidden rounded-lg">
-                <div className="w-[200%] h-full transform -translate-x-1/4">
-                  <InstagramPost
-                    {...leftHalf}
-                    index={-1}
-                    className="pointer-events-none h-full object-cover"
+                    className="w-full h-full object-cover"
                     isHovered={false}
                   />
                 </div>
-              </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
 
-              {/* Center 3 full images - increased width */}
-              <div className="flex-[2] grid grid-cols-3 gap-8">
-                {center.map((post, index) => (
-                  <div 
-                    key={`center-${post.id}-${index}`}
-                    className="h-full transition-all duration-300 ease-in-out"
-                  >
-                    <InstagramPost
-                      {...post} 
-                      index={index}
-                      className="h-full w-[100rem]"
-                      isHovered={hoveredIndex === index}
-                      onMouseEnter={() => handleMouseEnter(index)}
-                      onMouseLeave={handleMouseLeave}
-                    />
-                  </div>
-                ))}
-              </div>
-
-              {/* Right half image - made slightly wider */}
-              <div className="w-[15%] overflow-hidden rounded-lg">
-                <div className="w-[200%] h-full">
-                  <InstagramPost
-                    {...rightHalf}
-                    index={INSTAGRAM_POSTS.length}
-                    className="pointer-events-none h-full object-cover"
-                    isHovered={false}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Tablet layout (original 3-column grid) */}
-          <div className="hidden md:block lg:hidden relative w-full">
-            <div className="grid grid-cols-3 gap-4">
-              {center.map((post, index) => (
-                <div 
-                  key={`tablet-${post.id}-${index}`}
-                  className="transition-all duration-300 ease-in-out"
-                >
+        {/* Desktop/Tablet Static Grid - 3 large images */}
+        <div className="hidden md:block">
+          <div className="grid grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {displayPosts.slice(0, 3).map((post, index) => (
+              <div 
+                key={`desktop-${post.id}-${index}`}
+                className="min-h-[400px] overflow-hidden rounded-xl border-2 border-white group cursor-pointer"
+              >
+                <div className="relative w-full h-full">
                   <InstagramPost
                     {...post}
                     index={index}
-                    isHovered={hoveredIndex === index}
-                    onMouseEnter={() => handleMouseEnter(index)}
-                    onMouseLeave={handleMouseLeave}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    isHovered={false}
                   />
+                  {/* Hover overlay */}
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300" />
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

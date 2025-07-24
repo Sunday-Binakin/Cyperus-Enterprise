@@ -142,7 +142,7 @@ async function handleChargeFailed(data: any) {
 
     // Send payment failure notification
     try {
-      await sendPaymentFailureNotification(orderId, data);
+      await sendPaymentFailureNotification(orderId);
     } catch (emailError) {
       console.error('Failed to send payment failure notification:', emailError);
     }
@@ -219,7 +219,7 @@ async function notifyAdminOfNewOrder(orderId: string, paymentData: any) {
   }
 }
 
-async function sendPaymentFailureNotification(orderId: string, paymentData: any) {
+async function sendPaymentFailureNotification(orderId: string) {
   try {
     // TODO: Implement with Supabase Edge Functions or email service
     console.log('Would send payment failure notification for order:', orderId);
