@@ -1,0 +1,136 @@
+/* Mobile-first responsive utilities for about-us page */
+
+/* Touch target optimization - minimum 48x48px tap targets */
+.touch-target {
+  min-height: 48px;
+  min-width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
+
+/* Touch spacing - 8px minimum between interactive elements */
+.touch-spacing {
+  gap: 8px;
+}
+
+@media (min-width: 640px) {
+  .touch-spacing {
+    gap: 12px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .touch-spacing {
+    gap: 16px;
+  }
+}
+
+/* Parallax optimization - disable on mobile for performance */
+@media (max-width: 768px) {
+  .bg-fixed {
+    background-attachment: scroll !important;
+  }
+}
+
+/* Footer positioning - ensure it appears after all content */
+footer {
+  position: relative;
+  z-index: 30;
+  background-color: #000000 !important;
+}
+
+/* Swiper pagination customization for Instagram gallery */
+.swiper-pagination {
+  position: relative !important;
+  margin-top: 1rem !important;
+}
+
+.swiper-pagination-bullet {
+  background-color: rgba(255, 255, 255, 0.5) !important;
+  width: 12px !important;
+  height: 12px !important;
+  margin: 0 4px !important;
+  opacity: 1 !important;
+  transition: all 0.3s ease !important;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: rgba(255, 255, 255, 1) !important;
+  transform: scale(1.2) !important;
+}
+
+/* Disable hover states on touch devices */
+@media (hover: none) {
+  .hover-only:hover {
+    transform: none !important;
+    opacity: 1 !important;
+    background-color: inherit !important;
+  }
+}
+
+/* Progressive image loading */
+.progressive-image {
+  background-color: #f3f4f6;
+  background-image: linear-gradient(45deg, #f3f4f6 25%, transparent 25%),
+                    linear-gradient(-45deg, #f3f4f6 25%, transparent 25%),
+                    linear-gradient(45deg, transparent 75%, #f3f4f6 75%),
+                    linear-gradient(-45deg, transparent 75%, #f3f4f6 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+/* Smooth transitions for mobile interactions */
+.mobile-smooth {
+  transition: all 0.2s ease-out;
+}
+
+/* Prevent zoom on double tap for input elements */
+input, select, textarea, button {
+  touch-action: manipulation;
+}
+
+/* Optimized text selection on mobile */
+.mobile-text {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+
+/* Scroll behavior optimization */
+.smooth-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Focus visible for accessibility */
+.focus-visible:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Responsive container with proper gutters */
+.responsive-container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .responsive-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}

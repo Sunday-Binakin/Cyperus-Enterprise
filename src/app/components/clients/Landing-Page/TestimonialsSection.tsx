@@ -11,11 +11,22 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
+// Testimonials interface
+interface Testimonial {
+  id: number;
+  image: string;
+  category: string;
+  name: string;
+  role: string;
+  quote: string;
+  categoryColor: string;
+}
+
 // Testimonials data
-const testimonials = [
+const testimonials: Testimonial[] = [
   {
     id: 1,
-    image: "https://images.unsplash.com/photo-1494790108755-2616b612b1c5?w=400&h=400&fit=crop&crop=face",
+    image: "/images/clients/testimonial/akosua.jpg",
     category: "Customer Story",
     name: "Akosua Mensah",
     role: "Health Enthusiast, Accra",
@@ -24,7 +35,7 @@ const testimonials = [
   },
   {
     id: 2,
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+    image: "/images/clients/testimonial/kwame.jpg",
     category: "Chef Review",
     name: "Chef Kwame Asante",
     role: "Executive Chef, Five Star Hotel",
@@ -33,7 +44,7 @@ const testimonials = [
   },
   {
     id: 3,
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face",
+    image: "/images/clients/testimonial/gym.jpg",
     category: "Fitness Journey",
     name: "Sarah Osei",
     role: "Fitness Trainer, Kumasi",
@@ -42,7 +53,7 @@ const testimonials = [
   },
   {
     id: 4,
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop&crop=face",
+    image: "/images/clients/testimonial/akosua.jpg",
     category: "Family Wellness",
     name: "Mama Abena",
     role: "Mother of 3, Tamale",
@@ -51,7 +62,7 @@ const testimonials = [
   },
   {
     id: 5,
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
+    image: "/images/clients/testimonial/kwame.jpg",
     category: "Business Owner",
     name: "Kofi Adjei",
     role: "Restaurant Owner, Cape Coast",
@@ -61,7 +72,7 @@ const testimonials = [
 ];
 
 // Testimonial Card Component - Identical structure to BlogCard
-const TestimonialCard = ({ testimonial, className = "" }: { testimonial: typeof testimonials[0], className?: string }) => (
+const TestimonialCard = ({ testimonial, className = "" }: { testimonial: Testimonial, className?: string }) => (
   <div className={`bg-gray-900 text-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 ${className}`}>
     <div className="relative h-96">
       <Image 

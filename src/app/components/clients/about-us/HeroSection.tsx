@@ -18,24 +18,22 @@ type HeroSectionProps = {
 
 export function HeroSection({ breadcrumbItems, title, backgroundImage }: HeroSectionProps) {
   return (
-    <div className="relative min-h-screen">
-      {/* Fixed Background Image */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute inset-0">
-          <Image
-            src={backgroundImage}
-            alt="Background"
-            fill
-            className="object-cover"
-            priority
-            quality={100}
-          />
-          <div className="absolute inset-0 bg-black/40" />
-        </div>
+    <div className="relative h-screen overflow-hidden">
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        <Image
+          src={backgroundImage}
+          alt="Background"
+          fill
+          className="object-cover"
+          priority
+          quality={100}
+        />
+        <div className="absolute inset-0 bg-black/40" />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 h-screen flex flex-col justify-center items-start px-4 md:px-8 lg:px-16 pt-32 pb-16">
+      <div className="relative z-10 h-full flex flex-col justify-center items-start px-4 md:px-8 lg:px-16 pt-32 pb-16">
         {/* Breadcrumb */}
         <nav className="mb-8">
           <ol className="flex items-center space-x-2 text-sm text-gray-300">

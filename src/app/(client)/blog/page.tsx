@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { HeroSection } from '@/app/components/shared/HeroSection';
-import BlogSection from '@/app/components/clients/Landing-Page/BlogSection';
+import BlogSection from '@/app/components/clients/Landing-Page/blogSection/BlogSection';
 import SubscribeSection from '@/app/components/clients/blog/SubscribeSection';
 
 export default function BlogPage() {
