@@ -1,0 +1,118 @@
+/* Blog Section Swiper Carousel Styles */
+
+.blog-swiper {
+  position: relative;
+  padding-bottom: 3rem;
+}
+
+.blog-swiper .swiper-pagination {
+  position: relative !important;
+  bottom: 0 !important;
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.blog-swiper .swiper-pagination-bullet {
+  width: 12px !important;
+  height: 12px !important;
+  margin: 0 6px !important;
+  background-color: #6b7280 !important; /* gray-500 */
+  opacity: 0.5 !important;
+  transition: all 0.3s ease !important;
+  cursor: pointer;
+}
+
+.blog-swiper .swiper-pagination-bullet-active {
+  background-color: #4A651F !important; /* brand green */
+  opacity: 1 !important;
+  transform: scale(1.2) !important;
+}
+
+.blog-swiper .swiper-slide {
+  height: auto !important;
+  display: flex;
+  align-items: stretch;
+}
+
+/* Custom Navigation Arrows */
+.swiper-button-prev-custom,
+.swiper-button-next-custom {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+
+.swiper-button-prev-custom:hover,
+.swiper-button-next-custom:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.swiper-button-prev-custom {
+  left: 0.5rem;
+}
+
+.swiper-button-next-custom {
+  right: 0.5rem;
+}
+
+/* Hide arrows on desktop */
+@media (min-width: 1024px) {
+  .swiper-button-prev-custom,
+  .swiper-button-next-custom {
+    display: none !important;
+  }
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 640px) {
+  .blog-swiper {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .swiper-button-prev-custom,
+  .swiper-button-next-custom {
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  .swiper-button-prev-custom {
+    left: 0.25rem;
+  }
+  
+  .swiper-button-next-custom {
+    right: 0.25rem;
+  }
+}
+
+/* Smooth card transitions */
+.blog-swiper .swiper-slide-active {
+  transform: scale(1);
+}
+
+.blog-swiper .swiper-slide:not(.swiper-slide-active) {
+  transform: scale(0.95);
+  opacity: 0.8;
+}
+
+.blog-swiper .swiper-slide {
+  transition: all 0.3s ease;
+}
+
+/* Ensure proper touch area for mobile */
+.blog-swiper .swiper-wrapper {
+  padding-bottom: 1rem;
+}

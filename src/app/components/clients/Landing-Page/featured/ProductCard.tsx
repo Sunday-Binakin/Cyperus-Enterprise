@@ -32,18 +32,19 @@ export default function ProductCard({ id, name, price, image }: ProductCardProps
   }).format(price);
 
   useEffect(() => {
-    setIsInCart(items.some(item => item.id === id.toString()));
+    setIsInCart(items.some(item => item.product_id === id.toString()));
   }, [items, id]);
 
   const addToCart = async () => {
     setIsAdding(true);
     
     try {
-      addItem({ 
-        id: id.toString(), // Convert to string to match cart context
-        name, 
-        price, 
-        image 
+      await addItem({
+        product_id: id.toString(), // Use product_id as required by cart context
+        name,
+        price,
+        image,
+        inventory: 999 // Default inventory for featured products
       });
       
       toast.success(`${name} added to cart!`, {
