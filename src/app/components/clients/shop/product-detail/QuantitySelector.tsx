@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 type QuantitySelectorProps = {
   initialQuantity?: number;
+  maxQuantity?: number;
   onQuantityChange?: (quantity: number) => void;
 };
 
 export function QuantitySelector({ 
   initialQuantity = 1, 
+  maxQuantity = 999,
   onQuantityChange 
 }: QuantitySelectorProps) {
   const [quantity, setQuantity] = useState(initialQuantity);
+
+  useEffect(() => {
+    setQuantity(initialQuantity);
+  }, [initialQuantity]);
 
   const handleDecrease = () => {
     const newQuantity = Math.max(1, quantity - 1);
@@ -18,7 +24,7 @@ export function QuantitySelector({
   };
 
   const handleIncrease = () => {
-    const newQuantity = quantity + 1;
+    const newQuantity = Math.min(maxQuantity, quantity + 1);
     setQuantity(newQuantity);
     onQuantityChange?.(newQuantity);
   };

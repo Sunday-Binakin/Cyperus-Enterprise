@@ -58,7 +58,7 @@ export default function BitterKolaPage() {
           <h2 className="text-3xl font-bold text-white mb-4">Our Bitter Kola Products</h2>
           <div className="w-24 h-1 bg-yellow-500 mx-auto"></div>
         </div>
-        <ProductGrid products={BITTER_KOLA_PRODUCTS} />
+        <ProductGrid products={BITTER_KOLA_PRODUCTS} categoryPath="bitter-kola" />
       </div>
     </div>
   );

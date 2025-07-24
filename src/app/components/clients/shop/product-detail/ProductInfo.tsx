@@ -1,15 +1,54 @@
-import { Product } from '@/app/data/products/bitterKola';
+'use client';
+
+import { Product } from '@/app/types/product';
 import { QuantitySelector } from './QuantitySelector';
 import { ProductDetails } from './ProductDetails';
+import { useCart } from '@/app/context/CartContext';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 type ProductInfoProps = {
   product: Product;
 };
 
 export function ProductInfo({ product }: ProductInfoProps) {
-  const handleQuantityChange = (quantity: number) => {
-    // Handle quantity change
-    console.log('Quantity changed:', quantity);
+  const { addItem } = useCart();
+  const [quantity, setQuantity] = useState(1);
+  const [isAdding, setIsAdding] = useState(false);
+
+  const handleQuantityChange = (newQuantity: number) => {
+    setQuantity(newQuantity);
+  };
+
+  const handleAddToCart = async () => {
+    if (product.stock === 0) return;
+    
+    setIsAdding(true);
+    
+    try {
+      // Add the item to cart based on selected quantity
+      for (let i = 0; i < quantity; i++) {
+        addItem({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+        });
+      }
+      
+      toast.success(`${quantity} x ${product.name} added to cart!`, {
+        duration: 2000,
+        style: {
+          background: '#4A651F',
+          color: 'white',
+          border: '1px solid #EFE554',
+        },
+      });
+    } catch (error) {
+      toast.error('Failed to add item to cart');
+    } finally {
+      setTimeout(() => setIsAdding(false), 500);
+    }
   };
 
   return (
@@ -23,24 +62,32 @@ export function ProductInfo({ product }: ProductInfoProps) {
       <div className="mt-8 border-t border-gray-700 pt-6">
         <div className="flex items-center justify-between">
           <QuantitySelector 
+            initialQuantity={quantity}
             onQuantityChange={handleQuantityChange}
+            maxQuantity={product.stock}
           />
           
           <div className="text-right">
-            <p className="text-sm text-gray-400 mb-1">Price</p>
-            <p className="text-xl font-bold text-[#EFE554]">${product.price.toFixed(2)}</p>
+            <p className="text-sm text-gray-400 mb-1">Total Price</p>
+            <p className="text-xl font-bold text-[#EFE554]">${(product.price * quantity).toFixed(2)}</p>
           </div>
         </div>
 
         <div className="mt-6">
           <button
             type="button"
-            className="w-full flex items-center justify-center rounded-md bg-[#EFE554] px-6 py-3 text-base font-medium text-black hover:bg-[#d4ce4d] focus:outline-none focus:ring-2 focus:ring-[#EFE554] focus:ring-offset-2 focus:ring-offset-gray-900 transition-colors"
+            onClick={handleAddToCart}
+            disabled={product.stock === 0 || isAdding}
+            className={`w-full flex items-center justify-center rounded-md px-6 py-3 text-base font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 ${
+              product.stock > 0 && !isAdding
+                ? 'bg-[#EFE554] text-black hover:bg-[#d4ce4d] focus:ring-[#EFE554] active:scale-95'
+                : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+            } ${isAdding ? 'scale-95 bg-[#4A651F] text-white' : ''}`}
           >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg className={`w-5 h-5 mr-2 transition-transform duration-300 ${isAdding ? 'scale-110' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
-            Add to Cart
+            {isAdding ? 'Adding to Cart...' : product.stock > 0 ? `Add ${quantity} to Cart` : 'Out of Stock'}
           </button>
         </div>
 
@@ -51,6 +98,12 @@ export function ProductInfo({ product }: ProductInfoProps) {
             </svg>
             <p className="ml-1 text-sm text-gray-400">4.9 <span className="text-gray-500">(24 Reviews)</span></p>
           </div>
+        </div>
+        
+        <div className="mt-4">
+          <p className="text-sm text-gray-400">
+            In Stock: <span className="text-[#EFE554] font-medium">{product.stock} units</span>
+          </p>
         </div>
       </div>
 

@@ -68,6 +68,7 @@ function ProductDetailContent() {
             <RelatedProducts 
               products={BITTER_KOLA_PRODUCTS} 
               currentProductId={product.id} 
+              categoryPath="bitter-kola"
             />
           </div>
         </div>
