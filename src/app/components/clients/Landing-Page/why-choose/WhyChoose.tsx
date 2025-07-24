@@ -1,8 +1,6 @@
 'use client'
 import { ChevronRight } from 'lucide-react';
 import Image from 'next/image';
-import { GiHut } from 'react-icons/gi';
-import { GiMuscleUp } from 'react-icons/gi';
 import { GiHerbsBundle } from "react-icons/gi";
 import { TbBottleFilled } from "react-icons/tb";
 

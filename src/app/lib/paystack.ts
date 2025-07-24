@@ -1,3 +1,14 @@
+// Extend Window interface to include PaystackPop
+declare global {
+  interface Window {
+    PaystackPop?: {
+      setup: (config: unknown) => {
+        openIframe: () => void;
+      };
+    };
+  }
+}
+
 export interface PaystackConfig {
   publicKey: string;
   secretKey: string;
@@ -17,7 +28,7 @@ export interface PaystackTransaction {
   currency?: string;
   reference?: string;
   callback_url?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   channels?: string[];
   split_code?: string;
   subaccount?: string;
@@ -28,7 +39,7 @@ export interface PaystackTransaction {
 export interface PaystackResponse {
   status: boolean;
   message: string;
-  data: any;
+  data: unknown;
 }
 
 export interface PaystackVerificationResponse {
@@ -47,10 +58,10 @@ export interface PaystackVerificationResponse {
     channel: string;
     currency: string;
     ip_address: string;
-    metadata: Record<string, any>;
-    log: any;
+    metadata: Record<string, unknown>;
+    log: unknown;
     fees: number;
-    fees_split: any;
+    fees_split: unknown;
     authorization: {
       authorization_code: string;
       bin: string;

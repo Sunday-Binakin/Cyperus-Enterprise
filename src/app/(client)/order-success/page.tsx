@@ -441,11 +441,11 @@ export default function OrderSuccessPage() {
               <div className="space-y-3 text-sm text-gray-400">
                 <div className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-[#EFE554] rounded-full mt-2 flex-shrink-0"></div>
-                  <p>You'll receive an email confirmation shortly</p>
+                  <p>You&apos;ll receive an email confirmation shortly</p>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-[#EFE554] rounded-full mt-2 flex-shrink-0"></div>
-                  <p>We'll notify you when your order ships</p>
+                  <p>We&apos;ll notify you when your order ships</p>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-[#EFE554] rounded-full mt-2 flex-shrink-0"></div>

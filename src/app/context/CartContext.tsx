@@ -17,6 +17,35 @@ interface CartItem {
   inventory: number; // Available stock
 }
 
+interface DatabaseCartItem {
+  id: string;
+  product_id: string;
+  variant_id?: string;
+  quantity: number;
+  price: number;
+  products?: {
+    name: string;
+    image_url: string;
+    inventory: number;
+  } | null;
+  variants?: {
+    name: string;
+    inventory: number;
+  } | null;
+}
+
+interface LocalStorageCartItem {
+  id?: string;
+  product_id?: string;
+  variant_id?: string;
+  name: string;
+  variant_name?: string;
+  price: number;
+  image: string;
+  quantity: number;
+  inventory?: number;
+}
+
 interface CartContextType {
   items: CartItem[];
   addItem: (item: {
@@ -112,7 +141,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      const cartItems: CartItem[] = (data || []).map((item: any) => ({
+      const cartItems: CartItem[] = (data || []).map((item: DatabaseCartItem) => ({
         id: item.id,
         product_id: item.product_id,
         variant_id: item.variant_id,
@@ -141,7 +170,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (savedCart) {
         const localItems = JSON.parse(savedCart);
         // Convert localStorage format to database format
-        const cartItems: CartItem[] = localItems.map((item: any, index: number) => ({
+        const cartItems: CartItem[] = localItems.map((item: LocalStorageCartItem, index: number) => ({
           id: `local_${index}`, // Temporary ID for local items
           product_id: item.id || item.product_id || `temp_${index}`,
           variant_id: item.variant_id,

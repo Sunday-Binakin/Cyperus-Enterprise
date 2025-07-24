@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/app/context/AuthContext';
 import { toast } from 'sonner';
-import { Metadata } from 'next';
 
 export default function SetPassword() {
     const { resetPassword } = useAuth();
@@ -37,8 +36,9 @@ export default function SetPassword() {
             toast.success('Password set successfully!');
             setPassword('');
             setConfirmPassword('');
-        } catch (error: any) {
-            toast.error(error.message || 'Failed to set password');
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : 'Failed to set password';
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }

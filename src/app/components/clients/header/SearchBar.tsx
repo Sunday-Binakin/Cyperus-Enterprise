@@ -1,10 +1,6 @@
 import { Search } from 'lucide-react';
 
-interface SearchBarProps {
-  isMobile?: boolean;
-}
-
-export default function SearchBar({ isMobile = false }: SearchBarProps) {
+export default function SearchBar() {
   return (
     <div className="relative w-full -mt-8 gap-2 ">
       {/* <hr className="w-full border-t border-gray-300 " /> */}

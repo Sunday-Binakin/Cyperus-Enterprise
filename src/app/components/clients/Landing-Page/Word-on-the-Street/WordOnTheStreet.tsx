@@ -81,9 +81,9 @@ const TestimonialCard = ({ testimonial, className = "" }: { testimonial: typeof 
         <h3 className="text-2xl font-bold mb-2 line-clamp-2">{testimonial.name}</h3>
         <p className="text-sm text-[#EFE554] mb-2">{testimonial.role}</p>
         <p className="text-gray-300 mb-4 line-clamp-3 italic relative">
-          <span className="text-[#EFE554] text-2xl absolute -top-2 -left-1">"</span>
+          <span className="text-[#EFE554] text-2xl absolute -top-2 -left-1">&ldquo;</span>
           <span className="ml-3">{testimonial.quote}</span>
-          <span className="text-[#EFE554] text-2xl">"</span>
+          <span className="text-[#EFE554] text-2xl">&rdquo;</span>
         </p>
         <div className="flex items-center">
           <span className="text-sm text-gray-400">Read Testimonial</span>
@@ -155,7 +155,7 @@ export default function Testimonials() {
 
         {/* Desktop Grid View - Identical to BlogSection */}
         <div className="hidden lg:grid lg:grid-cols-3 gap-6 mb-10">
-          {testimonials.slice(0, 3).map((testimonial, index) => (
+          {testimonials.slice(0, 3).map((testimonial) => (
             <TestimonialCard 
               key={testimonial.id} 
               testimonial={testimonial} 

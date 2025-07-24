@@ -24,8 +24,8 @@ export default function LoginPage() {
       setLoading(true);
       await signIn(formData.email, formData.password);
       router.push('/account');
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : 'An error occurred');
     } finally {
       setLoading(false);
     }
@@ -40,8 +40,8 @@ export default function LoginPage() {
     try {
       await resetPassword(formData.email);
       toast.success('Check your email for the password reset link!');
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : 'An error occurred');
     }
   };
 
@@ -128,8 +128,8 @@ export default function LoginPage() {
                   setSocialLoading('google');
                   try {
                     await signInWithProvider('google');
-                  } catch (error: any) {
-                    toast.error(error.message);
+                  } catch (error: unknown) {
+                    toast.error(error instanceof Error ? error.message : 'An error occurred');
                   } finally {
                     setSocialLoading(null);
                   }
@@ -146,8 +146,8 @@ export default function LoginPage() {
                   setSocialLoading('github');
                   try {
                     await signInWithProvider('github');
-                  } catch (error: any) {
-                    toast.error(error.message);
+                  } catch (error: unknown) {
+                    toast.error(error instanceof Error ? error.message : 'An error occurred');
                   } finally {
                     setSocialLoading(null);
                   }

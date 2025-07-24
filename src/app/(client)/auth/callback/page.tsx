@@ -21,8 +21,8 @@ export default function AuthCallbackPage() {
         
         // Redirect to account page on successful authentication
         router.push('/account');
-      } catch (error: any) {
-        console.error('Error during OAuth callback:', error.message);
+      } catch (error: unknown) {
+        console.error('Error during OAuth callback:', error instanceof Error ? error.message : 'Unknown error');
         router.push('/auth/login');
       }
     };

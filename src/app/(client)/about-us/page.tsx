@@ -8,7 +8,6 @@ import OurStats from '@/app/components/clients/about-us/OurStats';
 import { MeetOurCeo } from '@/app/components/clients/about-us/MeetOurCeo';
 import InstagramGallery from '@/app/components/clients/contact-us/InstagramGallery';
 import Testimonials from '@/app/components/clients/Landing-Page/TestimonialsSection';
-import Footer from '@/app/components/clients/Footer';
 import '@/app/components/clients/about-us/responsive.css';
 
 

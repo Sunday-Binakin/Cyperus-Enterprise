@@ -1,5 +1,4 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { toast } from 'sonner';
 
 // Types
 export interface ShippingAddress {

@@ -2,7 +2,7 @@ export default function ContactCTASection() {
   return (
     <section className="py-16 bg-black text-white">
       <div className="container mx-auto px-6 text-center">
-        <h2 className="text-3xl font-bold font-serif mb-8">Ready to Partner? Let's Grow Together!</h2>
+        <h2 className="text-3xl font-bold font-serif mb-8">Ready to Partner? Let&apos;s Grow Together!</h2>
         
         <div className="mb-12">
           <p className="text-xl mb-2">
