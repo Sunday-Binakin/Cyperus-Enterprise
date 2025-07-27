@@ -22,8 +22,8 @@ export const Register = () => {
             await signUp(email, tempPassword);
             toast.success('Registration successful! Check your email to set your password.');
             router.push('/auth/login');
-        } catch (error: any) {
-            toast.error(error.message);
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : 'Registration failed');
         } finally {
             setLoading(false);
         }

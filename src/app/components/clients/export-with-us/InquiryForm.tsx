@@ -1,11 +1,25 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
-import { createClient } from '@supabase/supabase-js';
 
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Mock inquiry service (replaces Supabase)
+class MockInquiryService {
+  async submitInquiry(inquiryData: Record<string, unknown>) {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Log the inquiry (in a real app, this would be saved to a database)
+    console.log('New inquiry submitted:', inquiryData);
+    
+    // Simulate successful submission
+    return {
+      success: true,
+      message: 'Inquiry submitted successfully',
+      id: `inquiry_${Date.now()}`
+    };
+  }
+}
+
+const mockInquiryService = new MockInquiryService();
 
 // Countries list for dropdown
 const countries = [
@@ -69,20 +83,19 @@ export default function InquiryForm() {
         .filter(([, isSelected]) => isSelected)
         .map(([interest]) => interest);
 
-      // Insert into Supabase
-      const { error } = await supabase
-        .from('export_inquiries')
-        .insert({
-          name: formData.name,
-          company: formData.company,
-          email: formData.email,
-          country: formData.country,
-          interests: selectedInterests,
-          message: formData.message,
-          newsletter_subscription: formData.newsletter,
-        });
+      // Submit using mock service
+      const result = await mockInquiryService.submitInquiry({
+        name: formData.name,
+        company: formData.company,
+        email: formData.email,
+        country: formData.country,
+        interests: selectedInterests,
+        message: formData.message,
+        newsletter_subscription: formData.newsletter,
+        submitted_at: new Date().toISOString(),
+      });
 
-      if (error) throw error;
+      if (!result.success) throw new Error(result.message);
 
       toast.success("Thank you! We'll contact you within 24 hours.");
       

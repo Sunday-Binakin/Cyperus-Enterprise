@@ -2,22 +2,20 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@supabase/supabase-js';
-
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default function AuthCallbackPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Handle the OAuth callback
+    // Mock OAuth callback handling
     const handleOAuthCallback = async () => {
       try {
-        const { error } = await supabase.auth.getSession();
-        if (error) throw error;
+        // In a real app, you'd handle OAuth callback here
+        // For mock, we'll just redirect to account page
+        console.log('Mock OAuth callback completed');
+        
+        // Simulate delay for processing
+        await new Promise(resolve => setTimeout(resolve, 1000));
         
         // Redirect to account page on successful authentication
         router.push('/account');

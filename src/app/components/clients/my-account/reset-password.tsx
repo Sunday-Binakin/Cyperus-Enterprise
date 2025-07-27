@@ -22,8 +22,8 @@ export default function ResetPassword() {
             await resetPassword(email);
             toast.success('Password reset email sent! Check your inbox.');
             setEmail(''); // Clear the form
-        } catch (error: any) {
-            toast.error(error.message || 'Failed to send reset email');
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : 'Failed to send reset email');
         } finally {
             setLoading(false);
         }

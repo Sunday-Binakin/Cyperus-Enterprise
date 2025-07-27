@@ -29,10 +29,11 @@ export function ProductInfo({ product }: ProductInfoProps) {
       // Add the item to cart based on selected quantity
       for (let i = 0; i < quantity; i++) {
         addItem({
-          id: product.id,
+          product_id: product.id,
           name: product.name,
           price: product.price,
           image: product.image,
+          inventory: product.stock
         });
       }
       
@@ -44,7 +45,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
           border: '1px solid #EFE554',
         },
       });
-    } catch (error) {
+    } catch {
       toast.error('Failed to add item to cart');
     } finally {
       setTimeout(() => setIsAdding(false), 500);

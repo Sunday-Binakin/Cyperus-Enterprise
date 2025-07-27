@@ -30,7 +30,7 @@ export default function CartPopover() {
             <div className="max-h-80 overflow-y-auto space-y-4 mb-6">
               {items.map((item) => (
                 <div
-                  key={item.id}
+                  key={item.product_id}
                   className="flex items-center gap-4 p-3 bg-gray-900 rounded-lg border border-gray-800 hover:border-gray-700 transition-colors"
                 >
                   <div className="relative h-16 w-16 flex-shrink-0">
@@ -56,15 +56,15 @@ export default function CartPopover() {
                       </p>
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          onClick={() => updateQuantity(item.product_id, (item.quantity || 1) - 1)}
                           className="w-6 h-6 rounded-full bg-gray-700 text-white text-xs hover:bg-gray-600 transition-colors flex items-center justify-center"
-                          disabled={item.quantity <= 1}
+                          disabled={(item.quantity || 1) <= 1}
                         >
                           -
                         </button>
-                        <span className="text-xs text-gray-300 w-8 text-center">{item.quantity}</span>
+                        <span className="text-xs text-gray-300 w-8 text-center">{item.quantity || 1}</span>
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          onClick={() => updateQuantity(item.product_id, (item.quantity || 1) + 1)}
                           className="w-6 h-6 rounded-full bg-gray-700 text-white text-xs hover:bg-gray-600 transition-colors flex items-center justify-center"
                         >
                           +
@@ -76,12 +76,12 @@ export default function CartPopover() {
                         style: 'currency',
                         currency: 'GHS',
                         minimumFractionDigits: 2
-                      }).format(item.price * item.quantity).replace('GHS', 'GH₵')}
+                      }).format(item.price * (item.quantity || 1)).replace('GHS', 'GH₵')}
                     </p>
                   </div>
                   
                   <button
-                    onClick={() => removeItem(item.id)}
+                    onClick={() => removeItem(item.product_id)}
                     className="text-red-400 hover:text-red-300 transition-colors p-1"
                     title="Remove item"
                   >

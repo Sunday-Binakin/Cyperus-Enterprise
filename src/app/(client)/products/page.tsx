@@ -1,59 +1,42 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { productService } from '@/app/lib/product-service';
-import { useCart } from '@/app/context/CartContext';
+import { useState, useEffect, useCallback } from 'react';
+import { productService, ProductSearchFilters } from '@/app/lib/product-service';
+import { Product, ProductVariant } from '@/app/lib/mock-data';
+import { useCart, CartItem } from '@/app/context/CartContext';
 import { toast } from 'sonner';
-
-interface Product {
-  id: string;
-  name: string;
-  description: string | null;
-  price: number;
-  image_url: string | null;
-  category: string | null;
-  inventory: number;
-  is_active: boolean;
-  variants?: Variant[];
-}
-
-interface Variant {
-  id: string;
-  product_id: string;
-  name: string;
-  price_modifier: number;
-  inventory: number;
-  is_active: boolean;
-}
+import Image from 'next/image';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [cartLoading, setCartLoading] = useState(false);
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState('');
-  const { addItem, isLoading: cartLoading } = useCart();
+  const { addItem } = useCart();
 
-  useEffect(() => {
-    loadProducts();
-    loadCategories();
-  }, [selectedCategory]);
-
-  const loadProducts = async () => {
+  const loadProducts = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await productService.getProducts({
-        category: selectedCategory || undefined,
-        limit: 50
-      });
-      setProducts(data || []);
+      const filters: ProductSearchFilters = {};
+      if (selectedCategory) filters.category = selectedCategory;
+      if (searchQuery) filters.search = searchQuery;
+      
+      const result = await productService.getProducts(filters, 1, 50);
+      setProducts(result.products || []);
     } catch (error) {
       console.error('Error loading products:', error);
       toast.error('Failed to load products');
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedCategory, searchQuery]);
+
+  useEffect(() => {
+    loadProducts();
+    loadCategories();
+  }, [loadProducts]);
 
   const loadCategories = async () => {
     try {
@@ -82,23 +65,28 @@ export default function ProductsPage() {
     }
   };
 
-  const handleAddToCart = async (product: Product, variant?: Variant) => {
+  const handleAddToCart = async (product: Product, variant?: ProductVariant) => {
     try {
+      setCartLoading(true);
       const finalPrice = variant 
-        ? product.price + variant.price_modifier 
+        ? product.price + variant.price 
         : product.price;
 
-      await addItem({
+      const cartItem: CartItem = {
         product_id: product.id,
-        variant_id: variant?.id,
-        name: product.name,
-        variant_name: variant?.name,
+        name: variant ? `${product.name} - ${variant.name}` : product.name,
         price: finalPrice,
         image: product.image_url || '/placeholder-product.jpg',
-        inventory: variant ? variant.inventory : product.inventory
-      });
+        inventory: variant ? variant.stock_quantity : product.stock_quantity
+      };
+
+      await addItem(cartItem);
+      toast.success('Added to cart successfully!');
     } catch (error) {
       console.error('Error adding to cart:', error);
+      toast.error('Failed to add to cart');
+    } finally {
+      setCartLoading(false);
     }
   };
 
@@ -178,11 +166,13 @@ export default function ProductsPage() {
               key={product.id}
               className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
             >
-              <div className="aspect-square overflow-hidden">
-                <img
+              <div className="aspect-square overflow-hidden relative">
+                <Image
                   src={product.image_url || '/placeholder-product.jpg'}
                   alt={product.name}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  className="object-cover hover:scale-105 transition-transform duration-300"
                 />
               </div>
               <div className="p-4">
@@ -197,7 +187,7 @@ export default function ProductsPage() {
                     GH₵{product.price.toFixed(2)}
                   </span>
                   <span className="text-sm text-gray-500">
-                    Stock: {product.inventory}
+                    Stock: {product.stock_quantity}
                   </span>
                 </div>
 
@@ -206,16 +196,16 @@ export default function ProductsPage() {
                   <div className="mb-3">
                     <p className="text-sm font-medium text-gray-700 mb-2">Variants:</p>
                     <div className="space-y-1">
-                      {product.variants.filter(v => v.is_active).map((variant) => (
+                      {product.variants && product.variants.map((variant) => (
                         <div key={variant.id} className="flex items-center justify-between text-sm">
                           <span>{variant.name}</span>
                           <div className="flex items-center gap-2">
                             <span className="text-blue-600 font-medium">
-                              +GH₵{variant.price_modifier.toFixed(2)}
+                              GH₵{variant.price.toFixed(2)}
                             </span>
                             <button
                               onClick={() => handleAddToCart(product, variant)}
-                              disabled={cartLoading || variant.inventory === 0}
+                              disabled={cartLoading || variant.stock_quantity === 0}
                               className="px-2 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
                             >
                               Add
@@ -229,10 +219,10 @@ export default function ProductsPage() {
 
                 <button
                   onClick={() => handleAddToCart(product)}
-                  disabled={cartLoading || product.inventory === 0}
+                  disabled={cartLoading || product.stock_quantity === 0}
                   className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
                 >
-                  {cartLoading ? 'Adding...' : product.inventory === 0 ? 'Out of Stock' : 'Add to Cart'}
+                  {cartLoading ? 'Adding...' : product.stock_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
                 </button>
               </div>
             </div>

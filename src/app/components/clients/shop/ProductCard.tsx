@@ -28,10 +28,11 @@ export default function ProductCard({ product, categoryPath = 'bitter-kola' }: P
     
     try {
       addItem({
-        id: product.id,
+        product_id: product.id,
         name: product.name,
         price: product.price,
         image: product.image,
+        inventory: product.stock
       });
       
       toast.success(`${product.name} added to cart!`, {
@@ -42,7 +43,7 @@ export default function ProductCard({ product, categoryPath = 'bitter-kola' }: P
           border: '1px solid #EFE554',
         },
       });
-    } catch (error) {
+    } catch {
       toast.error('Failed to add item to cart');
     } finally {
       setTimeout(() => setIsAdding(false), 500);
