@@ -68,7 +68,7 @@ export default function Slideshow() {
               <div className="flex flex-col sm:flex-row gap-4 md:gap-6">
                 <a 
                   href={slide.primaryButton.link}
-                  className="bg-[#55006F] text-white px-6 py-3 md:px-8 md:py-4 rounded hover:bg-[#55006F]/90 transition-colors text-base md:text-lg font-semibold tracking-wide shadow-lg"
+                  className="bg-[#4A651F] text-white px-6 py-3 md:px-8 md:py-4 rounded hover:bg-[#55006F]/90 transition-colors text-base md:text-lg font-semibold tracking-wide shadow-lg"
                 >
                   {slide.primaryButton.text}
                 </a>

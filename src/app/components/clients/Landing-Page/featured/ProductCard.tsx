@@ -19,7 +19,13 @@ export default function ProductCard({ id, name, price, image }: ProductCardProps
   const [isInCart, setIsInCart] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   
-  // Add safety check for id
+  useEffect(() => {
+    if (id && items) {
+      setIsInCart(items.some(item => item.product_id === id.toString()));
+    }
+  }, [items, id]);
+  
+  // Add safety check for id - move after hooks
   if (!id || !name || !price || !image) {
     console.error('ProductCard: Missing required props', { id, name, price, image });
     return null;
@@ -30,10 +36,6 @@ export default function ProductCard({ id, name, price, image }: ProductCardProps
     currency: 'GHS',
     minimumFractionDigits: 2
   }).format(price);
-
-  useEffect(() => {
-    setIsInCart(items.some(item => item.product_id === id.toString()));
-  }, [items, id]);
 
   const addToCart = async () => {
     setIsAdding(true);
@@ -55,7 +57,7 @@ export default function ProductCard({ id, name, price, image }: ProductCardProps
           border: '1px solid #EFE554',
         },
       });
-    } catch (error) {
+    } catch {
       toast.error('Failed to add item to cart');
     } finally {
       setTimeout(() => setIsAdding(false), 500);

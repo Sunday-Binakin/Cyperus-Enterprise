@@ -1,38 +1,21 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-// Initialize Supabase client with fallback handling
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-let supabase: SupabaseClient | null = null;
-
-if (supabaseUrl && supabaseKey) {
-  try {
-    supabase = createClient(supabaseUrl, supabaseKey);
-  } catch (error) {
-    console.error('Failed to initialize Supabase client:', error);
-  }
-} else {
-  console.warn('Supabase configuration missing. Please check your environment variables.');
-  console.warn('Required: NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY');
-}
-
-type User = {
+// Mock user interface
+interface MockUser {
   id: string;
   email?: string;
   user_metadata?: {
     full_name?: string;
     avatar_url?: string;
   };
-};
+}
 
 type Provider = 'google' | 'github';
 
 interface AuthContextType {
-  user: User | null;
+  user: MockUser | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -44,101 +27,150 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Mock users database (in real app, this would be a backend)
+const mockUsers: MockUser[] = [
+  { 
+    id: '1', 
+    email: 'admin@cyperus.com', 
+    user_metadata: { full_name: 'Admin User', avatar_url: '' } 
+  },
+  { 
+    id: '2', 
+    email: 'user@example.com', 
+    user_metadata: { full_name: 'Test User', avatar_url: '' } 
+  },
+];
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<MockUser | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Check for existing session on mount
   useEffect(() => {
-    if (!supabase) {
-      console.warn('Supabase not available, user will remain null');
-      setLoading(false);
-      return;
+    const savedUser = localStorage.getItem('cyperus_auth_user');
+    if (savedUser) {
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch (error) {
+        console.error('Error parsing saved user:', error);
+        localStorage.removeItem('cyperus_auth_user');
+      }
     }
-
-    // Check active session
-    supabase.auth.getSession().then(({ data: { session } }: any) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
-    }).catch((error: any) => {
-      console.error('Error getting session:', error);
-      setLoading(false);
-    });
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    setLoading(false);
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    if (!supabase) {
-      throw new Error('Authentication service not available. Please check your configuration.');
+    setLoading(true);
+    
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Mock authentication logic
+    const foundUser = mockUsers.find(u => u.email === email);
+    
+    if (foundUser && password.length >= 6) {
+      setUser(foundUser);
+      localStorage.setItem('cyperus_auth_user', JSON.stringify(foundUser));
+      setLoading(false);
+      return;
     }
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) throw error;
+    
+    setLoading(false);
+    throw new Error('Invalid email or password');
   };
 
   const signUp = async (email: string, password: string) => {
-    if (!supabase) {
-      throw new Error('Authentication service not available. Please check your configuration.');
+    setLoading(true);
+    
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Check if user already exists
+    const existingUser = mockUsers.find(u => u.email === email);
+    if (existingUser) {
+      setLoading(false);
+      throw new Error('User already exists with this email');
     }
-    const { error } = await supabase.auth.signUp({ email, password });
-    if (error) throw error;
+    
+    if (password.length < 6) {
+      setLoading(false);
+      throw new Error('Password must be at least 6 characters');
+    }
+    
+    // Create new user
+    const newUser: MockUser = {
+      id: Date.now().toString(),
+      email,
+      user_metadata: { 
+        full_name: email.split('@')[0], 
+        avatar_url: '' 
+      }
+    };
+    
+    mockUsers.push(newUser);
+    setUser(newUser);
+    localStorage.setItem('cyperus_auth_user', JSON.stringify(newUser));
+    setLoading(false);
   };
 
   const signOut = async () => {
-    if (!supabase) {
-      throw new Error('Authentication service not available. Please check your configuration.');
-    }
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
+    setUser(null);
+    localStorage.removeItem('cyperus_auth_user');
   };
 
   const resetPassword = async (email: string) => {
-    if (!supabase) {
-      throw new Error('Authentication service not available. Please check your configuration.');
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    const foundUser = mockUsers.find(u => u.email === email);
+    if (!foundUser) {
+      throw new Error('User not found');
     }
-    const { error } = await supabase.auth.resetPasswordForEmail(email);
-    if (error) throw error;
+    
+    // In a real app, this would send an email
+    console.log(`Password reset email sent to ${email}`);
   };
 
   const signInWithProvider = async (provider: Provider) => {
-    if (!supabase) {
-      throw new Error('Authentication service not available. Please check your configuration.');
-    }
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider,
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`
+    setLoading(true);
+    
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Mock OAuth flow
+    const mockUser: MockUser = {
+      id: Date.now().toString(),
+      email: `user@${provider}.com`,
+      user_metadata: { 
+        full_name: `${provider} User`, 
+        avatar_url: '' 
       }
-    });
-    if (error) throw error;
+    };
+    
+    setUser(mockUser);
+    localStorage.setItem('cyperus_auth_user', JSON.stringify(mockUser));
+    setLoading(false);
   };
 
   const updateProfile = async (profile: { full_name?: string; avatar_url?: string }) => {
-    if (!supabase) {
-      throw new Error('Authentication service not available. Please check your configuration.');
+    if (!user) {
+      throw new Error('No user logged in');
     }
-    const { error } = await supabase.auth.updateUser({
-      data: profile
-    });
-    if (error) throw error;
+
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500));
 
     // Update local user state
-    if (user) {
-      setUser({
-        ...user,
-        user_metadata: {
-          ...user.user_metadata,
-          ...profile
-        }
-      });
-    }
+    const updatedUser = {
+      ...user,
+      user_metadata: {
+        ...user.user_metadata,
+        ...profile
+      }
+    };
+    
+    setUser(updatedUser);
+    localStorage.setItem('cyperus_auth_user', JSON.stringify(updatedUser));
   };
 
   const value = {

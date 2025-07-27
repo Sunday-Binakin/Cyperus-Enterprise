@@ -9,7 +9,7 @@ export interface PaystackPaymentData {
     order_id: string;
     customer_name?: string;
     phone?: string;
-    [key: string]: any;
+    [key: string]: string | number | boolean | null | undefined;
   };
   channels?: string[];
 }
@@ -27,10 +27,27 @@ export interface PaystackTransaction {
   channel: string;
   currency: string;
   ip_address: string;
-  metadata: any;
-  log: any;
+  metadata: Record<string, string | number | boolean | null | undefined>;
+  log: {
+    time_spent: number;
+    attempts: number;
+    authentication: string | null;
+    errors: number;
+    success: boolean;
+    mobile: boolean;
+    input: Array<{
+      field: string;
+      value: string | number | boolean | null;
+    }>;
+    channel: string | null;
+    history: Array<{
+      type: string;
+      message: string;
+      time: number;
+    }>;
+  };
   fees: number;
-  fees_split: any;
+  fees_split: Record<string, number>;
   authorization: {
     authorization_code: string;
     bin: string;
@@ -53,19 +70,36 @@ export interface PaystackTransaction {
     email: string;
     customer_code: string;
     phone: string | null;
-    metadata: any;
+    metadata: Record<string, string | number | boolean | null | undefined>;
     risk_action: string;
     international_format_phone: string | null;
   };
-  plan: any;
-  split: any;
+  plan: {
+    name: string;
+    plan_code: string;
+    description: string | null;
+  } | null;
+  split: {
+    type: string;
+    subaccount: string;
+    bearer_type: string;
+    bearer_subaccount: string;
+  } | null;
   order_id: string | null;
   paidAt: string | null;
   createdAt: string;
   requested_amount: number;
-  pos_transaction_data: any;
-  source: any;
-  fees_breakdown: any;
+  pos_transaction_data: Record<string, unknown> | null;
+  source: {
+    type: string;
+    source: string;
+    identifier: string | null;
+  } | null;
+  fees_breakdown: Array<{
+    amount: number;
+    type: string;
+    subtype?: string;
+  }> | null;
 }
 
 export class PaystackService {
@@ -175,7 +209,7 @@ export class PaystackService {
     first_name?: string;
     last_name?: string;
     phone?: string;
-    metadata?: any;
+    metadata?: Record<string, string | number | boolean | null | undefined>;
   }) {
     try {
       const response = await fetch(`${this.baseUrl}/customer`, {
@@ -222,12 +256,22 @@ export class PaystackService {
   }
 
   // Webhook signature verification
-  verifyWebhookSignature(body: string, signature: string): boolean {
-    const crypto = require('crypto');
-    const hash = crypto
-      .createHmac('sha512', this.secretKey)
-      .update(body)
-      .digest('hex');
+  async verifyWebhookSignature(body: string, signature: string): Promise<boolean> {
+    const encoder = new TextEncoder();
+    const keyData = encoder.encode(this.secretKey);
+    const messageData = encoder.encode(body);
+
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw',
+      keyData,
+      { name: 'HMAC', hash: 'SHA-512' },
+      false,
+      ['sign']
+    );
+
+    const hmac = await crypto.subtle.sign('HMAC', cryptoKey, messageData);
+    const hashArray = Array.from(new Uint8Array(hmac));
+    const hash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     
     return hash === signature;
   }

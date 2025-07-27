@@ -1,186 +1,252 @@
-import { createSupabaseClient } from './supabase';
-import type { Database } from './supabase';
+import { mockProducts, Product, ProductVariant } from './mock-data';
 
-type ProductInsert = Database['public']['Tables']['products']['Insert'];
-type ProductUpdate = Database['public']['Tables']['products']['Update'];
+export interface ProductSearchFilters {
+  category?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  inStock?: boolean;
+  search?: string;
+}
 
-export class ProductService {
-  private supabase = createSupabaseClient();
+export interface ProductSearchResult {
+  products: Product[];
+  total: number;
+  page: number;
+  totalPages: number;
+}
 
-  async getProducts({
-    category,
-    isActive = true,
-    limit = 20,
-    offset = 0
-  }: {
-    category?: string;
-    isActive?: boolean;
-    limit?: number;
-    offset?: number;
-  } = {}) {
-    let query = this.supabase
-      .from('products')
-      .select(`
-        *,
-        variants (*)
-      `)
-      .eq('is_active', isActive)
-      .order('created_at', { ascending: false });
+class ProductService {
+  private products: Product[] = mockProducts;
 
-    if (category) {
-      query = query.eq('category', category);
+  constructor() {
+    // Initialize with mock data
+    this.products = [...mockProducts];
+  }
+
+  /**
+   * Get all products with optional filtering
+   */
+  async getProducts(filters?: ProductSearchFilters, page = 1, limit = 12): Promise<ProductSearchResult> {
+    // Simulate API delay
+    await this.delay(300);
+
+    let filteredProducts = [...this.products];
+
+    // Apply filters
+    if (filters) {
+      if (filters.category) {
+        filteredProducts = filteredProducts.filter(p => 
+          p.category.toLowerCase() === filters.category!.toLowerCase()
+        );
+      }
+
+      if (filters.search) {
+        const searchTerm = filters.search.toLowerCase();
+        filteredProducts = filteredProducts.filter(p =>
+          p.name.toLowerCase().includes(searchTerm) ||
+          p.description.toLowerCase().includes(searchTerm) ||
+          p.category.toLowerCase().includes(searchTerm)
+        );
+      }
+
+      if (filters.minPrice !== undefined) {
+        filteredProducts = filteredProducts.filter(p => p.price >= filters.minPrice!);
+      }
+
+      if (filters.maxPrice !== undefined) {
+        filteredProducts = filteredProducts.filter(p => p.price <= filters.maxPrice!);
+      }
+
+      if (filters.inStock) {
+        filteredProducts = filteredProducts.filter(p => p.stock_quantity > 0);
+      }
     }
+
+    // Apply pagination
+    const total = filteredProducts.length;
+    const totalPages = Math.ceil(total / limit);
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+
+    return {
+      products: paginatedProducts,
+      total,
+      page,
+      totalPages
+    };
+  }
+
+  /**
+   * Get a single product by ID
+   */
+  async getProduct(id: string): Promise<Product | null> {
+    await this.delay(200);
+    
+    const product = this.products.find(p => p.id === id);
+    return product || null;
+  }
+
+  /**
+   * Get products by category
+   */
+  async getProductsByCategory(category: string, limit?: number): Promise<Product[]> {
+    await this.delay(250);
+    
+    let categoryProducts = this.products.filter(p => 
+      p.category.toLowerCase() === category.toLowerCase()
+    );
 
     if (limit) {
-      query = query.range(offset, offset + limit - 1);
+      categoryProducts = categoryProducts.slice(0, limit);
     }
 
-    const { data, error } = await query;
-
-    if (error) {
-      console.error('Error fetching products:', error);
-      throw error;
-    }
-
-    return data;
+    return categoryProducts;
   }
 
-  async getProduct(id: string) {
-    const { data, error } = await this.supabase
-      .from('products')
-      .select(`
-        *,
-        variants (*)
-      `)
-      .eq('id', id)
-      .eq('is_active', true)
-      .single();
+  /**
+   * Get featured products
+   */
+  async getFeaturedProducts(limit = 8): Promise<Product[]> {
+    await this.delay(200);
+    
+    // Return products with good stock levels (simulating featured products)
+    const featuredProducts = this.products
+      .filter(p => p.stock_quantity > 10 && p.is_active)
+      .slice(0, limit);
 
-    if (error) {
-      console.error('Error fetching product:', error);
-      throw error;
-    }
-
-    return data;
+    return featuredProducts;
   }
 
-  async getFeaturedProducts(limit = 8) {
-    const { data, error } = await this.supabase
-      .from('products')
-      .select(`
-        *,
-        variants (*)
-      `)
-      .eq('is_active', true)
-      .order('created_at', { ascending: false })
-      .limit(limit);
-
-    if (error) {
-      console.error('Error fetching featured products:', error);
-      throw error;
+  /**
+   * Search products
+   */
+  async searchProducts(query: string, limit = 10): Promise<Product[]> {
+    await this.delay(300);
+    
+    if (!query.trim()) {
+      return [];
     }
 
-    return data;
+    const searchTerm = query.toLowerCase();
+    const results = this.products.filter(p =>
+      p.name.toLowerCase().includes(searchTerm) ||
+      p.description.toLowerCase().includes(searchTerm) ||
+      p.category.toLowerCase().includes(searchTerm)
+    );
+
+    return results.slice(0, limit);
   }
 
-  async searchProducts(query: string, limit = 20) {
-    const { data, error } = await this.supabase
-      .from('products')
-      .select(`
-        *,
-        variants (*)
-      `)
-      .eq('is_active', true)
-      .or(`name.ilike.%${query}%,description.ilike.%${query}%,category.ilike.%${query}%`)
-      .order('created_at', { ascending: false })
-      .limit(limit);
-
-    if (error) {
-      console.error('Error searching products:', error);
-      throw error;
+  /**
+   * Get related products
+   */
+  async getRelatedProducts(productId: string, limit = 4): Promise<Product[]> {
+    await this.delay(200);
+    
+    const currentProduct = this.products.find(p => p.id === productId);
+    if (!currentProduct) {
+      return [];
     }
 
-    return data;
+    // Get products from same category, excluding current product
+    const relatedProducts = this.products
+      .filter(p => p.id !== productId && p.category === currentProduct.category)
+      .slice(0, limit);
+
+    // If not enough from same category, fill with other products
+    if (relatedProducts.length < limit) {
+      const additionalProducts = this.products
+        .filter(p => p.id !== productId && !relatedProducts.includes(p))
+        .slice(0, limit - relatedProducts.length);
+      
+      relatedProducts.push(...additionalProducts);
+    }
+
+    return relatedProducts;
   }
 
-  async getCategories() {
-    const { data, error } = await this.supabase
-      .from('products')
-      .select('category')
-      .eq('is_active', true)
-      .not('category', 'is', null);
-
-    if (error) {
-      console.error('Error fetching categories:', error);
-      throw error;
-    }
-
-    // Get unique categories
-    const categories = [...new Set(data.map(item => item.category).filter(Boolean))];
-    return categories;
+  /**
+   * Get all product categories
+   */
+  async getCategories(): Promise<string[]> {
+    await this.delay(100);
+    
+    const categories = [...new Set(this.products.map(p => p.category))];
+    return categories.sort();
   }
 
-  // Admin functions
-  async createProduct(product: ProductInsert) {
-    const { data, error } = await this.supabase
-      .from('products')
-      .insert(product)
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Error creating product:', error);
-      throw error;
+  /**
+   * Update product inventory (for cart operations)
+   */
+  async updateInventory(productId: string, quantity: number): Promise<boolean> {
+    await this.delay(100);
+    
+    const productIndex = this.products.findIndex(p => p.id === productId);
+    if (productIndex === -1) {
+      return false;
     }
 
-    return data;
+    const product = this.products[productIndex];
+    if (product.stock_quantity < quantity) {
+      return false; // Not enough inventory
+    }
+
+    // Update inventory
+    this.products[productIndex] = {
+      ...product,
+      stock_quantity: product.stock_quantity - quantity
+    };
+
+    return true;
   }
 
-  async updateProduct(id: string, updates: ProductUpdate) {
-    const { data, error } = await this.supabase
-      .from('products')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Error updating product:', error);
-      throw error;
-    }
-
-    return data;
+  /**
+   * Get product variants (if any)
+   */
+  async getProductVariants(productId: string): Promise<ProductVariant[]> {
+    await this.delay(100);
+    
+    const product = this.products.find(p => p.id === productId);
+    return product?.variants || [];
   }
 
-  async deleteProduct(id: string) {
-    const { error } = await this.supabase
-      .from('products')
-      .update({ is_active: false })
-      .eq('id', id);
-
-    if (error) {
-      console.error('Error deleting product:', error);
-      throw error;
+  /**
+   * Check product availability
+   */
+  async checkAvailability(productId: string, quantity = 1): Promise<boolean> {
+    await this.delay(100);
+    
+    const product = this.products.find(p => p.id === productId);
+    if (!product) {
+      return false;
     }
+
+    return product.stock_quantity >= quantity;
   }
 
-  async updateInventory(productId: string, variantId: string | null, quantity: number) {
-    if (variantId) {
-      const { error } = await this.supabase
-        .from('variants')
-        .update({ inventory: quantity })
-        .eq('id', variantId);
+  /**
+   * Get price range for filtering
+   */
+  async getPriceRange(): Promise<{ min: number; max: number }> {
+    await this.delay(100);
+    
+    const prices = this.products.map(p => p.price);
+    return {
+      min: Math.min(...prices),
+      max: Math.max(...prices)
+    };
+  }
 
-      if (error) throw error;
-    } else {
-      const { error } = await this.supabase
-        .from('products')
-        .update({ inventory: quantity })
-        .eq('id', productId);
-
-      if (error) throw error;
-    }
+  /**
+   * Simulate API delay
+   */
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }
 
+// Export singleton instance
 export const productService = new ProductService();
+
+export default ProductService;

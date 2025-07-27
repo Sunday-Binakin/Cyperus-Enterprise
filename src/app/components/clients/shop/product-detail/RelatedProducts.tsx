@@ -33,10 +33,11 @@ export function RelatedProducts({ products, currentProductId, categoryPath = 'bi
     
     try {
       addItem({
-        id: product.id,
+        product_id: product.id,
         name: product.name,
         price: product.price,
         image: product.image,
+        inventory: product.stock
       });
       
       toast.success(`${product.name} added to cart!`, {
@@ -47,7 +48,7 @@ export function RelatedProducts({ products, currentProductId, categoryPath = 'bi
           border: '1px solid #EFE554',
         },
       });
-    } catch (error) {
+    } catch {
       toast.error('Failed to add item to cart');
     } finally {
       setTimeout(() => {

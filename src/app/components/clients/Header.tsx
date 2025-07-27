@@ -7,8 +7,8 @@ import CartPopover from "./header/CartPopover";
 import { NAV_ITEMS, isNavItemWithDropdown } from "./header/constants";
 import Logo from "./header/Logo";
 import MobileMenuButton from "./header/MobileMenuButton";
-import { useCart } from "@/app/context/CartContext";
 import { useAuth } from "@/app/context/AuthContext";
+import { useCart } from "@/app/context/CartContext";
 import Link from "next/link";
 
 export default function Header() {
@@ -21,7 +21,7 @@ export default function Header() {
   const menuRef = useRef<HTMLDivElement>(null);
   const cartRef = useRef<HTMLDivElement>(null);
   const { getTotalItems } = useCart();
-  const { user, signOut } = useAuth();
+  const { user, signOut } = useAuth() ?? { user: null, signOut: async () => {} };
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -207,7 +207,7 @@ export default function Header() {
             }`}
           >
             <div className="max-w-full mx-auto">
-              <SearchBar isMobile />
+              <SearchBar   />
             </div>
           </div>
         </div>
@@ -356,5 +356,3 @@ export default function Header() {
   );
 }
 
-
-// https://wisdilabqkzupdungoan.supabase.co/auth/v1/callback

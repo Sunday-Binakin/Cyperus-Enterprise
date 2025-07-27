@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@/app/context/AuthContext';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -17,7 +17,7 @@ import {
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
-import { Order, orderService, formatOrderStatus, getOrderStatusColor } from '@/app/lib/orderService';
+import { Order, mockOrderService, formatOrderStatus, getOrderStatusColor } from '@/app/lib/mock-order-service';
 
 export default function OrdersPage() {
   const { user } = useAuth();
@@ -65,12 +65,12 @@ export default function OrdersPage() {
     }
   };
 
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     if (!user) return;
 
     setIsLoading(true);
     try {
-      const { orders: fetchedOrders, total } = await orderService.getUserOrders(
+      const { orders: fetchedOrders, total } = await mockOrderService.getUserOrders(
         user.id, 
         currentPage, 
         ordersPerPage
@@ -106,11 +106,11 @@ export default function OrdersPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user, currentPage, ordersPerPage, searchTerm, statusFilter, sortOrder]);
 
   useEffect(() => {
     fetchOrders();
-  }, [user, currentPage, searchTerm, statusFilter, sortOrder]);
+  }, [fetchOrders]);
 
   if (!user) {
     return (
@@ -263,7 +263,7 @@ export default function OrdersPage() {
                   <div className="mb-4">
                     <div className="flex justify-between items-center">
                       <span className="text-gray-400">Total</span>
-                      <span className="font-semibold text-[#EFE554]">{formatPrice(order.total)}</span>
+                      <span className="font-semibold text-[#EFE554]">{formatPrice(order.total_amount)}</span>
                     </div>
                   </div>
 

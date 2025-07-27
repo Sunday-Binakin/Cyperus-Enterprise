@@ -7,8 +7,8 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Loader2, CreditCard, Truck, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
-import { orderService, CreateOrderData } from '@/app/lib/orderService';
-import { initializePaystackPayment as paystackPayment, loadPaystackScript } from '@/app/lib/paystack';
+import { mockOrderService, CreateOrderData } from '@/app/lib/mock-order-service';
+import { initializeMockPayment as mockPayment, loadMockPaymentScript } from '@/app/lib/mock-payment-service';
 
 interface ShippingAddress {
   full_name: string;
@@ -32,7 +32,7 @@ export default function CheckoutPage() {
   const [savedAddresses, setSavedAddresses] = useState<ShippingAddress[]>([]);
   const [selectedAddressIndex, setSelectedAddressIndex] = useState(0);
   const [showNewAddressForm, setShowNewAddressForm] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<'paystack' | 'cash'>('paystack');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'mobile_money' | 'bank_transfer'>('card');
 
   const [shippingAddress, setShippingAddress] = useState<ShippingAddress>({
     full_name: user?.user_metadata?.full_name || '',
@@ -65,10 +65,10 @@ export default function CheckoutPage() {
     }
   }, [items, router]);
 
-  // Load saved addresses (mock data for now - will integrate with Supabase)
+  // Load saved addresses (mock data)
   useEffect(() => {
     if (user) {
-      // TODO: Fetch saved addresses from Supabase
+      // Mock addresses data
       const mockAddresses: ShippingAddress[] = [
         {
           full_name: user.user_metadata?.full_name || 'John Doe',
@@ -107,22 +107,21 @@ export default function CheckoutPage() {
         user_id: user?.id || undefined,
         session_id: !user ? crypto.randomUUID() : undefined,
         items: items.map(item => ({
-          product_id: item.id,
+          product_id: item.product_id,
           product_name: item.name,
           product_image: item.image,
           price: item.price,
-          quantity: item.quantity,
-          variant_info: item.variant ? { variant: item.variant } : undefined
+          quantity: item.quantity || 1,
+          variant_info: undefined
         })),
         shipping_address: shippingAddress,
-        payment_method: paymentMethod,
-        subtotal,
+        total_amount: total,
         shipping_fee: shippingFee,
-        tax,
-        estimated_delivery_date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString() // 3 days from now
+        tax_amount: tax,
+        payment_method: paymentMethod
       };
 
-      const order = await orderService.createOrder(orderData);
+      const order = await mockOrderService.createOrder(orderData);
       return order.id;
     } catch (error) {
       console.error('Error creating order:', error);
@@ -130,11 +129,11 @@ export default function CheckoutPage() {
     }
   };
 
-  const handlePaystackPayment = async (orderId: string) => {
-    // Load Paystack script if not already loaded
-    await loadPaystackScript();
+  const handleMockPayment = async (orderId: string) => {
+    // Load mock payment script if needed
+    await loadMockPaymentScript();
 
-    return paystackPayment({
+    return mockPayment({
       email: user?.email || shippingAddress.phone + '@temp.com',
       amount: total,
       metadata: {
@@ -160,9 +159,9 @@ export default function CheckoutPage() {
       // Create order first
       const orderId = await createOrder();
 
-      if (paymentMethod === 'paystack') {
-        // Initialize Paystack payment
-        const paymentResponse = await handlePaystackPayment(orderId);
+      if (paymentMethod === 'card') {
+        // Initialize mock payment
+        const paymentResponse = await handleMockPayment(orderId);
         
         if (paymentResponse && typeof paymentResponse === 'object' && 'status' in paymentResponse && paymentResponse.status === 'success') {
           // Clear cart on successful payment
@@ -178,9 +177,9 @@ export default function CheckoutPage() {
           throw new Error(message);
         }
       } else {
-        // Cash on delivery
+        // Bank transfer or mobile money (mock implementation)
         clearCart();
-        router.push(`/order-success?order_id=${orderId}&payment_method=cash`);
+        router.push(`/order-success?order_id=${orderId}&payment_method=${paymentMethod}`);
       }
 
     } catch (error: unknown) {
@@ -331,38 +330,57 @@ export default function CheckoutPage() {
               <div className="space-y-4">
                 <div
                   className={`p-4 border rounded-lg cursor-pointer transition-colors ${
-                    paymentMethod === 'paystack'
+                    paymentMethod === 'card'
                       ? 'border-[#EFE554] bg-gray-800'
                       : 'border-gray-700 hover:border-gray-600'
                   }`}
-                  onClick={() => setPaymentMethod('paystack')}
+                  onClick={() => setPaymentMethod('card')}
                 >
                   <div className="flex items-center gap-3">
                     <div className={`w-4 h-4 rounded-full border-2 ${
-                      paymentMethod === 'paystack' ? 'border-[#EFE554] bg-[#EFE554]' : 'border-gray-600'
+                      paymentMethod === 'card' ? 'border-[#EFE554] bg-[#EFE554]' : 'border-gray-600'
                     }`} />
                     <div>
                       <div className="font-medium">Pay with Card</div>
-                      <div className="text-sm text-gray-400">Secure payment via Paystack</div>
+                      <div className="text-sm text-gray-400">Secure payment via card</div>
                     </div>
                   </div>
                 </div>
 
                 <div
                   className={`p-4 border rounded-lg cursor-pointer transition-colors ${
-                    paymentMethod === 'cash'
+                    paymentMethod === 'mobile_money'
                       ? 'border-[#EFE554] bg-gray-800'
                       : 'border-gray-700 hover:border-gray-600'
                   }`}
-                  onClick={() => setPaymentMethod('cash')}
+                  onClick={() => setPaymentMethod('mobile_money')}
                 >
                   <div className="flex items-center gap-3">
                     <div className={`w-4 h-4 rounded-full border-2 ${
-                      paymentMethod === 'cash' ? 'border-[#EFE554] bg-[#EFE554]' : 'border-gray-600'
+                      paymentMethod === 'mobile_money' ? 'border-[#EFE554] bg-[#EFE554]' : 'border-gray-600'
                     }`} />
                     <div>
-                      <div className="font-medium">Cash on Delivery</div>
-                      <div className="text-sm text-gray-400">Pay when your order arrives</div>
+                      <div className="font-medium">Mobile Money</div>
+                      <div className="text-sm text-gray-400">Pay with MTN, AirtelTigo, or Vodafone</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  className={`p-4 border rounded-lg cursor-pointer transition-colors ${
+                    paymentMethod === 'bank_transfer'
+                      ? 'border-[#EFE554] bg-gray-800'
+                      : 'border-gray-700 hover:border-gray-600'
+                  }`}
+                  onClick={() => setPaymentMethod('bank_transfer')}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-4 h-4 rounded-full border-2 ${
+                      paymentMethod === 'bank_transfer' ? 'border-[#EFE554] bg-[#EFE554]' : 'border-gray-600'
+                    }`} />
+                    <div>
+                      <div className="font-medium">Bank Transfer</div>
+                      <div className="text-sm text-gray-400">Direct bank transfer</div>
                     </div>
                   </div>
                 </div>
@@ -378,7 +396,7 @@ export default function CheckoutPage() {
               {/* Items */}
               <div className="space-y-4 mb-6">
                 {items.map((item) => (
-                  <div key={item.id} className="flex gap-3">
+                  <div key={item.product_id} className="flex gap-3">
                     <div className="relative h-16 w-16 flex-shrink-0">
                       <Image
                         src={item.image}
@@ -390,8 +408,8 @@ export default function CheckoutPage() {
                     <div className="flex-1">
                       <h3 className="font-medium text-sm line-clamp-2">{item.name}</h3>
                       <div className="flex justify-between text-sm text-gray-400">
-                        <span>Qty: {item.quantity}</span>
-                        <span>{formatPrice(item.price * item.quantity)}</span>
+                        <span>Qty: {item.quantity || 1}</span>
+                        <span>{formatPrice(item.price * (item.quantity || 1))}</span>
                       </div>
                     </div>
                   </div>

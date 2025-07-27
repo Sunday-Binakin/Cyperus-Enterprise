@@ -22,8 +22,8 @@ export default function Login() {
       setLoading(true);
       await signIn(formData.email, formData.password);
       router.push('/account');
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : 'Login failed');
     } finally {
       setLoading(false);
     }
@@ -38,8 +38,8 @@ export default function Login() {
     try {
       await resetPassword(formData.email);
       toast.success('Password reset link sent! Check your email.');
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : 'Password reset failed');
     }
   };
 
