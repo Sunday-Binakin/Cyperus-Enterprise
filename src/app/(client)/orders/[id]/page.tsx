@@ -152,7 +152,7 @@ export default function OrderTrackingPage() {
       }
 
       try {
-        // TODO: Replace with actual Supabase query
+        // TODO: Fetch order details from mock order service
         // For now, we'll create mock order data
         const mockOrder: Order = {
           id: orderId,

@@ -3,7 +3,8 @@
 import { Product } from '@/app/types/product';
 import { QuantitySelector } from './QuantitySelector';
 import { ProductDetails } from './ProductDetails';
-import { useCart } from '@/app/context/CartContext';
+import { useCart } from '@/store/hooks';
+import { addItem } from '@/store/cartSlice';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -12,7 +13,7 @@ type ProductInfoProps = {
 };
 
 export function ProductInfo({ product }: ProductInfoProps) {
-  const { addItem } = useCart();
+  const { dispatch } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
 
@@ -28,13 +29,13 @@ export function ProductInfo({ product }: ProductInfoProps) {
     try {
       // Add the item to cart based on selected quantity
       for (let i = 0; i < quantity; i++) {
-        addItem({
+        dispatch(addItem({
           product_id: product.id,
           name: product.name,
           price: product.price,
           image: product.image,
           inventory: product.stock
-        });
+        }));
       }
       
       toast.success(`${quantity} x ${product.name} added to cart!`, {

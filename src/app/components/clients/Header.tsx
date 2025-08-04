@@ -7,8 +7,8 @@ import CartPopover from "./header/CartPopover";
 import { NAV_ITEMS, isNavItemWithDropdown } from "./header/constants";
 import Logo from "./header/Logo";
 import MobileMenuButton from "./header/MobileMenuButton";
-import { useAuth } from "@/app/context/AuthContext";
-import { useCart } from "@/app/context/CartContext";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { useCart } from "../../../store/hooks";
 import Link from "next/link";
 
 export default function Header() {
@@ -20,8 +20,19 @@ export default function Header() {
   const [showAccountDropdown, setShowAccountDropdown] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const cartRef = useRef<HTMLDivElement>(null);
-  const { getTotalItems } = useCart();
-  const { user, signOut } = useAuth() ?? { user: null, signOut: async () => {} };
+  const dispatch = useAppDispatch();
+  const authState = useAppSelector((state) => state.auth);
+  const user = authState?.user ?? null;
+  const { totalItems } = useCart();
+  
+  const handleSignOut = async () => {
+    try {
+      const { logoutUser } = await import('../../../store/authActions');
+      dispatch(logoutUser());
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -102,11 +113,11 @@ export default function Header() {
               {/* Auth-based nav items */}
               {user ? (
                 <div className="flex items-center gap-4">
-                  <Link href="/account" className="text-white hover:text-[#EFE554] transition-colors">
+                  <Link href="/my-account" className="text-white hover:text-[#EFE554] transition-colors">
                     MY ACCOUNT
                   </Link>
                   <button 
-                    onClick={() => signOut()}
+                    onClick={() => handleSignOut()}
                     className="bg-[#EFE554] text-[#55006F] px-4 py-2 rounded hover:bg-[#55006F] hover:text-[#EFE554] transition-colors"
                   >
                     Logout
@@ -150,11 +161,11 @@ export default function Header() {
             <div
               className="hidden md:block relative"
               ref={cartRef}
-              onMouseEnter={() => getTotalItems() > 0 && setShowCartPopover(true)}
+              onMouseEnter={() => totalItems > 0 && setShowCartPopover(true)}
               onMouseLeave={() => setShowCartPopover(false)}
             >
-              <CartIndicator itemCount={getTotalItems()} />
-              {showCartPopover && getTotalItems() > 0 && <CartPopover />}
+              <CartIndicator itemCount={totalItems} />
+              {showCartPopover && totalItems > 0 && <CartPopover />}
             </div>
 
             {/* Subscribe button - hidden on mobile */}
@@ -166,10 +177,10 @@ export default function Header() {
             <div className="md:hidden flex items-center gap-4">
               <div
                 className="relative"
-                onClick={() => getTotalItems() > 0 && setShowCartPopover(!showCartPopover)}
+                onClick={() => totalItems > 0 && setShowCartPopover(!showCartPopover)}
               >
-                <CartIndicator itemCount={getTotalItems()} />
-                {showCartPopover && getTotalItems() > 0 && (
+                <CartIndicator itemCount={totalItems} />
+                {showCartPopover && totalItems > 0 && (
                   <div className="fixed inset-0 z-40 bg-black bg-opacity-50" onClick={() => setShowCartPopover(false)}>
                     <div className="absolute top-20 right-4 w-80" onClick={(e) => e.stopPropagation()}>
                       <CartPopover />
@@ -273,7 +284,7 @@ export default function Header() {
                 <>
                   <li className="border-b border-white/20 pb-2">
                     <Link
-                      href="/account"
+                      href="/my-account"
                       className="block py-2 text-lg font-semibold hover:text-[#EFE554] transition-colors"
                       onClick={() => setIsMenuOpen(false)}
                     >
@@ -283,7 +294,7 @@ export default function Header() {
                   <li>
                     <button
                       onClick={() => {
-                        signOut();
+                        handleSignOut();
                         setIsMenuOpen(false);
                       }}
                       className="w-full bg-[#EFE554] text-[#55006F] py-3 px-4 rounded font-semibold hover:bg-[#55006F] hover:text-[#EFE554] transition-colors"

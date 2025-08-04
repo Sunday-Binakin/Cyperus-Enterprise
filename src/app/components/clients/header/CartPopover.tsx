@@ -1,18 +1,41 @@
 'use client';
 
-import { useCart } from '@/app/context/CartContext';
+import { useCart } from '../../../../store/hooks';
+import { useAppSelector, useAppDispatch } from '../../../../store/hooks';
+import { removeItem, updateQuantity } from '../../../../store/cartSlice';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function CartPopover() {
-  const { items, getTotalPrice, removeItem, updateQuantity } = useCart();
-  const totalPrice = getTotalPrice();
+  const { cartItems, totalPrice } = useCart();
+  const authState = useAppSelector((state) => state.auth);
+  const user = authState?.user ?? null;
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  
   const formattedTotal = new Intl.NumberFormat('en-NG', {
     style: 'currency',
     currency: 'GHS',
     minimumFractionDigits: 2
   }).format(totalPrice).replace('GHS', 'GH₵');
+
+  const handleProceedToCheckout = () => {
+    if (cartItems.length === 0) {
+      toast.error('Your cart is empty');
+      return;
+    }
+
+    if (!user) {
+      toast.error('Please sign in to continue');
+      router.push('/auth/login?redirect=/checkout');
+      return;
+    }
+
+    router.push('/checkout');
+  };
 
   const truncateProductName = (name: string, maxLength: number = 25) => {
     return name.length > maxLength ? `${name.substring(0, maxLength)}...` : name;
@@ -21,14 +44,14 @@ export default function CartPopover() {
   return (
     <div className="absolute right-0 mt-2 w-96 bg-black rounded-lg shadow-2xl border border-gray-800 z-50 animate-in slide-in-from-top-2 duration-200">
       <div className="p-6">
-        {items.length > 0 ? (
+        {cartItems.length > 0 ? (
           <>
             <div className="mb-4">
-              <h3 className="text-lg font-semibold text-white">Shopping Cart ({items.length} {items.length === 1 ? 'item' : 'items'})</h3>
+              <h3 className="text-lg font-semibold text-white">Shopping Cart ({cartItems.length} {cartItems.length === 1 ? 'item' : 'items'})</h3>
             </div>
             
             <div className="max-h-80 overflow-y-auto space-y-4 mb-6">
-              {items.map((item) => (
+              {cartItems.map((item) => (
                 <div
                   key={item.product_id}
                   className="flex items-center gap-4 p-3 bg-gray-900 rounded-lg border border-gray-800 hover:border-gray-700 transition-colors"
@@ -56,7 +79,7 @@ export default function CartPopover() {
                       </p>
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() => updateQuantity(item.product_id, (item.quantity || 1) - 1)}
+                          onClick={() => dispatch(updateQuantity({ productId: item.product_id, quantity: (item.quantity || 1) - 1 }))}
                           className="w-6 h-6 rounded-full bg-gray-700 text-white text-xs hover:bg-gray-600 transition-colors flex items-center justify-center"
                           disabled={(item.quantity || 1) <= 1}
                         >
@@ -64,7 +87,7 @@ export default function CartPopover() {
                         </button>
                         <span className="text-xs text-gray-300 w-8 text-center">{item.quantity || 1}</span>
                         <button
-                          onClick={() => updateQuantity(item.product_id, (item.quantity || 1) + 1)}
+                          onClick={() => dispatch(updateQuantity({ productId: item.product_id, quantity: (item.quantity || 1) + 1 }))}
                           className="w-6 h-6 rounded-full bg-gray-700 text-white text-xs hover:bg-gray-600 transition-colors flex items-center justify-center"
                         >
                           +
@@ -81,7 +104,7 @@ export default function CartPopover() {
                   </div>
                   
                   <button
-                    onClick={() => removeItem(item.product_id)}
+                    onClick={() => dispatch(removeItem(item.product_id))}
                     className="text-red-400 hover:text-red-300 transition-colors p-1"
                     title="Remove item"
                   >
@@ -107,11 +130,8 @@ export default function CartPopover() {
                 View Basket
               </Link>
               <button
-                onClick={() => {
-                  // TODO: Implement Paystack checkout
-                  console.log('Proceeding to checkout with items:', items);
-                }}
-                className="bg-[#EFE554] text-black px-4 py-3 rounded-lg text-center text-sm font-medium hover:bg-[#dbd348] transition-colors font-semibold"
+                onClick={handleProceedToCheckout}
+                className="bg-[#EFE554] text-black px-4 py-3 rounded-lg text-center text-sm hover:bg-[#dbd348] transition-colors font-semibold"
               >
                 Checkout
               </button>
@@ -135,7 +155,7 @@ export default function CartPopover() {
             <p className="text-gray-400 text-lg font-medium mb-2">Your cart is empty</p>
             <p className="text-gray-500 text-sm mb-4">Add some products to get started</p>
             <Link
-              href="/shop"
+              href="/products"
               className="inline-block bg-[#EFE554] text-black px-6 py-2 rounded-lg text-sm font-medium hover:bg-[#dbd348] transition-colors"
             >
               Continue Shopping

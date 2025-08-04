@@ -2,27 +2,57 @@
 
 import Link from 'next/link';
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/app/context/AuthContext';
+import { useAppDispatch } from '@/store/hooks';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'sonner';
 
+// Create a temporary registration action for testing
+const tempRegisterUser = createAsyncThunk(
+  'temp/registerUser',
+  async (userData: { email: string; password: string; firstName: string; lastName: string }) => {
+    // Simulate registration process
+    console.log('📧 [MOCK] Activation email sent to', userData.email);
+    console.log('🔗 Activation link: http://localhost:3000/auth/activate?token=mock_token&email=' + encodeURIComponent(userData.email));
+    
+    return {
+      id: 'temp_id',
+      email: userData.email,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      isActive: false,
+      createdAt: new Date().toISOString()
+    };
+  }
+);
+
 export const Register = () => {
-    const router = useRouter();
-    const { signUp } = useAuth();
+    const dispatch = useAppDispatch();
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         
+        if (!email) {
+            toast.error('Please enter your email address');
+            return;
+        }
+
         try {
             setLoading(true);
-            // Generate a temporary password - in a real app, you might want to let users set their own password
-            const tempPassword = Math.random().toString(36).slice(-8);
-            await signUp(email, tempPassword);
-            toast.success('Registration successful! Check your email to set your password.');
-            router.push('/auth/login');
+            
+            // Use the temporary registration action
+            await dispatch(tempRegisterUser({ 
+                email, 
+                password: 'temp123',
+                firstName: 'User',
+                lastName: 'Name'
+            }));
+            
+            toast.success('Registration initiated! Please check your email for activation instructions.');
+            setEmail(''); // Clear the form
         } catch (error: unknown) {
+            console.error('Registration error:', error);
             toast.error(error instanceof Error ? error.message : 'Registration failed');
         } finally {
             setLoading(false);

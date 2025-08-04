@@ -2,7 +2,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Product } from '@/app/types/product';
 import { TiShoppingCart } from 'react-icons/ti';
-import { useCart } from '@/app/context/CartContext';
+import { useCart } from '@/store/hooks';
+import { addItem } from '@/store/cartSlice';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -13,7 +14,7 @@ type RelatedProductsProps = {
 };
 
 export function RelatedProducts({ products, currentProductId, categoryPath = 'bitter-kola' }: RelatedProductsProps) {
-  const { addItem } = useCart();
+  const { dispatch } = useCart();
   const [addingItems, setAddingItems] = useState<Set<string>>(new Set());
 
   // Filter out the current product and get up to 4 related products
@@ -32,13 +33,13 @@ export function RelatedProducts({ products, currentProductId, categoryPath = 'bi
     setAddingItems(prev => new Set(prev).add(product.id));
     
     try {
-      addItem({
+      dispatch(addItem({
         product_id: product.id,
         name: product.name,
         price: product.price,
         image: product.image,
         inventory: product.stock
-      });
+      }));
       
       toast.success(`${product.name} added to cart!`, {
         duration: 2000,

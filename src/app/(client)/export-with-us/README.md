@@ -7,27 +7,26 @@ Place the following images in the `/public/images/` directory:
 - `tigernut-factory.jpg` - Hero background image (1920x1080px recommended)
 - `tigernut-farm.jpg` - Farm image for "Why Choose Us" section (800x600px recommended)
 
-### 2. Supabase Database Setup
+### 2. Client-Side Data Management
 
-#### Export Inquiries Table
-This table stores submissions from the "Become a Distributor" form:
+#### Export Inquiries Storage
+This page uses client-side mock services for demonstration purposes. In a production environment, you would integrate with your preferred backend service.
 
-```sql
-create table public.export_inquiries (
-  id uuid primary key default uuid_generate_v4(),
-  name text not null,
-  company text not null,
-  email text not null,
-  country text not null,
-  interests text[] not null,
-  message text,
-  created_at timestamp with time zone default now(),
-  contacted boolean default false,
-  notes text
-);
+The export inquiries are handled by the mock service which includes the following data structure:
 
--- Set up row level security policies
-alter table public.export_inquiries enable row level security;
+```typescript
+interface ExportInquiry {
+  id: string;
+  name: string;
+  company: string;
+  email: string;
+  country: string;
+  interests: string[];
+  message?: string;
+  createdAt: Date;
+  contacted: boolean;
+  notes?: string;
+}
 
 -- Only allow admins to read from this table (protect customer data)
 create policy "Allow admins to read export inquiries"
@@ -68,33 +67,22 @@ alter table public.products enable row level security;
 create policy "Allow public read access to products"
   on public.products for select
   to anon
-  using (true);
-
--- Only allow authenticated admins to modify products
-create policy "Allow admin to modify products"
-  on public.products for all
-  to authenticated
-  using (auth.uid() in (
-    select auth.uid() from auth.users 
-    where auth.email() in (select email from public.admin_users)
-  ))
-  with check (auth.uid() in (
-    select auth.uid() from auth.users 
-    where auth.email() in (select email from public.admin_users)
-  ));
 ```
 
-### 3. Supabase Storage Setup
-1. Create a new bucket named `product-images`
-2. Set public access to "true" to allow anonymous reads
-3. Update RLS policies to restrict uploads to authenticated admin users
+### 3. Mock Services Integration
+The export page integrates with the following mock services:
+- Mock product service for inventory data
+- Mock inquiry service for form submissions
+- Mock authentication service for admin access
 
 ### 4. Environment Variables
 Make sure your `.env.local` file contains:
 ```
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY=your_paystack_public_key
 ```
 
-### 5. Real-time Updates
-This page includes Supabase's real-time features for inventory tracking, but you will need to enable real-time in your Supabase project settings.
+### 5. Client-Side Features
+This page includes client-side features for:
+- Real-time inventory display using mock data
+- Form submission handling with local storage
+- Export inquiry management

@@ -8,7 +8,8 @@ import Image from 'next/image';
 import { Loader2, CreditCard, Truck, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
 import { mockOrderService, CreateOrderData } from '@/app/lib/mock-order-service';
-import { initializeMockPayment as mockPayment, loadMockPaymentScript } from '@/app/lib/mock-payment-service';
+import { paystackService, PaymentData } from '@/app/lib/paystack-service';
+import FirstLoginPasswordChange from '@/app/components/clients/my-account/FirstLoginPasswordChange';
 
 interface ShippingAddress {
   full_name: string;
@@ -25,14 +26,15 @@ interface ShippingAddress {
 
 export default function CheckoutPage() {
   const { items, getTotalPrice, clearCart } = useCart();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
   const [savedAddresses, setSavedAddresses] = useState<ShippingAddress[]>([]);
   const [selectedAddressIndex, setSelectedAddressIndex] = useState(0);
   const [showNewAddressForm, setShowNewAddressForm] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'mobile_money' | 'bank_transfer'>('card');
+  const [hasChangedPassword, setHasChangedPassword] = useState(false);
+
 
   const [shippingAddress, setShippingAddress] = useState<ShippingAddress>({
     full_name: user?.user_metadata?.full_name || '',
@@ -118,7 +120,7 @@ export default function CheckoutPage() {
         total_amount: total,
         shipping_fee: shippingFee,
         tax_amount: tax,
-        payment_method: paymentMethod
+        payment_method: 'paystack'
       };
 
       const order = await mockOrderService.createOrder(orderData);
@@ -129,25 +131,29 @@ export default function CheckoutPage() {
     }
   };
 
-  const handleMockPayment = async (orderId: string) => {
-    // Load mock payment script if needed
-    await loadMockPaymentScript();
+  const handlePaystackPayment = async (orderId: string) => {
+    if (!user?.email) {
+      throw new Error('User email is required for payment');
+    }
 
-    return mockPayment({
-      email: user?.email || shippingAddress.phone + '@temp.com',
+    const paymentData: PaymentData = {
+      email: user.email,
       amount: total,
+      currency: 'GHS',
+      reference: `order_${orderId}_${Date.now()}`,
+      firstname: shippingAddress.full_name.split(' ')[0],
+      lastname: shippingAddress.full_name.split(' ').slice(1).join(' '),
+      phone: shippingAddress.phone,
       metadata: {
         order_id: orderId,
+        customer_id: user.id,
         customer_name: shippingAddress.full_name,
-        customer_phone: shippingAddress.phone,
+        shipping_address: JSON.stringify(shippingAddress)
       },
-      onSuccess: (response: unknown) => {
-        console.log('Payment successful:', response);
-      },
-      onCancel: () => {
-        console.log('Payment cancelled');
-      }
-    });
+      channels: ['card', 'bank', 'ussd', 'qr', 'mobile_money', 'bank_transfer']
+    };
+
+    return paystackService.initializePayment(paymentData);
   };
 
   const handlePlaceOrder = async () => {
@@ -159,27 +165,17 @@ export default function CheckoutPage() {
       // Create order first
       const orderId = await createOrder();
 
-      if (paymentMethod === 'card') {
-        // Initialize mock payment
-        const paymentResponse = await handleMockPayment(orderId);
-        
-        if (paymentResponse && typeof paymentResponse === 'object' && 'status' in paymentResponse && paymentResponse.status === 'success') {
-          // Clear cart on successful payment
-          clearCart();
-          
-          // Redirect to success page
-          const reference = (typeof paymentResponse === 'object' && 'reference' in paymentResponse) ? paymentResponse.reference : 'unknown';
-          router.push(`/order-success?order_id=${orderId}&reference=${reference}`);
-        } else {
-          const message = (typeof paymentResponse === 'object' && paymentResponse && 'message' in paymentResponse && typeof paymentResponse.message === 'string') 
-            ? paymentResponse.message 
-            : 'Payment failed';
-          throw new Error(message);
-        }
-      } else {
-        // Bank transfer or mobile money (mock implementation)
+      // Initialize Paystack payment (supports all payment methods)
+      const paymentResponse = await handlePaystackPayment(orderId);
+      
+      if (paymentResponse && paymentResponse.status === 'success') {
+        // Clear cart on successful payment
         clearCart();
-        router.push(`/order-success?order_id=${orderId}&payment_method=${paymentMethod}`);
+        
+        // Redirect to success page
+        router.push(`/order-success?order_id=${orderId}&reference=${paymentResponse.reference}&payment_method=paystack`);
+      } else {
+        throw new Error('Payment failed or was cancelled');
       }
 
     } catch (error: unknown) {
@@ -194,10 +190,62 @@ export default function CheckoutPage() {
     setShippingAddress(prev => ({ ...prev, [field]: value }));
   };
 
+  // Redirect to cart if no items
+  useEffect(() => {
+    if (items.length === 0) {
+      toast.error('Your cart is empty');
+      router.push('/cart');
+    }
+  }, [items.length, router]);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!loading && !user) {
+      toast.error('Please sign in to continue with checkout');
+      router.push('/my-account');
+    }
+  }, [loading, user, router]);
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#EFE554] mx-auto mb-4"></div>
+          <p className="text-white">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect to login if not authenticated
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#EFE554] mx-auto mb-4"></div>
+          <p className="text-white">Redirecting to sign in...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // If user is logged in but it's their first login and they haven't changed password yet
+  if (user.isFirstLogin && !hasChangedPassword) {
+    return (
+      <FirstLoginPasswordChange 
+        onPasswordChanged={() => setHasChangedPassword(true)}
+      />
+    );
+  }
+
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-[#EFE554]"></div>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#EFE554] mx-auto mb-4"></div>
+          <p className="text-white">Redirecting to cart...</p>
+        </div>
       </div>
     );
   }
@@ -328,59 +376,17 @@ export default function CheckoutPage() {
               </div>
 
               <div className="space-y-4">
-                <div
-                  className={`p-4 border rounded-lg cursor-pointer transition-colors ${
-                    paymentMethod === 'card'
-                      ? 'border-[#EFE554] bg-gray-800'
-                      : 'border-gray-700 hover:border-gray-600'
-                  }`}
-                  onClick={() => setPaymentMethod('card')}
-                >
+                <div className="p-4 border border-[#EFE554] bg-gray-800 rounded-lg">
                   <div className="flex items-center gap-3">
-                    <div className={`w-4 h-4 rounded-full border-2 ${
-                      paymentMethod === 'card' ? 'border-[#EFE554] bg-[#EFE554]' : 'border-gray-600'
-                    }`} />
+                    <div className="w-4 h-4 rounded-full border-2 border-[#EFE554] bg-[#EFE554]" />
                     <div>
-                      <div className="font-medium">Pay with Card</div>
-                      <div className="text-sm text-gray-400">Secure payment via card</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  className={`p-4 border rounded-lg cursor-pointer transition-colors ${
-                    paymentMethod === 'mobile_money'
-                      ? 'border-[#EFE554] bg-gray-800'
-                      : 'border-gray-700 hover:border-gray-600'
-                  }`}
-                  onClick={() => setPaymentMethod('mobile_money')}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className={`w-4 h-4 rounded-full border-2 ${
-                      paymentMethod === 'mobile_money' ? 'border-[#EFE554] bg-[#EFE554]' : 'border-gray-600'
-                    }`} />
-                    <div>
-                      <div className="font-medium">Mobile Money</div>
-                      <div className="text-sm text-gray-400">Pay with MTN, AirtelTigo, or Vodafone</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  className={`p-4 border rounded-lg cursor-pointer transition-colors ${
-                    paymentMethod === 'bank_transfer'
-                      ? 'border-[#EFE554] bg-gray-800'
-                      : 'border-gray-700 hover:border-gray-600'
-                  }`}
-                  onClick={() => setPaymentMethod('bank_transfer')}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className={`w-4 h-4 rounded-full border-2 ${
-                      paymentMethod === 'bank_transfer' ? 'border-[#EFE554] bg-[#EFE554]' : 'border-gray-600'
-                    }`} />
-                    <div>
-                      <div className="font-medium">Bank Transfer</div>
-                      <div className="text-sm text-gray-400">Direct bank transfer</div>
+                      <div className="font-medium">Secure Payment via Paystack</div>
+                      <div className="text-sm text-gray-400">
+                        Pay with cards, mobile money, bank transfer, USSD, or QR code
+                      </div>
+                      <div className="text-xs text-[#EFE554] mt-1">
+                        Supports all major payment methods in Ghana
+                      </div>
                     </div>
                   </div>
                 </div>

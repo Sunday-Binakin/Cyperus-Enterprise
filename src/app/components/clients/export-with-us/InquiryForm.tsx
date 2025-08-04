@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 
-// Mock inquiry service (replaces Supabase)
+// Mock inquiry service for client-side form handling
 class MockInquiryService {
   async submitInquiry(inquiryData: Record<string, unknown>) {
     // Simulate API delay

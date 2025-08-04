@@ -1,6 +1,6 @@
-# Full-Stack eCommerce System Setup Guide
+# Client-Side eCommerce System Setup Guide
 
-This guide will help you set up a complete eCommerce system using Supabase (database & auth) and Paystack (payments for Ghana).
+This guide will help you set up a complete client-side eCommerce system using mock services and Paystack payments for Ghana.
 
 ## 🚀 Quick Start
 
@@ -12,31 +12,22 @@ cp .env.example .env.local
 ```
 
 2. Fill in your actual values in `.env.local`:
-   - Get Supabase credentials from your Supabase project dashboard
    - Get Paystack keys from your Paystack dashboard
    - Update other configurations as needed
 
-### 2. Database Setup
+### 2. Client-Side Mock Services
 
-1. Create a new Supabase project at [supabase.com](https://supabase.com)
+This application uses mock services for demonstration purposes:
+- Mock authentication service with persistent login state
+- Mock product catalog with sample data
+- Mock order management system
+- Mock user profile management
 
-2. Run the database schema in your Supabase SQL editor:
-```sql
--- Copy and paste the contents of src/app/lib/database-schema.sql
--- This will create all tables, triggers, RLS policies, and sample data
-```
-
-3. Enable Row Level Security (RLS) on all tables (should be enabled by the schema)
+All data is stored in browser localStorage for persistence across sessions.
 
 ### 3. Authentication Setup
 
-1. In your Supabase dashboard, go to Authentication > Settings
-2. Configure allowed domains for your app
-3. Enable Google OAuth (optional):
-   - Add Google OAuth credentials
-   - Set redirect URL to: `https://your-domain.com/auth/callback`
-
-### 4. Paystack Setup (Ghana Payments)
+### 3. Paystack Setup (Ghana Payments)
 
 1. Create a Paystack account at [paystack.com](https://paystack.com)
 2. Get your test/live API keys from the dashboard
@@ -63,40 +54,39 @@ src/
 │   │   ├── AuthContext.tsx    # Authentication state
 │   │   └── CartContext.tsx    # Shopping cart state
 │   └── lib/                   # Utilities and services
-│       ├── database-schema.sql # Complete database schema
-│       ├── supabase.ts        # Supabase client and types
-│       ├── product-service.ts # Product operations
-│       ├── order-service.ts   # Order operations
-│       └── paystack-service.ts # Payment processing
+│       ├── mock-auth-service.ts      # Mock authentication
+│       ├── mock-product-service.ts   # Mock product catalog
+│       ├── mock-order-service.ts     # Mock order management
+│       └── paystack-service.ts       # Payment processing
 ```
 
 ## 🛠 Features Implemented
 
-### Database & Authentication
-- ✅ Complete PostgreSQL schema with RLS policies
-- ✅ User authentication with Supabase Auth
+### Client-Side Services & Authentication
+- ✅ Complete client-side architecture with mock services
+- ✅ Client-side authentication with mock service
 - ✅ Guest checkout support
-- ✅ Admin permissions system
+- ✅ Mock admin permissions system
 - ✅ Real-time cart synchronization
 
 ### Product Management
 - ✅ Products with variants support
-- ✅ Inventory management
+- ✅ Mock inventory management
 - ✅ Category filtering
 - ✅ Product search
 - ✅ Image handling
 
 ### Shopping Cart
-- ✅ Database-backed cart (replaces localStorage)
+- ✅ Client-side cart with localStorage persistence
 - ✅ Guest and authenticated user support
 - ✅ Real-time updates across sessions
 - ✅ Inventory validation
 - ✅ Cart persistence
 
 ### Orders & Payments
-- ✅ Complete order management
+- ✅ Complete order management with mock service
 - ✅ Paystack integration for Ghana
-- ✅ Order tracking
+- ✅ Order tracking with mock data
 - ✅ Payment webhook handling
 - ✅ Order status updates
 
@@ -109,7 +99,7 @@ src/
 
 ## 🧪 Testing the System
 
-### 1. Database Operations
+### 1. Mock Service Operations
 ```bash
 # Install dependencies
 npm install
@@ -211,11 +201,11 @@ The system is fully responsive and mobile-optimized:
 
 ## 🔒 Security Features
 
-### Database Security
-- Row Level Security (RLS) enabled
+### Data Security
+- Client-side data validation
+- Secure localStorage handling  
 - User-specific data access
-- Admin role permissions
-- SQL injection protection
+- XSS protection
 
 ### Payment Security
 - Paystack PCI compliance
@@ -224,10 +214,10 @@ The system is fully responsive and mobile-optimized:
 - HTTPS enforcement
 
 ### Authentication Security
-- Supabase Auth security
-- Session management
-- Password policies
-- OAuth integration
+- Client-side authentication security
+- Session management with localStorage
+- Password policies with mock service
+- Demo OAuth integration
 
 ## 🚀 Deployment
 
@@ -238,11 +228,6 @@ The system is fully responsive and mobile-optimized:
 
 ### Environment Variables for Production
 ```bash
-# Production Supabase
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-production-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-production-service-key
-
 # Production Paystack
 NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY=pk_live_your-live-public-key
 PAYSTACK_SECRET_KEY=sk_live_your-live-secret-key

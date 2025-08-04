@@ -1,6 +1,6 @@
 # 🛒 Cyperus E-commerce Post-Checkout Flow
 
-A comprehensive post-checkout user experience built with Next.js, Supabase, and Paystack integration.
+A comprehensive post-checkout user experience built with Next.js, client-side mock services, and Paystack integration.
 
 ## ✨ Features
 
@@ -14,7 +14,7 @@ A comprehensive post-checkout user experience built with Next.js, Supabase, and 
 - **Celebration Animation**: Confetti effects and visual feedback
 - **Instant Confirmation**: Order details with receipt download
 - **Order Tracking**: Direct link to track order progress
-- **Email Notifications**: Automated confirmation emails
+- **Email Notifications**: Automated confirmation emails (demo)
 
 ### 📦 Order Tracking System
 - **Visual Progress Bar**: Real-time status with completion percentage
@@ -32,7 +32,6 @@ A comprehensive post-checkout user experience built with Next.js, Supabase, and 
 
 ### Prerequisites
 - Node.js 18+ and npm
-- Supabase account and project
 - Paystack account with API keys
 
 ### Installation
@@ -51,11 +50,6 @@ cp .env.example .env.local
 
 Configure your environment variables:
 ```env
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-
 # Paystack
 NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY=pk_test_your_public_key
 PAYSTACK_SECRET_KEY=sk_test_your_secret_key
@@ -65,11 +59,8 @@ DISCORD_WEBHOOK_URL=your_discord_webhook
 SLACK_WEBHOOK_URL=your_slack_webhook
 ```
 
-3. **Database Setup**
-Run the SQL schema in your Supabase dashboard:
-```sql
--- Copy and execute the contents of src/app/lib/supabase-schema.sql
-```
+3. **Mock Services Setup**
+The application uses client-side mock services that are automatically initialized. No database setup required for demo purposes.
 
 4. **Paystack Webhook Configuration**
 - Go to Paystack Dashboard → Settings → Webhooks
@@ -96,14 +87,15 @@ src/app/
 │   └── webhooks/
 │       └── paystack/route.ts      # Webhook handler
 ├── lib/
-│   ├── paystack.ts               # Paystack integration
-│   ├── orderService.ts           # Order management
-│   └── supabase-schema.sql       # Database schema
+│   ├── paystack-service.ts       # Paystack integration
+│   ├── mock-order-service.ts     # Mock order management
+│   ├── mock-auth-service.ts      # Mock authentication
+│   └── mock-product-service.ts   # Mock product catalog
 └── context/
     └── CartContext.tsx           # Enhanced cart management
 ```
 
-### Database Schema
+### Mock Services Architecture
 - **orders**: Main order information
 - **order_items**: Individual product items
 - **order_tracking_events**: Status timeline
@@ -249,7 +241,6 @@ vercel --prod
 
 ### Environment Variables
 Set all required environment variables in your deployment platform:
-- Supabase credentials
 - Paystack API keys
 - Webhook URLs (optional)
 
@@ -261,19 +252,19 @@ https://yourdomain.com/api/webhooks/paystack
 
 ## 📖 API Reference
 
-### Order Service Methods
+### Mock Order Service Methods
 ```typescript
 // Create new order
-const order = await orderService.createOrder(orderData);
+const order = await mockOrderService.createOrder(orderData);
 
 // Get order details
-const order = await orderService.getOrder(orderId);
+const order = await mockOrderService.getOrder(orderId);
 
 // Update order status
-await orderService.updateOrderStatus(orderId, 'shipped');
+await mockOrderService.updateOrderStatus(orderId, 'shipped');
 
 // Add tracking event
-await orderService.addTrackingEvent(orderId, 'custom', 'Description');
+await mockOrderService.addTrackingEvent(orderId, 'custom', 'Description');
 ```
 
 ### Paystack Integration
@@ -305,21 +296,22 @@ await loadPaystackScript();
 - Verify HTTPS endpoint (required for production)
 - Check webhook signature validation
 
-3. **Database Connection Issues**
-- Verify Supabase credentials
-- Check Row Level Security policies
-- Ensure proper table permissions
+3. **Mock Service Issues**
+- Check localStorage is enabled in browser
+- Verify mock data initialization
+- Clear browser storage if needed
 
 4. **Order Not Creating**
 - Check required fields validation
-- Verify user authentication
-- Review Supabase logs
+- Verify user authentication state
+- Review console logs for errors
 
 ### Debug Mode
 ```javascript
 // Enable debug logging
 console.log('Order creation data:', orderData);
 console.log('Paystack response:', paymentResponse);
+console.log('Mock service state:', localStorage.getItem('orders'));
 ```
 
 ## 🤝 Contributing

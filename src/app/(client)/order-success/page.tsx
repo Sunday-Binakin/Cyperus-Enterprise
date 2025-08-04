@@ -105,7 +105,7 @@ function OrderSuccessContent() {
       }
 
       try {
-        // TODO: Replace with actual Supabase query
+        // TODO: Fetch order from mock order service
         // For now, we'll create mock order data
         const mockOrder: Order = {
           id: orderId,
@@ -146,7 +146,7 @@ function OrderSuccessContent() {
 
         setOrder(mockOrder);
 
-        // Send confirmation email (TODO: implement with Supabase Edge Functions)
+        // Send confirmation email (TODO: implement with email service)
         // await sendOrderConfirmationEmail(mockOrder);
 
         // Notify admin (TODO: implement webhook)
@@ -172,7 +172,7 @@ function OrderSuccessContent() {
 
     setIsDownloading(true);
     try {
-      // TODO: Generate PDF receipt using Supabase Edge Functions
+      // TODO: Generate PDF receipt using PDF service
       // For now, we'll create a simple receipt view
       const receiptWindow = window.open('', '_blank');
       if (receiptWindow) {

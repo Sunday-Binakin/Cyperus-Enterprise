@@ -1,4 +1,4 @@
-// Mock Order Service (replaces Supabase implementation)
+// Mock Order Service for client-side order management
 
 // Types
 export interface ShippingAddress {
@@ -52,7 +52,7 @@ export interface CreateOrderData {
   shipping_fee: number;
   tax_amount?: number;
   discount_amount?: number;
-  payment_method: 'card' | 'mobile_money' | 'bank_transfer';
+  payment_method: 'card' | 'mobile_money' | 'bank_transfer' | 'paystack';
   notes?: string;
 }
 
@@ -100,7 +100,7 @@ export interface Order {
   order_number: string;
   status: 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
   payment_status: 'pending' | 'paid' | 'failed' | 'refunded';
-  payment_method: 'card' | 'mobile_money' | 'bank_transfer';
+  payment_method: 'card' | 'mobile_money' | 'bank_transfer' | 'paystack';
   payment_reference?: string;
   total_amount: number;
   shipping_fee: number;

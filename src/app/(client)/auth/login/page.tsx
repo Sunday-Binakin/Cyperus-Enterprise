@@ -4,14 +4,15 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Toaster, toast } from 'sonner';
-import { useAuth } from '@/app/context/AuthContext';
+import { useAuth } from '@/store/hooks';
 import { FaGoogle, FaGithub } from 'react-icons/fa';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { signIn, resetPassword, signInWithProvider } = useAuth();
+  const { dispatch } = useAuth();
   const [loading, setLoading] = useState(false);
   const [socialLoading, setSocialLoading] = useState<'google' | 'github' | null>(null);
+  const [forgotPasswordLoading, setForgotPasswordLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -22,8 +23,22 @@ export default function LoginPage() {
     
     try {
       setLoading(true);
-      await signIn(formData.email, formData.password);
-      router.push('/account');
+      // Dynamically import auth functions to avoid module resolution issues
+      const { loginUser } = await import('@/store/authActions');
+      await dispatch(loginUser({ 
+        email: formData.email, 
+        password: formData.password 
+      }));
+      
+      // Check for redirect query parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirect = urlParams.get('redirect');
+      
+      if (redirect) {
+        router.push(redirect);
+      } else {
+        router.push('/my-account');
+      }
     } catch (error: unknown) {
       toast.error(error instanceof Error ? error.message : 'An error occurred');
     } finally {
@@ -38,10 +53,15 @@ export default function LoginPage() {
     }
 
     try {
-      await resetPassword(formData.email);
+      setForgotPasswordLoading(true);
+      // Dynamically import auth functions to avoid module resolution issues
+      const { requestPasswordReset } = await import('@/store/authActions');
+      await dispatch(requestPasswordReset(formData.email));
       toast.success('Check your email for the password reset link!');
     } catch (error: unknown) {
       toast.error(error instanceof Error ? error.message : 'An error occurred');
+    } finally {
+      setForgotPasswordLoading(false);
     }
   };
 
@@ -127,7 +147,8 @@ export default function LoginPage() {
                 onClick={async () => {
                   setSocialLoading('google');
                   try {
-                    await signInWithProvider('google');
+                    // Social sign-in not implemented in Redux yet
+                    toast.info('Social sign-in coming soon!');
                   } catch (error: unknown) {
                     toast.error(error instanceof Error ? error.message : 'An error occurred');
                   } finally {
@@ -145,7 +166,8 @@ export default function LoginPage() {
                 onClick={async () => {
                   setSocialLoading('github');
                   try {
-                    await signInWithProvider('github');
+                    // Social sign-in not implemented in Redux yet
+                    toast.info('Social sign-in coming soon!');
                   } catch (error: unknown) {
                     toast.error(error instanceof Error ? error.message : 'An error occurred');
                   } finally {

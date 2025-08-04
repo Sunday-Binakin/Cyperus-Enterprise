@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useAuth } from '@/app/context/AuthContext';
+import { useAuth } from '@/store/hooks';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 export default function Login() {
+  const { dispatch } = useAuth();
   const router = useRouter();
-  const { signIn, resetPassword } = useAuth();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -20,8 +20,14 @@ export default function Login() {
     
     try {
       setLoading(true);
-      await signIn(formData.email, formData.password);
-      router.push('/account');
+      // Dynamically import loginUser to avoid module resolution issues
+      const { loginUser } = await import('@/store/authActions');
+      await dispatch(loginUser({ 
+        email: formData.email, 
+        password: formData.password 
+      }));
+      // User will automatically see the dashboard component due to conditional rendering in my-account page
+      toast.success('Login successful!');
     } catch (error: unknown) {
       toast.error(error instanceof Error ? error.message : 'Login failed');
     } finally {
@@ -29,18 +35,8 @@ export default function Login() {
     }
   };
 
-  const handleResetPassword = async () => {
-    if (!formData.email) {
-      toast.error('Please enter your email address');
-      return;
-    }
-
-    try {
-      await resetPassword(formData.email);
-      toast.success('Password reset link sent! Check your email.');
-    } catch (error: unknown) {
-      toast.error(error instanceof Error ? error.message : 'Password reset failed');
-    }
+  const handleForgotPassword = () => {
+    router.push('/auth/forgot-password');
   };
 
   return (
@@ -112,7 +108,7 @@ export default function Login() {
           <div className="text-sm mb-15">
             <button
               type="button"
-              onClick={handleResetPassword}
+              onClick={handleForgotPassword}
               className="font-medium -ml-1 text-white hover:text-[#EFE554] hover:underline transition-colors"
             >
               Forgot your password?

@@ -1,16 +1,18 @@
 'use client';
 
-import React from 'react'
-import { useAuth } from '@/app/context/AuthContext'
+import React, { useState } from 'react'
+import { useAuth } from '@/store/hooks'
 import Login from '@/app/components/clients/my-account/login'
 import { Register } from '@/app/components/clients/my-account/Register'
 import Dashboard from '@/app/components/clients/my-account/dashboard'
+import FirstLoginPasswordChange from '@/app/components/clients/my-account/FirstLoginPasswordChange'
 
 export default function MyAccountPage() {
-  const { user, loading } = useAuth();
+  const { user, isLoading } = useAuth();
+  const [hasChangedPassword, setHasChangedPassword] = useState(false);
 
   // Show loading state
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="text-center">
