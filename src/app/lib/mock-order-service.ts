@@ -552,7 +552,6 @@ class MockOrderService {
         shipping_address: addressLine,
       });
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.warn('Order confirmation email skipped or failed:', e);
     }
   }

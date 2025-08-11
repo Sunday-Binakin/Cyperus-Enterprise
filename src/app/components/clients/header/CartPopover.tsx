@@ -145,7 +145,7 @@ export default function CartPopover() {
             <p className="text-gray-400 text-lg font-medium mb-2">Your cart is empty</p>
             <p className="text-gray-500 text-sm mb-4">Add some products to get started</p>
             <Link
-              href="/products"
+              href="/"
               className="inline-block bg-[#EFE554] text-black px-6 py-2 rounded-lg text-sm font-medium hover:bg-[#dbd348] transition-colors"
             >
               Continue Shopping

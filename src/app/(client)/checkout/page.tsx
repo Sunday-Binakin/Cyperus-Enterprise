@@ -30,7 +30,6 @@ export default function CheckoutPage() {
   const [savedAddresses, setSavedAddresses] = useState<ShippingAddress[]>([]);
   const [selectedAddressIndex, setSelectedAddressIndex] = useState(0);
   const [showNewAddressForm, setShowNewAddressForm] = useState(false);
-  const [hasChangedPassword, setHasChangedPassword] = useState(false);
   const [emailForReceipt, setEmailForReceipt] = useState('');
 
 
@@ -46,7 +45,7 @@ export default function CheckoutPage() {
   });
 
   const subtotal = getTotalPrice();
-  const shippingFee = subtotal > 100 ? 0 : 15; // Free shipping over GH₵100
+  const shippingFee = 0; // Free shipping for testing
   const tax = subtotal * 0.025; // 2.5% VAT
   const total = subtotal + shippingFee + tax;
 

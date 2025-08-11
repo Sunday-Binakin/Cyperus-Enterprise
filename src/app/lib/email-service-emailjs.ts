@@ -16,9 +16,21 @@ const CONFIRMATION_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_CONFIRMATION_TE
 
 let initialized = false;
 
+type EmailJSModule = {
+  default: {
+    init: (opts: { publicKey: string }) => void;
+    send: (
+      serviceId: string,
+      templateId: string,
+      templateParams: Record<string, unknown>,
+      options: { publicKey: string }
+    ) => Promise<{ status: number }>;
+  };
+};
+
 async function getEmailJS() {
-  const mod = await import('@emailjs/browser');
-  const emailjs = mod.default || (mod as any);
+  const mod = (await import('@emailjs/browser')) as unknown as EmailJSModule;
+  const emailjs = mod.default;
   if (!initialized && typeof window !== 'undefined' && PUBLIC_KEY) {
     try {
       if (typeof emailjs.init === 'function') {
@@ -27,7 +39,6 @@ async function getEmailJS() {
       initialized = true;
     } catch (e) {
       // Safe to continue; we'll fall back to sending with publicKey arg
-      // eslint-disable-next-line no-console
       console.warn('EmailJS init failed:', e);
     }
   }
@@ -38,7 +49,6 @@ export async function sendOrderConfirmation(params: OrderConfirmationParams): Pr
   if (typeof window === 'undefined') return false; // client-only
 
   if (!SERVICE_ID || !PUBLIC_KEY || !CONFIRMATION_TEMPLATE_ID) {
-    // eslint-disable-next-line no-console
     console.warn('EmailJS env not configured. Skipping order confirmation email.');
     return false;
   }
@@ -65,7 +75,6 @@ export async function sendOrderConfirmation(params: OrderConfirmationParams): Pr
 
     return res?.status === 200;
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.warn('EmailJS sendOrderConfirmation failed:', error);
     return false;
   }

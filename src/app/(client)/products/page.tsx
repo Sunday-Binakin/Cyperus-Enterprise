@@ -3,8 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { productService, ProductSearchFilters } from '@/app/lib/product-service';
 import { Product, ProductVariant } from '@/app/lib/mock-data';
-import { useCart } from '@/store/hooks';
-import { addItem, CartItem } from '@/store/cartSlice';
+import { useCart } from '@/app/context/CartContext';
 import { toast } from 'sonner';
 import Image from 'next/image';
 
@@ -15,7 +14,7 @@ export default function ProductsPage() {
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState('');
-  const { dispatch } = useCart();
+  const { addItem } = useCart();
 
   const loadProducts = useCallback(async () => {
     try {
@@ -81,7 +80,7 @@ export default function ProductsPage() {
         inventory: variant ? variant.stock_quantity : product.stock_quantity
       };
 
-      dispatch(addItem(cartItemData));
+      addItem(cartItemData);
       toast.success('Added to cart successfully!');
     } catch (error) {
       console.error('Error adding to cart:', error);
