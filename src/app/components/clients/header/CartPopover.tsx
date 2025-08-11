@@ -1,8 +1,6 @@
 'use client';
 
-import { useCart } from '../../../../store/hooks';
-import { useAppSelector, useAppDispatch } from '../../../../store/hooks';
-import { removeItem, updateQuantity } from '../../../../store/cartSlice';
+import { useCart } from '@/app/context/CartContext';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,12 +8,9 @@ import { Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function CartPopover() {
-  const { cartItems, totalPrice } = useCart();
-  const authState = useAppSelector((state) => state.auth);
-  const user = authState?.user ?? null;
-  const dispatch = useAppDispatch();
+  const { items, getTotalPrice, removeItem, updateQuantity } = useCart();
   const router = useRouter();
-  
+  const totalPrice = getTotalPrice();
   const formattedTotal = new Intl.NumberFormat('en-NG', {
     style: 'currency',
     currency: 'GHS',
@@ -23,17 +18,12 @@ export default function CartPopover() {
   }).format(totalPrice).replace('GHS', 'GH₵');
 
   const handleProceedToCheckout = () => {
-    if (cartItems.length === 0) {
+    if (items.length === 0) {
       toast.error('Your cart is empty');
       return;
     }
 
-    if (!user) {
-      toast.error('Please sign in to continue');
-      router.push('/auth/login?redirect=/checkout');
-      return;
-    }
-
+    // guest-only: go straight to checkout
     router.push('/checkout');
   };
 
@@ -44,14 +34,14 @@ export default function CartPopover() {
   return (
     <div className="absolute right-0 mt-2 w-96 bg-black rounded-lg shadow-2xl border border-gray-800 z-50 animate-in slide-in-from-top-2 duration-200">
       <div className="p-6">
-        {cartItems.length > 0 ? (
+        {items.length > 0 ? (
           <>
             <div className="mb-4">
-              <h3 className="text-lg font-semibold text-white">Shopping Cart ({cartItems.length} {cartItems.length === 1 ? 'item' : 'items'})</h3>
+              <h3 className="text-lg font-semibold text-white">Shopping Cart ({items.length} {items.length === 1 ? 'item' : 'items'})</h3>
             </div>
             
             <div className="max-h-80 overflow-y-auto space-y-4 mb-6">
-              {cartItems.map((item) => (
+              {items.map((item) => (
                 <div
                   key={item.product_id}
                   className="flex items-center gap-4 p-3 bg-gray-900 rounded-lg border border-gray-800 hover:border-gray-700 transition-colors"
@@ -79,7 +69,7 @@ export default function CartPopover() {
                       </p>
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() => dispatch(updateQuantity({ productId: item.product_id, quantity: (item.quantity || 1) - 1 }))}
+                          onClick={() => updateQuantity(item.product_id, (item.quantity || 1) - 1)}
                           className="w-6 h-6 rounded-full bg-gray-700 text-white text-xs hover:bg-gray-600 transition-colors flex items-center justify-center"
                           disabled={(item.quantity || 1) <= 1}
                         >
@@ -87,7 +77,7 @@ export default function CartPopover() {
                         </button>
                         <span className="text-xs text-gray-300 w-8 text-center">{item.quantity || 1}</span>
                         <button
-                          onClick={() => dispatch(updateQuantity({ productId: item.product_id, quantity: (item.quantity || 1) + 1 }))}
+                          onClick={() => updateQuantity(item.product_id, (item.quantity || 1) + 1)}
                           className="w-6 h-6 rounded-full bg-gray-700 text-white text-xs hover:bg-gray-600 transition-colors flex items-center justify-center"
                         >
                           +
@@ -104,7 +94,7 @@ export default function CartPopover() {
                   </div>
                   
                   <button
-                    onClick={() => dispatch(removeItem(item.product_id))}
+                    onClick={() => removeItem(item.product_id)}
                     className="text-red-400 hover:text-red-300 transition-colors p-1"
                     title="Remove item"
                   >

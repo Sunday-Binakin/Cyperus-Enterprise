@@ -4,8 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Product } from '@/app/types/product';
 import { TiShoppingCart } from 'react-icons/ti';
-import { useCart } from '@/store/hooks';
-import { addItem } from '@/store/cartSlice';
+import { useCart } from '@/app/context/CartContext';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -15,7 +14,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, categoryPath = 'bitter-kola' }: ProductCardProps) {
-  const { dispatch } = useCart();
+  const { addItem } = useCart();
   const [isAdding, setIsAdding] = useState(false);
   const formattedPrice = `GH₵${product.price.toFixed(2)}`;
 
@@ -28,13 +27,13 @@ export default function ProductCard({ product, categoryPath = 'bitter-kola' }: P
     setIsAdding(true);
     
     try {
-      dispatch(addItem({
+      addItem({
         product_id: product.id,
         name: product.name,
         price: product.price,
         image: product.image,
         inventory: product.stock
-      }));
+      });
       
       toast.success(`${product.name} added to cart!`, {
         duration: 2000,

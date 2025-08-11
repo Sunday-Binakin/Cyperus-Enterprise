@@ -9,12 +9,6 @@ export const store = configureStore({
     cart: cartReducer,
     products: productsReducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
-      },
-    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

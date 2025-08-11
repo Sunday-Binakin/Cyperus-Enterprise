@@ -2,31 +2,11 @@
 
 import Link from 'next/link';
 import React, { useState } from 'react';
-import { useAppDispatch } from '@/store/hooks';
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { useAuth } from '@/app/context/AuthContext';
 import { toast } from 'sonner';
 
-// Create a temporary registration action for testing
-const tempRegisterUser = createAsyncThunk(
-  'temp/registerUser',
-  async (userData: { email: string; password: string; firstName: string; lastName: string }) => {
-    // Simulate registration process
-    console.log('📧 [MOCK] Activation email sent to', userData.email);
-    console.log('🔗 Activation link: http://localhost:3000/auth/activate?token=mock_token&email=' + encodeURIComponent(userData.email));
-    
-    return {
-      id: 'temp_id',
-      email: userData.email,
-      firstName: userData.firstName,
-      lastName: userData.lastName,
-      isActive: false,
-      createdAt: new Date().toISOString()
-    };
-  }
-);
-
 export const Register = () => {
-    const dispatch = useAppDispatch();
+    const { signUp } = useAuth();
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState('');
 
@@ -40,19 +20,10 @@ export const Register = () => {
 
         try {
             setLoading(true);
-            
-            // Use the temporary registration action
-            await dispatch(tempRegisterUser({ 
-                email, 
-                password: 'temp123',
-                firstName: 'User',
-                lastName: 'Name'
-            }));
-            
+            await signUp(email);
             toast.success('Registration initiated! Please check your email for activation instructions.');
             setEmail(''); // Clear the form
         } catch (error: unknown) {
-            console.error('Registration error:', error);
             toast.error(error instanceof Error ? error.message : 'Registration failed');
         } finally {
             setLoading(false);

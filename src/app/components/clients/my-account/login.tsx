@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useAuth } from '@/store/hooks';
+import { useAuth } from '@/app/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 export default function Login() {
-  const { dispatch } = useAuth();
+  const { signIn } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -20,12 +20,7 @@ export default function Login() {
     
     try {
       setLoading(true);
-      // Dynamically import loginUser to avoid module resolution issues
-      const { loginUser } = await import('@/store/authActions');
-      await dispatch(loginUser({ 
-        email: formData.email, 
-        password: formData.password 
-      }));
+      await signIn(formData.email, formData.password);
       // User will automatically see the dashboard component due to conditional rendering in my-account page
       toast.success('Login successful!');
     } catch (error: unknown) {

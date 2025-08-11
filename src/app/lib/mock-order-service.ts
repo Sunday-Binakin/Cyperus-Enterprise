@@ -54,6 +54,7 @@ export interface CreateOrderData {
   discount_amount?: number;
   payment_method: 'card' | 'mobile_money' | 'bank_transfer' | 'paystack';
   notes?: string;
+  customer_email?: string; // added
 }
 
 export interface TrackingEvent {
@@ -115,6 +116,7 @@ export interface Order {
   items: OrderItem[];
   tracking_events?: TrackingEvent[];
   courier_info?: CourierInfo | null;
+  customer_email?: string; // added
 }
 
 // Mock storage for orders
@@ -229,7 +231,8 @@ class MockOrderService {
           description: 'Order placed and awaiting confirmation',
           created_at: timestamp
         }
-      ]
+      ],
+      customer_email: orderData.customer_email,
     };
 
     this.storage.saveOrder(order);
@@ -516,7 +519,42 @@ class MockOrderService {
    */
   async sendOrderConfirmationEmail(orderId: string): Promise<void> {
     await this.delay(100);
-    console.log('Mock: Sending order confirmation email for order:', orderId);
+    const order = this.storage.getOrder(orderId);
+    if (!order) return;
+
+    const itemsPayload = order.items.map((i) => ({
+      name: i.product_name,
+      price: i.price,
+      quantity: i.quantity,
+    }));
+
+    const shippingAddress = order.shipping_address;
+    const addressLine = [
+      shippingAddress.full_name,
+      shippingAddress.address_line_1,
+      shippingAddress.address_line_2,
+      `${shippingAddress.city}, ${shippingAddress.state}`,
+      shippingAddress.postal_code,
+      shippingAddress.country,
+      `Phone: ${shippingAddress.phone}`,
+    ]
+      .filter(Boolean)
+      .join(', ');
+
+    try {
+      const { sendOrderConfirmation } = await import('./email-service-emailjs');
+      await sendOrderConfirmation({
+        order_id: order.order_number,
+        customer_name: shippingAddress.full_name,
+        email_to: order.customer_email || 'customer@example.com',
+        items_json: JSON.stringify(itemsPayload),
+        total: order.total_amount,
+        shipping_address: addressLine,
+      });
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn('Order confirmation email skipped or failed:', e);
+    }
   }
 
   async sendShippingNotification(orderId: string): Promise<void> {

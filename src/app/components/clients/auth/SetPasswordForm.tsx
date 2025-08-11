@@ -62,7 +62,7 @@ export const SetPasswordForm = () => {
       }
 
       // Redirect to login page on success
-      router.push('/auth/login?message=Password has been reset successfully');
+      router.push('/my-account?message=Password has been reset successfully');
     } catch (err: Error | unknown) {
       setError(err instanceof Error ? err.message : 'An error occurred while setting the password');
     } finally {

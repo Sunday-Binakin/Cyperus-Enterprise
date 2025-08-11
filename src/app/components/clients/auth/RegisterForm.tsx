@@ -50,7 +50,7 @@ export const RegisterForm = () => {
         throw new Error(data.message || 'Registration failed');
       }
 
-      router.push('/auth/login');
+      router.push('/my-account');
     } catch (err: Error | unknown) {
       setError(err instanceof Error ? err.message : 'An error occurred during registration');
     }

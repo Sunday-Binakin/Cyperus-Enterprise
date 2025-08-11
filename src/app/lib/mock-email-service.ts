@@ -18,6 +18,20 @@ export interface PasswordResetData {
   resetToken: string;
 }
 
+export interface StoredEmailData {
+  id: string;
+  type: 'activation' | 'password_reset';
+  email: string;
+  timestamp: number;
+  activationToken?: string;
+  resetToken?: string;
+  temporaryPassword?: string;
+  used?: boolean;
+  activated?: boolean;
+  activatedAt?: string;
+  usedAt?: string;
+}
+
 class MockEmailService {
   private readonly baseUrl: string;
 
@@ -43,13 +57,14 @@ class MockEmailService {
       console.log('HTML Content:', template.htmlContent);
       
       // Store the email data in localStorage for demo purposes
-      const emailData = {
+      const emailData: StoredEmailData = {
+        id: `activation_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         type: 'activation',
         email: data.email,
         activationToken: data.activationToken,
         temporaryPassword: data.temporaryPassword,
-        sentAt: new Date().toISOString(),
-        activated: false
+        timestamp: Date.now(),
+        used: false
       };
       
       this.saveEmailToStorage(emailData);
@@ -80,11 +95,12 @@ class MockEmailService {
       console.log('HTML Content:', template.htmlContent);
       
       // Store the email data in localStorage for demo purposes
-      const emailData = {
+      const emailData: StoredEmailData = {
+        id: `reset_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         type: 'password_reset',
         email: data.email,
         resetToken: data.resetToken,
-        sentAt: new Date().toISOString(),
+        timestamp: Date.now(),
         used: false
       };
       
@@ -236,7 +252,7 @@ The Cyperus Team
   /**
    * Save email data to localStorage for demo purposes
    */
-  private saveEmailToStorage(emailData: any): void {
+  private saveEmailToStorage(emailData: StoredEmailData): void {
     try {
       const existingEmails = JSON.parse(localStorage.getItem('mock_emails') || '[]');
       existingEmails.push(emailData);
@@ -249,7 +265,7 @@ The Cyperus Team
   /**
    * Get all emails from storage (for demo purposes)
    */
-  getEmailsFromStorage(): any[] {
+  getEmailsFromStorage(): StoredEmailData[] {
     try {
       return JSON.parse(localStorage.getItem('mock_emails') || '[]');
     } catch (error) {
@@ -261,7 +277,7 @@ The Cyperus Team
   /**
    * Find activation email by token
    */
-  findActivationEmail(token: string, email: string): any | null {
+  findActivationEmail(token: string, email: string): StoredEmailData | null {
     const emails = this.getEmailsFromStorage();
     return emails.find(e => 
       e.type === 'activation' && 
@@ -274,7 +290,7 @@ The Cyperus Team
   /**
    * Find password reset email by token
    */
-  findPasswordResetEmail(token: string, email: string): any | null {
+  findPasswordResetEmail(token: string, email: string): StoredEmailData | null {
     const emails = this.getEmailsFromStorage();
     return emails.find(e => 
       e.type === 'password_reset' && 

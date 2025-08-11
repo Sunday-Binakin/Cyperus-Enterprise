@@ -1,7 +1,7 @@
 'use client';
 
 import { useCart } from '@/app/context/CartContext';
-import { useAuth } from '@/app/context/AuthContext';
+// removed AuthContext for guest-only mode
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,7 +10,6 @@ import { toast } from 'sonner';
 
 export default function CartPage() {
   const { items, updateQuantity, removeItem, getTotalPrice, clearCart } = useCart();
-  const { user } = useAuth();
   const router = useRouter();
   const totalPrice = getTotalPrice();
   
@@ -26,12 +25,7 @@ export default function CartPage() {
       return;
     }
 
-    if (!user) {
-      toast.error('Please sign in to continue');
-      router.push('/auth/login?redirect=/checkout');
-      return;
-    }
-
+    // guest-only: go straight to checkout
     router.push('/checkout');
   };
 

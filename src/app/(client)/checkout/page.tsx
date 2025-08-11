@@ -1,7 +1,6 @@
 'use client';
 
 import { useCart } from '@/app/context/CartContext';
-import { useAuth } from '@/app/context/AuthContext';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -9,7 +8,6 @@ import { Loader2, CreditCard, Truck, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
 import { mockOrderService, CreateOrderData } from '@/app/lib/mock-order-service';
 import { paystackService, PaymentData } from '@/app/lib/paystack-service';
-import FirstLoginPasswordChange from '@/app/components/clients/my-account/FirstLoginPasswordChange';
 
 interface ShippingAddress {
   full_name: string;
@@ -26,7 +24,6 @@ interface ShippingAddress {
 
 export default function CheckoutPage() {
   const { items, getTotalPrice, clearCart } = useCart();
-  const { user, loading } = useAuth();
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -34,10 +31,11 @@ export default function CheckoutPage() {
   const [selectedAddressIndex, setSelectedAddressIndex] = useState(0);
   const [showNewAddressForm, setShowNewAddressForm] = useState(false);
   const [hasChangedPassword, setHasChangedPassword] = useState(false);
+  const [emailForReceipt, setEmailForReceipt] = useState('');
 
 
   const [shippingAddress, setShippingAddress] = useState<ShippingAddress>({
-    full_name: user?.user_metadata?.full_name || '',
+    full_name: '',
     phone: '',
     address_line_1: '',
     address_line_2: '',
@@ -65,35 +63,38 @@ export default function CheckoutPage() {
     if (items.length === 0) {
       router.push('/cart');
     }
-  }, [items, router]);
+  }, [items.length, router]);
 
   // Load saved addresses (mock data)
   useEffect(() => {
-    if (user) {
-      // Mock addresses data
-      const mockAddresses: ShippingAddress[] = [
-        {
-          full_name: user.user_metadata?.full_name || 'John Doe',
-          phone: '+233 123 456 789',
-          address_line_1: '123 Independence Avenue',
-          city: 'Accra',
-          state: 'Greater Accra',
-          postal_code: 'GA-123-4567',
-          country: 'Ghana'
-        }
-      ];
-      setSavedAddresses(mockAddresses);
-      if (mockAddresses.length > 0) {
-        setShippingAddress(mockAddresses[0]);
+    // Mock addresses data
+    const mockAddresses: ShippingAddress[] = [
+      {
+        full_name: 'John Doe',
+        phone: '+233 123 456 789',
+        address_line_1: '123 Independence Avenue',
+        city: 'Accra',
+        state: 'Greater Accra',
+        postal_code: 'GA-123-4567',
+        country: 'Ghana'
       }
+    ];
+    setSavedAddresses(mockAddresses);
+    if (mockAddresses.length > 0) {
+      setShippingAddress(mockAddresses[0]);
     }
-  }, [user]);
+  }, []);
 
   const validateForm = () => {
     const requiredFields = ['full_name', 'phone', 'address_line_1', 'city', 'state'];
     const missingFields = requiredFields.filter(field => 
       !shippingAddress[field as keyof ShippingAddress]?.trim()
     );
+
+    if (!emailForReceipt.trim()) {
+      toast.error('Please enter your email for receipt');
+      return false;
+    }
 
     if (missingFields.length > 0) {
       toast.error(`Please fill in: ${missingFields.join(', ').replace(/_/g, ' ')}`);
@@ -106,8 +107,7 @@ export default function CheckoutPage() {
   const createOrder = async () => {
     try {
       const orderData: CreateOrderData = {
-        user_id: user?.id || undefined,
-        session_id: !user ? crypto.randomUUID() : undefined,
+        session_id: crypto.randomUUID(),
         items: items.map(item => ({
           product_id: item.product_id,
           product_name: item.name,
@@ -120,7 +120,8 @@ export default function CheckoutPage() {
         total_amount: total,
         shipping_fee: shippingFee,
         tax_amount: tax,
-        payment_method: 'paystack'
+        payment_method: 'paystack',
+        customer_email: emailForReceipt || ''
       };
 
       const order = await mockOrderService.createOrder(orderData);
@@ -132,12 +133,12 @@ export default function CheckoutPage() {
   };
 
   const handlePaystackPayment = async (orderId: string) => {
-    if (!user?.email) {
-      throw new Error('User email is required for payment');
+    if (!emailForReceipt) {
+      throw new Error('Email is required for receipt');
     }
 
     const paymentData: PaymentData = {
-      email: user.email,
+      email: emailForReceipt,
       amount: total,
       currency: 'GHS',
       reference: `order_${orderId}_${Date.now()}`,
@@ -146,7 +147,6 @@ export default function CheckoutPage() {
       phone: shippingAddress.phone,
       metadata: {
         order_id: orderId,
-        customer_id: user.id,
         customer_name: shippingAddress.full_name,
         shipping_address: JSON.stringify(shippingAddress)
       },
@@ -169,6 +169,14 @@ export default function CheckoutPage() {
       const paymentResponse = await handlePaystackPayment(orderId);
       
       if (paymentResponse && paymentResponse.status === 'success') {
+        // mark paid and send confirmation email
+        try {
+          await mockOrderService.updatePaymentStatus(orderId, 'paid', paymentResponse.reference);
+          await mockOrderService.sendOrderConfirmationEmail(orderId);
+        } catch (e) {
+          console.warn('Post-payment updates failed:', e);
+        }
+
         // Clear cart on successful payment
         clearCart();
         
@@ -198,16 +206,8 @@ export default function CheckoutPage() {
     }
   }, [items.length, router]);
 
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    if (!loading && !user) {
-      toast.error('Please sign in to continue with checkout');
-      router.push('/my-account');
-    }
-  }, [loading, user, router]);
-
   // Show loading state
-  if (loading) {
+  if (false) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
@@ -215,27 +215,6 @@ export default function CheckoutPage() {
           <p className="text-white">Loading...</p>
         </div>
       </div>
-    );
-  }
-
-  // Redirect to login if not authenticated
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#EFE554] mx-auto mb-4"></div>
-          <p className="text-white">Redirecting to sign in...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // If user is logged in but it's their first login and they haven't changed password yet
-  if (user.isFirstLogin && !hasChangedPassword) {
-    return (
-      <FirstLoginPasswordChange 
-        onPasswordChanged={() => setHasChangedPassword(true)}
-      />
     );
   }
 
@@ -274,7 +253,19 @@ export default function CheckoutPage() {
                 <h2 className="text-xl font-semibold">Shipping Address</h2>
               </div>
 
-              {user && savedAddresses.length > 0 && !showNewAddressForm ? (
+              {/* Guest email for receipt */}
+              <div className="mb-4">
+                <label className="block text-sm text-gray-400 mb-2">Email for receipt</label>
+                <input
+                  type="email"
+                  placeholder="you@example.com"
+                  value={emailForReceipt}
+                  onChange={(e) => setEmailForReceipt(e.target.value)}
+                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-[#EFE554] focus:outline-none"
+                />
+              </div>
+
+              {savedAddresses.length > 0 && !showNewAddressForm ? (
                 <div className="space-y-4">
                   {savedAddresses.map((address, index) => (
                     <div

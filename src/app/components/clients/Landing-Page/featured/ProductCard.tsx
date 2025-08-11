@@ -2,8 +2,7 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { TiShoppingCart } from 'react-icons/ti';
-import { useCart } from '@/store/hooks';
-import { addItem } from '@/store/cartSlice';
+import { useCart } from '@/app/context/CartContext';
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 
@@ -16,15 +15,15 @@ interface ProductCardProps {
 
 export default function ProductCard({ id, name, price, image }: ProductCardProps) {
   const router = useRouter();
-  const { cartItems, dispatch } = useCart();
+  const { items, addItem } = useCart();
   const [isInCart, setIsInCart] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   
   useEffect(() => {
-    if (id && cartItems) {
-      setIsInCart(cartItems.some(item => item.product_id === id.toString()));
+    if (id && items) {
+      setIsInCart(items.some(item => item.product_id === id.toString()));
     }
-  }, [cartItems, id]);
+  }, [items, id]);
   
   // Add safety check for id - move after hooks
   if (!id || !name || !price || !image) {
@@ -42,13 +41,13 @@ export default function ProductCard({ id, name, price, image }: ProductCardProps
     setIsAdding(true);
     
     try {
-      dispatch(addItem({
+      await addItem({
         product_id: id.toString(), // Use product_id as required by cart context
         name,
         price,
         image,
         inventory: 999 // Default inventory for featured products
-      }));
+      });
       
       toast.success(`${name} added to cart!`, {
         duration: 2000,
