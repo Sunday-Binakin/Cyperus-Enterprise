@@ -1,4 +1,4 @@
-// Mock data for products (replaces Supabase database)
+// Mock data for products and client-side storage
 
 export interface Product {
   id: string;

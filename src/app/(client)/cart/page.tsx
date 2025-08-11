@@ -1,12 +1,16 @@
 'use client';
 
 import { useCart } from '@/app/context/CartContext';
+// removed AuthContext for guest-only mode
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Trash2, Plus, Minus } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function CartPage() {
   const { items, updateQuantity, removeItem, getTotalPrice, clearCart } = useCart();
+  const router = useRouter();
   const totalPrice = getTotalPrice();
   
   const formattedTotal = new Intl.NumberFormat('en-NG', {
@@ -14,6 +18,16 @@ export default function CartPage() {
     currency: 'GHS',
     minimumFractionDigits: 2
   }).format(totalPrice).replace('GHS', 'GH₵');
+
+  const handleProceedToCheckout = () => {
+    if (items.length === 0) {
+      toast.error('Your cart is empty');
+      return;
+    }
+
+    // guest-only: go straight to checkout
+    router.push('/checkout');
+  };
 
   if (items.length === 0) {
     return (
@@ -29,7 +43,7 @@ export default function CartPage() {
             <h2 className="text-2xl font-semibold mb-4">Your cart is empty</h2>
             <p className="text-gray-400 mb-8">Add some products to get started</p>
             <Link
-              href="/shop"
+              href="/"
               className="inline-block bg-[#EFE554] text-black px-8 py-3 rounded-lg font-semibold hover:bg-[#dbd348] transition-colors"
             >
               Continue Shopping
@@ -154,10 +168,7 @@ export default function CartPage() {
               </div>
               
               <button
-                onClick={() => {
-                  // TODO: Implement Paystack checkout
-                  console.log('Proceeding to checkout with items:', items);
-                }}
+                onClick={handleProceedToCheckout}
                 className="w-full bg-[#EFE554] text-black py-3 px-6 rounded-lg font-semibold hover:bg-[#dbd348] transition-colors mb-4"
               >
                 Proceed to Checkout

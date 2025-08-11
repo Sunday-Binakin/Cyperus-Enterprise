@@ -32,7 +32,7 @@ export default function FeaturedProducts() {
           {/* View All Featured Button for Mobile */}
           <div className="mt-6 flex justify-center">
             <Link 
-              href="/products" 
+              href="/" 
               className="w-full max-w-sm mx-auto block text-center border border-gray-300 text-white py-3 px-6 rounded-lg hover:bg-gray-800 hover:border-[#EFE554] transition-all duration-300"
             >
               View All Featured Products
@@ -55,4 +55,4 @@ export default function FeaturedProducts() {
       </div>
     </div>
   );
-} 
+}

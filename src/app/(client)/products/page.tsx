@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { productService, ProductSearchFilters } from '@/app/lib/product-service';
 import { Product, ProductVariant } from '@/app/lib/mock-data';
-import { useCart, CartItem } from '@/app/context/CartContext';
+import { useCart } from '@/app/context/CartContext';
 import { toast } from 'sonner';
 import Image from 'next/image';
 
@@ -72,7 +72,7 @@ export default function ProductsPage() {
         ? product.price + variant.price 
         : product.price;
 
-      const cartItem: CartItem = {
+      const cartItemData = {
         product_id: product.id,
         name: variant ? `${product.name} - ${variant.name}` : product.name,
         price: finalPrice,
@@ -80,7 +80,7 @@ export default function ProductsPage() {
         inventory: variant ? variant.stock_quantity : product.stock_quantity
       };
 
-      await addItem(cartItem);
+      addItem(cartItemData);
       toast.success('Added to cart successfully!');
     } catch (error) {
       console.error('Error adding to cart:', error);

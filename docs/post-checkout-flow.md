@@ -1,14 +1,14 @@
 # Post-Checkout User Flow Documentation
 
 ## Overview
-This document outlines the complete post-checkout user flow for the Cyperus e-commerce application, integrating Supabase and Paystack for a seamless order processing experience.
+This document outlines the complete post-checkout user flow for the Cyperus e-commerce application, using client-side mock services and Paystack for a seamless order processing experience.
 
 ## Architecture
 
 ### Tech Stack
 - **Frontend**: Next.js 14 with App Router
-- **Database**: Supabase (PostgreSQL)
-- **Authentication**: Supabase Auth
+- **Data Management**: Client-side mock services with localStorage
+- **Authentication**: Mock authentication service
 - **Payments**: Paystack
 - **State Management**: React Context API
 - **Notifications**: Sonner (Toast), Canvas Confetti
@@ -24,7 +24,7 @@ This document outlines the complete post-checkout user flow for the Cyperus e-co
 - Shipping address management (auto-fill from saved addresses)
 - Payment method selection (Paystack/Cash on Delivery)
 - Form validation and error handling
-- Integration with Supabase for order creation
+- Integration with mock order service for order creation
 - Paystack payment processing
 
 **Key Functions**:
@@ -69,15 +69,17 @@ This document outlines the complete post-checkout user flow for the Cyperus e-co
 - Sorting options (newest/oldest first)
 - Quick actions (view details, download receipt)
 
-## Backend Integration
+## Data Management
 
-### Supabase Schema
-**File**: `src/app/lib/supabase-schema.sql`
+### Mock Services Architecture
+**Files**: `src/app/lib/mock-*.ts`
 
-**Tables**:
-- `orders`: Main order information
-- `order_items`: Individual items in each order
-- `order_tracking_events`: Order status timeline
+**Services**:
+- `mock-order-service.ts`: Order creation and management
+- `mock-auth-service.ts`: User authentication 
+- `mock-product-service.ts`: Product catalog management
+
+**Storage**: All data persisted in browser localStorage
 - `order_courier_info`: Delivery courier details
 - `customer_addresses`: Saved customer addresses
 - `cart_items`: Persistent cart storage
@@ -265,11 +267,9 @@ NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY=your_paystack_public_key
 PAYSTACK_SECRET_KEY=your_paystack_secret_key
 ```
 
-### 2. Database Setup
-```sql
--- Run the Supabase schema
-psql -h your_supabase_host -d postgres -f src/app/lib/supabase-schema.sql
-```
+### 2. Mock Services Setup
+Mock services are automatically initialized - no additional setup required.
+All data is stored in browser localStorage for demo purposes.
 
 ### 3. Paystack Configuration
 1. Create Paystack account and get API keys

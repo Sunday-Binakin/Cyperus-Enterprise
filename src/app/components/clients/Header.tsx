@@ -7,7 +7,6 @@ import CartPopover from "./header/CartPopover";
 import { NAV_ITEMS, isNavItemWithDropdown } from "./header/constants";
 import Logo from "./header/Logo";
 import MobileMenuButton from "./header/MobileMenuButton";
-import { useAuth } from "@/app/context/AuthContext";
 import { useCart } from "@/app/context/CartContext";
 import Link from "next/link";
 
@@ -17,11 +16,9 @@ export default function Header() {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isAnyDropdownHovered, setIsAnyDropdownHovered] = useState(false);
   const [showCartPopover, setShowCartPopover] = useState(false);
-  const [showAccountDropdown, setShowAccountDropdown] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const cartRef = useRef<HTMLDivElement>(null);
   const { getTotalItems } = useCart();
-  const { user, signOut } = useAuth() ?? { user: null, signOut: async () => {} };
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -75,7 +72,7 @@ export default function Header() {
         <div className="flex flex-row justify-between items-center p-4 w-full px-6">
           {/* Logo */}
           <div>
-            <Logo   />
+            <Logo />
           </div>
 
           {/* Nav links - hidden on mobile */}
@@ -98,50 +95,11 @@ export default function Header() {
                   <NavItem key={index} label={item.label} href={item.href} />
                 )
               )}
-              
-              {/* Auth-based nav items */}
-              {user ? (
-                <div className="flex items-center gap-4">
-                  <Link href="/account" className="text-white hover:text-[#EFE554] transition-colors">
-                    MY ACCOUNT
-                  </Link>
-                  <button 
-                    onClick={() => signOut()}
-                    className="bg-[#EFE554] text-[#55006F] px-4 py-2 rounded hover:bg-[#55006F] hover:text-[#EFE554] transition-colors"
-                  >
-                    Logout
-                  </button>
-                </div>
-              ) : (
-                <div className="relative group">
-                  <button className="text-white hover:text-[#EFE554] transition-colors flex items-center gap-1 font-medium">
-                    MY ACCOUNT
-                    <svg 
-                      className="w-4 h-4 transition-transform group-hover:rotate-180" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                  
-                  <div className="absolute right-0 mt-2 w-[12rem] bg-black text-white rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-50">
-                    <Link 
-                      href="/auth/login" 
-                      className="block px-4 py-2 hover:text-[#EFE554] transition-colors"
-                    >
-                      Login
-                    </Link>
-                    <Link 
-                      href="/auth/register" 
-                      className="block px-4 py-2 hover:text-[#EFE554] transition-colors"
-                    >
-                      Register
-                    </Link>
-                  </div>
-                </div>
-              )}
+
+              {/* Optional Orders link for guest */}
+              <Link href="/order-success" className="text-white hover:text-[#EFE554] transition-colors">
+                ORDERS
+              </Link>
             </ul>
           </div>
 
@@ -268,69 +226,16 @@ export default function Header() {
                 </li>
               ))}
               
-              {/* Auth-based nav items */}
-              {user ? (
-                <>
-                  <li className="border-b border-white/20 pb-2">
-                    <Link
-                      href="/account"
-                      className="block py-2 text-lg font-semibold hover:text-[#EFE554] transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      MY ACCOUNT
-                    </Link>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        signOut();
-                        setIsMenuOpen(false);
-                      }}
-                      className="w-full bg-[#EFE554] text-[#55006F] py-3 px-4 rounded font-semibold hover:bg-[#55006F] hover:text-[#EFE554] transition-colors"
-                    >
-                      Logout
-                    </button>
-                  </li>
-                </>
-              ) : (
-                <>
-                  <li className="border-b border-white/20 pb-2">
-                    <button
-                      onClick={() => setShowAccountDropdown(!showAccountDropdown)}
-                      className="flex items-center justify-between w-full py-2 text-lg font-semibold hover:text-[#EFE554] transition-colors"
-                    >
-                      MY ACCOUNT
-                      <svg 
-                        className={`w-4 h-4 transition-transform ${showAccountDropdown ? 'rotate-180' : ''}`} 
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                    
-                    {showAccountDropdown && (
-                      <div className="mt-2 pl-4 space-y-2">
-                        <Link
-                          href="/auth/login"
-                          className="block py-2 text-base text-gray-300 hover:text-[#EFE554] transition-colors"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          Login
-                        </Link>
-                        <Link
-                          href="/auth/register"
-                          className="block py-2 text-base text-gray-300 hover:text-[#EFE554] transition-colors"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          Register
-                        </Link>
-                      </div>
-                    )}
-                  </li>
-                </>
-              )}
+              {/* Optional Orders link for guest */}
+              <li className="border-b border-white/20 pb-2">
+                <Link
+                  href="/order-success"
+                  className="block py-2 text-lg font-semibold hover:text-[#EFE554] transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  ORDERS
+                </Link>
+              </li>
               
               <li className="pt-4">
                 <button className="w-full bg-[#C2A83E] text-white font-semibold py-3 px-4 rounded hover:bg-[#55006F] transition-colors duration-300">

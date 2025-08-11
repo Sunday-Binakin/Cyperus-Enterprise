@@ -1,18 +1,31 @@
 'use client';
 
 import { useCart } from '@/app/context/CartContext';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function CartPopover() {
   const { items, getTotalPrice, removeItem, updateQuantity } = useCart();
+  const router = useRouter();
   const totalPrice = getTotalPrice();
   const formattedTotal = new Intl.NumberFormat('en-NG', {
     style: 'currency',
     currency: 'GHS',
     minimumFractionDigits: 2
   }).format(totalPrice).replace('GHS', 'GH₵');
+
+  const handleProceedToCheckout = () => {
+    if (items.length === 0) {
+      toast.error('Your cart is empty');
+      return;
+    }
+
+    // guest-only: go straight to checkout
+    router.push('/checkout');
+  };
 
   const truncateProductName = (name: string, maxLength: number = 25) => {
     return name.length > maxLength ? `${name.substring(0, maxLength)}...` : name;
@@ -107,11 +120,8 @@ export default function CartPopover() {
                 View Basket
               </Link>
               <button
-                onClick={() => {
-                  // TODO: Implement Paystack checkout
-                  console.log('Proceeding to checkout with items:', items);
-                }}
-                className="bg-[#EFE554] text-black px-4 py-3 rounded-lg text-center text-sm font-medium hover:bg-[#dbd348] transition-colors font-semibold"
+                onClick={handleProceedToCheckout}
+                className="bg-[#EFE554] text-black px-4 py-3 rounded-lg text-center text-sm hover:bg-[#dbd348] transition-colors font-semibold"
               >
                 Checkout
               </button>
@@ -135,7 +145,7 @@ export default function CartPopover() {
             <p className="text-gray-400 text-lg font-medium mb-2">Your cart is empty</p>
             <p className="text-gray-500 text-sm mb-4">Add some products to get started</p>
             <Link
-              href="/shop"
+              href="/"
               className="inline-block bg-[#EFE554] text-black px-6 py-2 rounded-lg text-sm font-medium hover:bg-[#dbd348] transition-colors"
             >
               Continue Shopping
