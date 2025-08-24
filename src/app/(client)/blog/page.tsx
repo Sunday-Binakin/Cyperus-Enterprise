@@ -1,31 +1,41 @@
  "use client";
 
 import React from 'react';
-import { HeroSection } from '@/app/components/shared/HeroSection';
+import { HeroSection } from '@/app/components/clients/contact-us/HeroSection';
 import BlogSection from '@/app/components/clients/Landing-Page/blogSection/BlogSection';
 import SubscribeSection from '@/app/components/clients/blog/SubscribeSection';
 
 export default function BlogPage() {
-  return (
-    <div>
-      <HeroSection
-        title="Blog"
-        backgroundImage="/images/clients/hero/slider1.JPG"
-        height="medium"
-        contentPosition="center"
-        overlayOpacity={60}
-        breadcrumbItems={[
-          { label: 'Home', href: '/' },
-          { label: 'Blog', href: undefined }
-        ]}
-        className="text-white font-bold text-2xl"
-      />
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Blog' },
+  ];
 
-      {/* Blog content */}
-      <BlogSection />
+  const backgroundImage = "/images/clients/hero/slider1.JPG";
+
+  return (
+    <div className="relative">
+      {/* Hero Section with Fixed Background */}
+      <HeroSection 
+        title="Blog"
+        breadcrumbItems={breadcrumbItems}
+        backgroundImage={backgroundImage}
+      />
       
-      {/* Subscribe section with fixed background */}
-      <SubscribeSection />
+      {/* Scrollable Content */}
+      <div className="bg-black">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="space-y-16 py-16">
+              {/* Blog content */}
+              <BlogSection />
+            </div>
+          </div>
+        </div>
+        
+        {/* Subscribe section with fixed background */}
+        <SubscribeSection />
+      </div>
     </div>
   );
 }

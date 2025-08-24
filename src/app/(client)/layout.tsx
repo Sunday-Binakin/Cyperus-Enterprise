@@ -1,8 +1,8 @@
-import Footer from "../components/clients/Footer";
-import FloatingWhatsApp from "../components/clients/FloatingWhatsAppButton";
+import Footer from "@/components/layout/Footer";
+import FloatingWhatsApp from "@/components/shared/FloatingWhatsAppButton";
 import { Toaster } from "sonner";
 import { geist } from '@/app/fonts';
-import Providers from "../components/clients/Providers";
+import Providers from "@/components/shared/Providers";
 import ClientOnlyHeader from "../components/clients/ClientOnlyHeader";
 
 export default function ClientLayout({

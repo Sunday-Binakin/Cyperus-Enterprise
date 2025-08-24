@@ -69,15 +69,15 @@ export default function Header() {
   return (
     <>
       <div className="fixed top-0 left-0 right-0 z-40 flex flex-col bg-[#4A651F]">
-        <div className="flex flex-row justify-between items-center p-4 w-full px-6">
+        <div className="flex flex-row justify-between items-center p-2 lg:p-3 w-full px-4 lg:px-8 min-h-[60px]">
           {/* Logo */}
-          <div>
+          <div className="flex-shrink-0 w-24 md:w-28 lg:w-32 xl:w-40">
             <Logo />
           </div>
 
           {/* Nav links - hidden on mobile */}
-          <div className="hidden md:block">
-            <ul className="flex flex-row gap-4 lg:gap-6 font-semibold whitespace-nowrap">
+          <div className="hidden md:flex flex-1 justify-center overflow-hidden px-2">
+            <ul className="flex flex-row gap-1 md:gap-2 lg:gap-4 font-medium whitespace-nowrap text-xs md:text-sm lg:text-base items-center">
               {/* Standard nav items */}
               {NAV_ITEMS.filter(item => item.label !== 'MY ACCOUNT').map((item, index: number) =>
                 isNavItemWithDropdown(item) ? (
@@ -97,14 +97,14 @@ export default function Header() {
               )}
 
               {/* Optional Orders link for guest */}
-              <Link href="/order-success" className="text-white hover:text-[#EFE554] transition-colors">
+              <Link href="/order-success" className="text-white hover:text-[#EFE554] transition-colors text-xs md:text-sm lg:text-base px-1 md:px-2">
                 ORDERS
               </Link>
             </ul>
           </div>
 
           {/* Cart, Subscribe, and Menu */}
-          <div className="flex flex-row gap-6 items-center">
+          <div className="flex flex-row gap-2 md:gap-3 lg:gap-4 items-center flex-shrink-0">
             <div
               className="hidden md:block relative"
               ref={cartRef}
@@ -115,13 +115,14 @@ export default function Header() {
               {showCartPopover && getTotalItems() > 0 && <CartPopover />}
             </div>
 
-            {/* Subscribe button - hidden on mobile */}
-            <button className="bg-[#C2A83E] text-white font-semibold border border-[#C2A83E] hover:bg-[#55006F] hover:text-white hover:border-[#55006F] transition-colors duration-300 ease-in-out transform hover:scale-105 py-3 px-6 rounded-md hidden md:block">
-              SUBSCRIBE & SAVE
+            {/* Subscribe button - hidden on mobile and small screens */}
+            <button className="bg-[#C2A83E] text-white font-semibold border border-[#C2A83E] hover:bg-[#55006F] hover:text-white hover:border-[#55006F] transition-colors duration-300 ease-in-out transform hover:scale-105 py-1 md:py-2 px-3 md:px-4 lg:px-6 rounded text-xs md:text-sm hidden md:block whitespace-nowrap">
+              <span className="hidden lg:inline">SUBSCRIBE & SAVE</span>
+              <span className="lg:hidden">SUBSCRIBE</span>
             </button>
 
-            {/* Menu icon - only on mobile */}
-            <div className="md:hidden flex items-center gap-4">
+            {/* Menu icon - mobile and tablet */}
+            <div className="md:hidden flex items-center gap-2">
               <div
                 className="relative"
                 onClick={() => getTotalItems() > 0 && setShowCartPopover(!showCartPopover)}
@@ -141,7 +142,7 @@ export default function Header() {
         </div>
 
         {/* Account and search - hidden on mobile */}
-        <div className="hidden md:flex flex-col items-center bg-[#4A651F] py-4 relative z-10 w-full">
+        <div className="hidden lg:flex flex-col items-center bg-[#4A651F] py-2 relative z-10 w-full">
           <div className="w-[90%] max-w-[1400px] mx-auto">
             <div
               className={`transition-all duration-300 transform ${
@@ -156,7 +157,7 @@ export default function Header() {
         </div>
 
         {/* Mobile search bar */}
-        <div className="md:hidden w-full px-4 pb-4">
+        <div className="lg:hidden w-full px-4 pb-2">
           <div
             className={`transition-all duration-300 transform ${
               showSearch
@@ -165,7 +166,7 @@ export default function Header() {
             }`}
           >
             <div className="max-w-full mx-auto">
-              <SearchBar   />
+              <SearchBar />
             </div>
           </div>
         </div>
@@ -249,14 +250,14 @@ export default function Header() {
         {/* Overlay when mobile menu is open */}
         {isMenuOpen && (
           <div
-            className="fixed inset-0 bg-black/50 z-40 md:hidden"
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
             onClick={toggleMenu}
           />
         )}
       </div>
 
       {/* Spacer div to prevent content from going under fixed header */}
-      <div className="h-[80px] md:h-[100px]"></div>
+      <div className="h-[60px] md:h-[80px]"></div>
     </>
   );
 }

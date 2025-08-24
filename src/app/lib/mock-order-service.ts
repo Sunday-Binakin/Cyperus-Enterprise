@@ -102,6 +102,7 @@ export interface Order {
   status: 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
   payment_status: 'pending' | 'paid' | 'failed' | 'refunded';
   payment_method: 'card' | 'mobile_money' | 'bank_transfer' | 'paystack';
+  payment_channel?: string; // Actual payment channel from Paystack (e.g., "mobile_money", "card", etc.)
   payment_reference?: string;
   total_amount: number;
   shipping_fee: number;
@@ -303,7 +304,8 @@ class MockOrderService {
   async updatePaymentStatus(
     orderId: string, 
     paymentStatus: Order['payment_status'], 
-    paymentReference?: string
+    paymentReference?: string,
+    paymentChannel?: string
   ): Promise<void> {
     await this.delay(200);
 
@@ -318,6 +320,7 @@ class MockOrderService {
       ...order,
       payment_status: paymentStatus,
       payment_reference: paymentReference,
+      payment_channel: paymentChannel,
       updated_at: timestamp,
       ...(paymentStatus === 'paid' && { status: 'confirmed' })
     };
@@ -327,7 +330,7 @@ class MockOrderService {
         id: this.generateId(),
         order_id: orderId,
         status: 'confirmed',
-        description: 'Payment confirmed, order is being processed',
+        description: `Payment confirmed via ${paymentChannel || 'paystack'}, order is being processed`,
         created_at: timestamp
       };
 
@@ -503,7 +506,10 @@ class MockOrderService {
     const orderId = paymentData.metadata?.order_id;
     if (!orderId) return;
 
-    await this.updatePaymentStatus(orderId, 'paid', paymentData.reference);
+    // Extract payment channel from paymentData if available
+    const paymentChannel = (paymentData as PaymentWebhookEvent['data'] & { channel?: string }).channel || 'paystack';
+
+    await this.updatePaymentStatus(orderId, 'paid', paymentData.reference, paymentChannel);
     await this.sendOrderConfirmationEmail(orderId);
   }
 
@@ -511,7 +517,10 @@ class MockOrderService {
     const orderId = paymentData.metadata?.order_id;
     if (!orderId) return;
 
-    await this.updatePaymentStatus(orderId, 'failed', paymentData.reference);
+    // Extract payment channel from paymentData if available
+    const paymentChannel = (paymentData as PaymentWebhookEvent['data'] & { channel?: string }).channel || 'paystack';
+
+    await this.updatePaymentStatus(orderId, 'failed', paymentData.reference, paymentChannel);
   }
 
   /**
@@ -541,6 +550,9 @@ class MockOrderService {
       .filter(Boolean)
       .join(', ');
 
+    // Format payment method for display
+    const paymentMethodDisplay = this.formatPaymentMethodForEmail(order.payment_channel || order.payment_method);
+
     try {
       const { sendOrderConfirmation } = await import('./email-service-emailjs');
       await sendOrderConfirmation({
@@ -550,9 +562,35 @@ class MockOrderService {
         items_json: JSON.stringify(itemsPayload),
         total: order.total_amount,
         shipping_address: addressLine,
+        payment_method: paymentMethodDisplay,
       });
     } catch (e) {
       console.warn('Order confirmation email skipped or failed:', e);
+    }
+  }
+
+  /**
+   * Format payment method for email display
+   */
+  private formatPaymentMethodForEmail(paymentChannel?: string): string {
+    if (!paymentChannel) return 'Online Payment';
+    
+    switch (paymentChannel.toLowerCase()) {
+      case 'mobile_money':
+        return 'Mobile Money';
+      case 'card':
+        return 'Card Payment';
+      case 'bank':
+      case 'bank_transfer':
+        return 'Bank Transfer';
+      case 'ussd':
+        return 'USSD';
+      case 'qr':
+        return 'QR Code';
+      case 'paystack':
+        return 'Online Payment';
+      default:
+        return paymentChannel.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     }
   }
 

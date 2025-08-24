@@ -46,8 +46,7 @@ export default function Slideshow() {
         {SLIDES.map((slide, index) => (
           <div
             key={index}
-            className="absolute top-0 left-0 w-full h-full"
-            style={{ transform: `translateX(${index * 100}%)` }}
+            className="flex-shrink-0 w-full h-full relative"
           >
             {/* Background Image with Enhanced Overlay */}
             <div 

@@ -170,7 +170,9 @@ export default function CheckoutPage() {
       if (paymentResponse && paymentResponse.status === 'success') {
         // mark paid and send confirmation email
         try {
-          await mockOrderService.updatePaymentStatus(orderId, 'paid', paymentResponse.reference);
+          // Since we don't have channel info in the immediate response, we'll let the webhook handle it
+          // But we'll update with generic paystack first in case webhook fails
+          await mockOrderService.updatePaymentStatus(orderId, 'paid', paymentResponse.reference, 'paystack');
           await mockOrderService.sendOrderConfirmationEmail(orderId);
         } catch (e) {
           console.warn('Post-payment updates failed:', e);
