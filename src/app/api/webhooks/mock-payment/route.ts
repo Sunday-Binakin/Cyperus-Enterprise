@@ -95,8 +95,8 @@ async function handleChargeSuccess(data: MockChargeData) {
       return;
     }
 
-    // Update payment status to paid
-    await mockOrderService.updatePaymentStatus(orderId, 'paid', data.reference);
+    // Update payment status to paid with the actual payment channel
+    await mockOrderService.updatePaymentStatus(orderId, 'paid', data.reference, data.channel);
     
     // Add tracking event
     await mockOrderService.addTrackingEvent(
@@ -130,8 +130,8 @@ async function handleChargeFailed(data: MockChargeData) {
       return;
     }
 
-    // Update payment status to failed
-    await mockOrderService.updatePaymentStatus(orderId, 'failed', data.reference);
+    // Update payment status to failed with the payment channel
+    await mockOrderService.updatePaymentStatus(orderId, 'failed', data.reference, data.channel);
     
     // Add tracking event
     await mockOrderService.addTrackingEvent(
@@ -143,6 +143,7 @@ async function handleChargeFailed(data: MockChargeData) {
     console.log(`Payment failed for order ${orderId}:`, {
       reference: data.reference,
       reason: data.gateway_response,
+      channel: data.channel,
       customer_email: data.customer.email
     });
 

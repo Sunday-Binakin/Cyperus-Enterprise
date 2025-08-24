@@ -8,6 +8,7 @@ export type OrderConfirmationParams = {
   items_json: string; // JSON stringified items
   total: number;
   shipping_address: string; // single-line formatted address
+  payment_method?: string; // Added payment method
 };
 
 const SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '';
@@ -64,6 +65,7 @@ export async function sendOrderConfirmation(params: OrderConfirmationParams): Pr
       items_json: params.items_json,
       total: params.total,
       shipping_address: params.shipping_address,
+      payment_method: params.payment_method || 'Online Payment',
     } as const;
 
     const res = await emailjs.send(

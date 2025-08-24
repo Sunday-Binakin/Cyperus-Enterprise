@@ -46,11 +46,6 @@ export default function ChoconutPage() {
                   </li>
                 </ol>
               </nav>
-              
-              {/* Subtitle */}
-              <p className="text-lg md:text-xl text-gray-300 max-w-2xl">
-                Discover the perfect harmony of chocolate and coconut in our premium Choconut collection
-              </p>
             </div>
           </div>
         </div>

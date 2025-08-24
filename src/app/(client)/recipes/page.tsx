@@ -1,27 +1,38 @@
 'use client';
 
+import React from 'react';
+import { HeroSection } from '@/app/components/clients/contact-us/HeroSection';
 import FeaturedProducts from '@/app/components/clients/Landing-Page/featured/FeaturedProducts';
-import { HeroSection } from '@/app/components/shared/HeroSection';
 import TigernutsCTA from '@/app/components/clients/recipes/TigernutsCTA';
 
 export default function RecipesPage() {
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Recipes' },
+  ];
+
+  const backgroundImage = "/images/clients/hero/slider1.JPG";
+
   return (
-    <main>
-      <HeroSection
+    <div className="relative">
+      {/* Hero Section with Fixed Background */}
+      <HeroSection 
         title="Delicious Recipes"
-        subtitle="Discover and share amazing recipes from around the world"
-        backgroundImage="/images/clients/hero/slider1.JPG"  
-        breadcrumbItems={[
-          { label: 'Home', href: '/' },
-          { label: 'Recipes', href: '/recipes' },
-        ]}
-        height="medium"
-        contentPosition="center"
-        overlayOpacity={60}
+        breadcrumbItems={breadcrumbItems}
+        backgroundImage={backgroundImage}
       />
       
-      <FeaturedProducts />
-      <TigernutsCTA />
-    </main>
+      {/* Scrollable Content */}
+      <div className="bg-black">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="space-y-16 py-16">
+              <FeaturedProducts />
+            </div>
+          </div>
+        </div>
+        <TigernutsCTA />
+      </div>
+    </div>
   );
 }
