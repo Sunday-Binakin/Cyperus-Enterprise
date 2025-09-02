@@ -13,23 +13,28 @@ type BreadcrumbItem = {
 type HeroSectionProps = {
   breadcrumbItems: BreadcrumbItem[];
   title: string;
-  backgroundImage: string;
+  backgroundImage?: string; // optional to allow safe fallback
 };
 
 export function HeroSection({ breadcrumbItems, title, backgroundImage }: HeroSectionProps) {
+  const hasBg = typeof backgroundImage === 'string' && backgroundImage.trim().length > 0;
   return (
     <div className="relative min-h-screen">
       {/* Fixed Background Image */}
       <div className="fixed inset-0 -z-10">
         <div className="absolute inset-0">
-          <Image
-            src={backgroundImage}
-            alt="Background"
-            fill
-            className="object-cover"
-            priority
-            quality={100}
-          />
+          {hasBg ? (
+            <Image
+              src={backgroundImage as string}
+              alt="Background"
+              fill
+              className="object-cover"
+              priority
+              quality={100}
+            />
+          ) : (
+            <div className="w-full h-full bg-black" />
+          )}
           {/* <div className="absolute inset-0 bg-black" /> */}
           <div className="absolute inset-0 bg-black/40" />
         </div>

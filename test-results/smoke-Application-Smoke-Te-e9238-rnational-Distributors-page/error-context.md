@@ -1,0 +1,524 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - link "Cyperus Logo" [ref=e7] [cursor=pointer]:
+          - /url: /
+          - img "Cyperus Logo" [ref=e8] [cursor=pointer]
+        - list [ref=e10]:
+          - listitem [ref=e12] [cursor=pointer]:
+            - generic [ref=e13] [cursor=pointer]:
+              - text: SHOP
+              - img [ref=e14] [cursor=pointer]
+          - listitem [ref=e17] [cursor=pointer]:
+            - generic [ref=e18] [cursor=pointer]:
+              - text: EXPORTS WITH US
+              - img [ref=e19] [cursor=pointer]
+          - listitem [ref=e21]:
+            - link "ABOUT US" [ref=e22] [cursor=pointer]:
+              - /url: /about-us
+          - listitem [ref=e24] [cursor=pointer]:
+            - generic [ref=e25] [cursor=pointer]:
+              - text: RESOURCE
+              - img [ref=e26] [cursor=pointer]
+          - listitem [ref=e28]:
+            - link "CONTACT US" [ref=e29] [cursor=pointer]:
+              - /url: /contact-us
+          - link "ORDERS" [ref=e30] [cursor=pointer]:
+            - /url: /order-success
+        - generic [ref=e31]:
+          - img [ref=e34] [cursor=pointer]
+          - button "SUBSCRIBE & SAVE" [ref=e38]:
+            - generic [ref=e39]: SUBSCRIBE & SAVE
+      - generic [ref=e44]:
+        - textbox "Search For Products..." [ref=e45]
+        - button [ref=e46]:
+          - img [ref=e47]
+      - generic [ref=e51]:
+        - generic [ref=e52]:
+          - heading "Menu" [level=2] [ref=e53]
+          - button "Close menu" [ref=e54]: ×
+        - list [ref=e55]:
+          - listitem [ref=e56]:
+            - generic [ref=e57]: SHOP
+            - list [ref=e58]:
+              - listitem [ref=e59]:
+                - link "Choconut" [ref=e60] [cursor=pointer]:
+                  - /url: /choconut
+              - listitem [ref=e61]:
+                - link "Bitter Kola" [ref=e62] [cursor=pointer]:
+                  - /url: /bitter-kola
+              - listitem [ref=e63]:
+                - link "Ginger" [ref=e64] [cursor=pointer]:
+                  - /url: /ginger
+              - listitem [ref=e65]:
+                - link "All Products" [ref=e66] [cursor=pointer]:
+                  - /url: /products
+          - listitem [ref=e67]:
+            - generic [ref=e68]: EXPORTS WITH US
+            - list [ref=e69]:
+              - listitem [ref=e70]:
+                - link "Local Distributors" [ref=e71] [cursor=pointer]:
+                  - /url: /local-distributors
+              - listitem [ref=e72]:
+                - link "International Distributors" [ref=e73] [cursor=pointer]:
+                  - /url: /international-distributors
+          - listitem [ref=e74]:
+            - link "ABOUT US" [ref=e75] [cursor=pointer]:
+              - /url: /about-us
+          - listitem [ref=e76]:
+            - generic [ref=e77]: RESOURCE
+            - list [ref=e78]:
+              - listitem [ref=e79]:
+                - link "Blog" [ref=e80] [cursor=pointer]:
+                  - /url: /blog
+              - listitem [ref=e81]:
+                - link "Recipes" [ref=e82] [cursor=pointer]:
+                  - /url: /recipes
+          - listitem [ref=e83]:
+            - link "CONTACT US" [ref=e84] [cursor=pointer]:
+              - /url: /contact-us
+          - listitem [ref=e85]:
+            - link "ORDERS" [ref=e86] [cursor=pointer]:
+              - /url: /order-success
+          - listitem [ref=e87]:
+            - button "SUBSCRIBE & SAVE" [ref=e88]
+    - main [ref=e90]:
+      - main [ref=e91]:
+        - generic [ref=e92]:
+          - generic [ref=e93]:
+            - generic [ref=e97]:
+              - heading "We're Nuts" [level=1] [ref=e98]
+              - heading "About Tigernuts" [level=2] [ref=e99]
+              - generic [ref=e100]:
+                - link "GRAB A TIGERNUT DRINK" [ref=e101] [cursor=pointer]:
+                  - /url: /shop
+                - link "SEE OUR NEAREST STORE" [ref=e102] [cursor=pointer]:
+                  - /url: /stores
+            - generic [ref=e106]:
+              - heading "Natural Goodness" [level=1] [ref=e107]
+              - heading "In Every Sip" [level=2] [ref=e108]
+              - generic [ref=e109]:
+                - link "SHOP NOW" [ref=e110] [cursor=pointer]:
+                  - /url: /shop
+                - link "LEARN MORE" [ref=e111] [cursor=pointer]:
+                  - /url: /about
+          - button "Previous slide" [ref=e112]:
+            - img [ref=e113]
+          - button "Next slide" [ref=e115]:
+            - img [ref=e116]
+          - generic [ref=e118]:
+            - button "Go to slide 1" [ref=e119]
+            - button "Go to slide 2" [ref=e120]
+        - generic [ref=e123]:
+          - generic [ref=e124]:
+            - generic [ref=e125]:
+              - generic [ref=e126]:
+                - img "Tigernut Choconut Variant" [ref=e127]
+                - paragraph [ref=e129]: Choconut
+              - generic [ref=e130]:
+                - img "Tigernut Clove Variant" [ref=e131]
+                - paragraph [ref=e133]: Clove
+            - generic [ref=e134]:
+              - generic [ref=e135]:
+                - img "Tigernut Ginger Variant" [ref=e136]
+                - paragraph [ref=e138]: Ginger
+              - generic [ref=e139]:
+                - img "Tigernut Lemon Grass Variant" [ref=e140]
+                - paragraph [ref=e142]: Lemon Grass
+          - generic [ref=e143]:
+            - paragraph [ref=e144]: GHANA'S HEARTBEAT OF TIGERNUT INNOVATION
+            - heading "Discover The Possibilities With Tigernut" [level=2] [ref=e145]
+            - paragraph [ref=e146]:
+              - text: At
+              - strong [ref=e147]: Cyperus Enterprise
+              - text: ", we go beyond beverages — we're reimagining tigernut into everyday essentials. From refreshing drinks to wholesome snacks, nourishing popsicles, baking flour, and even poultry feed, our range is built to serve your"
+              - strong [ref=e148]: health, taste, and community.
+            - paragraph [ref=e149]: Whether you're sipping, snacking, baking, or farming — there's a Cyperus product made just for you.
+            - button "LEARN SOME CULINARY MAGIC" [ref=e150]:
+              - generic [ref=e151]: LEARN SOME CULINARY MAGIC
+        - generic [ref=e155]:
+          - generic [ref=e156]:
+            - paragraph [ref=e157]: Our Signature Tigernut Products
+            - heading "Tigernut Goodness, The Cyperus Way" [level=2] [ref=e158]
+          - generic [ref=e159]:
+            - generic [ref=e160]:
+              - 'img "TIGERNUTS MEAL SWALLOW: COCONUT MIX 1700g" [ref=e162]'
+              - generic [ref=e163]:
+                - 'heading "TIGERNUTS MEAL SWALLOW: COCONUT MIX 1700g" [level=3] [ref=e164]'
+                - paragraph [ref=e165]: GH₵ 2.00
+                - button "ADD TO BASKET" [ref=e166]:
+                  - img [ref=e167]
+                  - generic [ref=e172]: ADD TO BASKET
+            - generic [ref=e173]:
+              - 'img "TIGERNUTS MEAL SWALLOW: ORIGINAL 1700g" [ref=e175]'
+              - generic [ref=e176]:
+                - 'heading "TIGERNUTS MEAL SWALLOW: ORIGINAL 1700g" [level=3] [ref=e177]'
+                - paragraph [ref=e178]: GH₵ 2.00
+                - button "ADD TO BASKET" [ref=e179]:
+                  - img [ref=e180]
+                  - generic [ref=e185]: ADD TO BASKET
+            - generic [ref=e186]:
+              - 'img "DRIZZLES: TIGERNUT CHILLI SAUCE 320 ML" [ref=e188]'
+              - generic [ref=e189]:
+                - 'heading "DRIZZLES: TIGERNUT CHILLI SAUCE 320 ML" [level=3] [ref=e190]'
+                - paragraph [ref=e191]: GH₵ 2.00
+                - button "ADD TO BASKET" [ref=e192]:
+                  - img [ref=e193]
+                  - generic [ref=e198]: ADD TO BASKET
+            - generic [ref=e199]:
+              - 'img "SNACKS: TRAIL MIX WITH NUTS 320 Grams" [ref=e201]'
+              - generic [ref=e202]:
+                - 'heading "SNACKS: TRAIL MIX WITH NUTS 320 Grams" [level=3] [ref=e203]'
+                - paragraph [ref=e204]: GH₵ 2.00
+                - button "ADD TO BASKET" [ref=e205]:
+                  - img [ref=e206]
+                  - generic [ref=e211]: ADD TO BASKET
+            - generic [ref=e212]:
+              - 'img "SNACKS: TRAIL MIX WITH NUTS 320 Grams" [ref=e214]'
+              - generic [ref=e215]:
+                - 'heading "SNACKS: TRAIL MIX WITH NUTS 320 Grams" [level=3] [ref=e216]'
+                - paragraph [ref=e217]: GH₵ 2.00
+                - button "ADD TO BASKET" [ref=e218]:
+                  - img [ref=e219]
+                  - generic [ref=e224]: ADD TO BASKET
+            - generic [ref=e225]:
+              - 'img "SNACKS: TRAIL MIX WITH NUTS 320 Grams" [ref=e227]'
+              - generic [ref=e228]:
+                - 'heading "SNACKS: TRAIL MIX WITH NUTS 320 Grams" [level=3] [ref=e229]'
+                - paragraph [ref=e230]: GH₵ 2.00
+                - button "ADD TO BASKET" [ref=e231]:
+                  - img [ref=e232]
+                  - generic [ref=e237]: ADD TO BASKET
+            - generic [ref=e238]:
+              - 'img "SNACKS: TRAIL MIX WITH NUTS 320 Grams" [ref=e240]'
+              - generic [ref=e241]:
+                - 'heading "SNACKS: TRAIL MIX WITH NUTS 320 Grams" [level=3] [ref=e242]'
+                - paragraph [ref=e243]: GH₵ 2.00
+                - button "ADD TO BASKET" [ref=e244]:
+                  - img [ref=e245]
+                  - generic [ref=e250]: ADD TO BASKET
+            - generic [ref=e251]:
+              - 'img "SNACKS: TRAIL MIX WITH NUTS 320 Grams" [ref=e253]'
+              - generic [ref=e254]:
+                - 'heading "SNACKS: TRAIL MIX WITH NUTS 320 Grams" [level=3] [ref=e255]'
+                - paragraph [ref=e256]: GH₵ 2.00
+                - button "ADD TO BASKET" [ref=e257]:
+                  - img [ref=e258]
+                  - generic [ref=e263]: ADD TO BASKET
+        - generic [ref=e266]:
+          - img "Tigernut Drink Splash" [ref=e268]
+          - generic [ref=e269]:
+            - paragraph [ref=e270]: WHY CHOOSE CYPERUS ENTERPRISE
+            - heading "Experience the Power of Tigernut — Reimagined for You" [level=2] [ref=e271]
+            - paragraph [ref=e272]: At Cyperus Enterprise, we believe tigernut isn't just a superfood — it's a solution for health, taste, and opportunity. Every product we make is crafted to nourish your body and uplift our communities.
+            - generic [ref=e273]:
+              - generic [ref=e274]:
+                - generic [ref=e275]: 🌱
+                - generic [ref=e276]:
+                  - heading "Naturally Wholesome" [level=3] [ref=e277]
+                  - paragraph [ref=e278]: We keep it simple and pure. Our tigernuts are sourced straight from trusted farmers and processed with care — no additives, just the real thing.
+              - generic [ref=e279]:
+                - generic [ref=e280]: 🧃
+                - generic [ref=e281]:
+                  - heading "Health You Can Taste" [level=3] [ref=e282]
+                  - paragraph [ref=e283]: From creamy dairy-free drinks to delicious snacks and popsicles, our products are rich in fiber, iron, and plant-based nutrients. Perfect for everyone — including vegans, kids, and the health-conscious.
+              - generic [ref=e284]:
+                - generic [ref=e285]: ⚡
+                - generic [ref=e286]:
+                  - heading "Sustained Energy, Every Day" [level=3] [ref=e287]
+                  - paragraph [ref=e288]: Whether you're starting your morning or need a midday boost, our tigernut-based drinks and snacks give you lasting, natural energy — without the crash.
+              - generic [ref=e289]:
+                - generic [ref=e290]: 💼
+                - generic [ref=e291]:
+                  - heading "Made with Purpose" [level=3] [ref=e292]
+                  - paragraph [ref=e293]: By choosing Cyperus, you're supporting a business that's creating jobs, empowering women, and transforming Ghana's food system — one tigernut at a time.
+            - generic [ref=e294]:
+              - heading "WHAT DRIVES US" [level=3] [ref=e295]
+              - paragraph [ref=e296]: At Cyperus Enterprise, we're driven by more than just food — we're building a future where tigernut powers health, jobs, and purpose.
+              - paragraph [ref=e297]: From farm to bottle, we create clean, nourishing products, empower young women with skills and jobs, and use every part of the tigernut to reduce waste and grow sustainably.
+              - paragraph [ref=e298]: Rooted in Ghana. Crafted for impact.
+        - generic [ref=e301]:
+          - button "Previous category" [ref=e302]:
+            - img [ref=e303]
+          - button "Next category" [ref=e305]:
+            - img [ref=e306]
+          - generic:
+            - generic:
+              - link "Tigernuts Milk Tigernuts Milk" [ref=e309] [cursor=pointer]:
+                - /url: /shop/milk
+                - generic [ref=e310] [cursor=pointer]:
+                  - img "Tigernuts Milk" [ref=e311] [cursor=pointer]
+                  - heading "Tigernuts Milk" [level=3] [ref=e315] [cursor=pointer]
+              - link "Hot Chilli Sauce Hot Chilli Sauce" [ref=e317] [cursor=pointer]:
+                - /url: /shop/sauce
+                - generic [ref=e318] [cursor=pointer]:
+                  - img "Hot Chilli Sauce" [ref=e319] [cursor=pointer]
+                  - heading "Hot Chilli Sauce" [level=3] [ref=e323] [cursor=pointer]
+              - link "Zobo Drink Zobo Drink" [ref=e325] [cursor=pointer]:
+                - /url: /shop/zobo
+                - generic [ref=e326] [cursor=pointer]:
+                  - img "Zobo Drink" [ref=e327] [cursor=pointer]
+                  - heading "Zobo Drink" [level=3] [ref=e331] [cursor=pointer]
+              - link "Original Mix Original Mix" [ref=e333] [cursor=pointer]:
+                - /url: /shop/original
+                - generic [ref=e334] [cursor=pointer]:
+                  - img "Original Mix" [ref=e335] [cursor=pointer]
+                  - heading "Original Mix" [level=3] [ref=e339] [cursor=pointer]
+              - link "Chili Pepper Sauce Chili Pepper Sauce" [ref=e341] [cursor=pointer]:
+                - /url: /shop/chili-pepper-sauce
+                - generic [ref=e342] [cursor=pointer]:
+                  - img "Chili Pepper Sauce" [ref=e343] [cursor=pointer]
+                  - heading "Chili Pepper Sauce" [level=3] [ref=e347] [cursor=pointer]
+              - link "Ginger Drink Ginger Drink" [ref=e349] [cursor=pointer]:
+                - /url: /shop/ginger
+                - generic [ref=e350] [cursor=pointer]:
+                  - img "Ginger Drink" [ref=e351] [cursor=pointer]
+                  - heading "Ginger Drink" [level=3] [ref=e355] [cursor=pointer]
+              - link "Lemon Grass Drink Lemon Grass Drink" [ref=e357] [cursor=pointer]:
+                - /url: /shop/lemon-grass
+                - generic [ref=e358] [cursor=pointer]:
+                  - img "Lemon Grass Drink" [ref=e359] [cursor=pointer]
+                  - heading "Lemon Grass Drink" [level=3] [ref=e363] [cursor=pointer]
+              - link "Turmeric Latte Turmeric Latte" [ref=e365] [cursor=pointer]:
+                - /url: /shop/turmeric-latte
+                - generic [ref=e366] [cursor=pointer]:
+                  - img "Turmeric Latte" [ref=e367] [cursor=pointer]
+                  - heading "Turmeric Latte" [level=3] [ref=e371] [cursor=pointer]
+              - link "Turmeric Latte Turmeric Latte" [ref=e373] [cursor=pointer]:
+                - /url: /shop/turmeric-latte
+                - generic [ref=e374] [cursor=pointer]:
+                  - img "Turmeric Latte" [ref=e375] [cursor=pointer]
+                  - heading "Turmeric Latte" [level=3] [ref=e379] [cursor=pointer]
+              - link "Turmeric Latte Turmeric Latte" [ref=e381] [cursor=pointer]:
+                - /url: /shop/turmeric-latte
+                - generic [ref=e382] [cursor=pointer]:
+                  - img "Turmeric Latte" [ref=e383] [cursor=pointer]
+                  - heading "Turmeric Latte" [level=3] [ref=e387] [cursor=pointer]
+              - link "Turmeric Latte Turmeric Latte" [ref=e389] [cursor=pointer]:
+                - /url: /shop/turmeric-latte
+                - generic [ref=e390] [cursor=pointer]:
+                  - img "Turmeric Latte" [ref=e391] [cursor=pointer]
+                  - heading "Turmeric Latte" [level=3] [ref=e395] [cursor=pointer]
+              - link "Turmeric Latte Turmeric Latte" [ref=e397] [cursor=pointer]:
+                - /url: /shop/turmeric-latte
+                - generic [ref=e398] [cursor=pointer]:
+                  - img "Turmeric Latte" [ref=e399] [cursor=pointer]
+                  - heading "Turmeric Latte" [level=3] [ref=e403] [cursor=pointer]
+          - generic [ref=e404]:
+            - button "View categories 1 to 3" [ref=e405]
+            - button "View categories 4 to 6" [ref=e406]
+            - button "View categories 7 to 9" [ref=e407]
+            - button "View categories 10 to 12" [ref=e408]
+        - generic [ref=e411]:
+          - generic [ref=e412]:
+            - heading "Latest From Our Blog" [level=2] [ref=e413]
+            - paragraph [ref=e414]: Stay informed with our latest insights, tips, and stories about tigernuts and healthy living.
+          - text: prev next
+          - generic [ref=e415]:
+            - generic [ref=e416]:
+              - generic [ref=e417]:
+                - img "The Health Benefits of Tigernut Milk" [ref=e418]
+                - generic [ref=e421]: Health & Wellness
+                - generic [ref=e423]: 5 min read
+              - generic [ref=e424]:
+                - heading "The Health Benefits of Tigernut Milk" [level=3] [ref=e425]:
+                  - link "The Health Benefits of Tigernut Milk" [ref=e426] [cursor=pointer]:
+                    - /url: /blog/health-benefits-tigernut-milk
+                - paragraph [ref=e427]: Discover why tigernut milk is becoming a popular dairy-free alternative packed with nutrients and health benefits.
+                - generic [ref=e428]:
+                  - generic [ref=e429]: January 15, 2024
+                  - link "Read More" [ref=e430] [cursor=pointer]:
+                    - /url: /blog/health-benefits-tigernut-milk
+                    - text: Read More
+                    - img [ref=e431] [cursor=pointer]
+            - generic [ref=e433]:
+              - generic [ref=e434]:
+                - img "5 Delicious Ways to Use Tigernut Flour" [ref=e435]
+                - generic [ref=e438]: Recipes
+                - generic [ref=e440]: 8 min read
+              - generic [ref=e441]:
+                - heading "5 Delicious Ways to Use Tigernut Flour" [level=3] [ref=e442]:
+                  - link "5 Delicious Ways to Use Tigernut Flour" [ref=e443] [cursor=pointer]:
+                    - /url: /blog/delicious-ways-tigernut-flour
+                - paragraph [ref=e444]: Explore creative recipes and cooking tips using our premium tigernut flour for healthy baking.
+                - generic [ref=e445]:
+                  - generic [ref=e446]: January 10, 2024
+                  - link "Read More" [ref=e447] [cursor=pointer]:
+                    - /url: /blog/delicious-ways-tigernut-flour
+                    - text: Read More
+                    - img [ref=e448] [cursor=pointer]
+            - generic [ref=e450]:
+              - generic [ref=e451]:
+                - img "The Future of Sustainable Farming" [ref=e452]
+                - generic [ref=e455]: Sustainability
+                - generic [ref=e457]: 6 min read
+              - generic [ref=e458]:
+                - heading "The Future of Sustainable Farming" [level=3] [ref=e459]:
+                  - link "The Future of Sustainable Farming" [ref=e460] [cursor=pointer]:
+                    - /url: /blog/future-sustainable-farming
+                - paragraph [ref=e461]: How tigernut farming is helping communities and the environment through sustainable agricultural practices.
+                - generic [ref=e462]:
+                  - generic [ref=e463]: January 5, 2024
+                  - link "Read More" [ref=e464] [cursor=pointer]:
+                    - /url: /blog/future-sustainable-farming
+                    - text: Read More
+                    - img [ref=e465] [cursor=pointer]
+            - generic [ref=e467]:
+              - generic [ref=e468]:
+                - img "Complete Tigernut Nutrition Guide" [ref=e469]
+                - generic [ref=e472]: Nutrition
+                - generic [ref=e474]: 7 min read
+              - generic [ref=e475]:
+                - heading "Complete Tigernut Nutrition Guide" [level=3] [ref=e476]:
+                  - link "Complete Tigernut Nutrition Guide" [ref=e477] [cursor=pointer]:
+                    - /url: /blog/tigernut-nutrition-guide
+                - paragraph [ref=e478]: A comprehensive guide to the nutritional value and health benefits of tigernuts for your diet.
+                - generic [ref=e479]:
+                  - generic [ref=e480]: January 1, 2024
+                  - link "Read More" [ref=e481] [cursor=pointer]:
+                    - /url: /blog/tigernut-nutrition-guide
+                    - text: Read More
+                    - img [ref=e482] [cursor=pointer]
+          - link "View All Posts" [ref=e485] [cursor=pointer]:
+            - /url: /blog/all
+            - text: View All Posts
+            - img [ref=e486] [cursor=pointer]
+        - generic [ref=e490]:
+          - generic [ref=e491]:
+            - heading "TESTIMONIALS" [level=2] [ref=e492]
+            - heading "What Our Customers Say" [level=3] [ref=e493]
+          - generic [ref=e495]:
+            - generic [ref=e497]:
+              - img "Akosua Mensah" [ref=e498]
+              - generic [ref=e499]:
+                - generic [ref=e500]: Customer Story
+                - heading "Akosua Mensah" [level=3] [ref=e501]
+                - paragraph [ref=e502]: Health Enthusiast, Accra
+                - paragraph [ref=e503]:
+                  - generic [ref=e504]: “
+                  - generic [ref=e505]: Switching to tigernut milk has completely transformed my morning routine. My digestion improved and I feel more energetic throughout the day. It's creamy, delicious, and my kids love it too!
+                  - generic [ref=e506]: ”
+                - generic [ref=e507]:
+                  - generic [ref=e508]: Read Testimonial
+                  - img [ref=e509]
+            - generic [ref=e512]:
+              - img "Chef Kwame Asante" [ref=e513]
+              - generic [ref=e514]:
+                - generic [ref=e515]: Chef Review
+                - heading "Chef Kwame Asante" [level=3] [ref=e516]
+                - paragraph [ref=e517]: Executive Chef, Five Star Hotel
+                - paragraph [ref=e518]:
+                  - generic [ref=e519]: “
+                  - generic [ref=e520]: Tigernut flour has become my secret ingredient. The nutty flavor and texture it brings to our pastries is absolutely incredible. Our guests constantly ask about our secret ingredient!
+                  - generic [ref=e521]: ”
+                - generic [ref=e522]:
+                  - generic [ref=e523]: Read Testimonial
+                  - img [ref=e524]
+            - generic [ref=e527]:
+              - img "Sarah Osei" [ref=e528]
+              - generic [ref=e529]:
+                - generic [ref=e530]: Fitness Journey
+                - heading "Sarah Osei" [level=3] [ref=e531]
+                - paragraph [ref=e532]: Fitness Trainer, Kumasi
+                - paragraph [ref=e533]:
+                  - generic [ref=e534]: “
+                  - generic [ref=e535]: My clients love the tigernut protein bars I recommend. It's natural, nutritious, and keeps them satisfied during workouts. Perfect for anyone on a health journey!
+                  - generic [ref=e536]: ”
+                - generic [ref=e537]:
+                  - generic [ref=e538]: Read Testimonial
+                  - img [ref=e539]
+          - link "VIEW ALL TESTIMONIALS" [ref=e542] [cursor=pointer]:
+            - /url: /testimonials
+            - text: VIEW ALL TESTIMONIALS
+            - img [ref=e543] [cursor=pointer]
+        - generic [ref=e549]:
+          - img "Tigernut Products" [ref=e551]
+          - generic [ref=e554]:
+            - heading "Subscribe to Our Newsletter" [level=2] [ref=e555]
+            - paragraph [ref=e556]: Get the latest updates, news and product offers sent straight to your inbox.
+            - generic [ref=e557]:
+              - generic [ref=e558]:
+                - textbox "Enter your email" [ref=e559]
+                - button "Subscribe" [ref=e560]
+              - paragraph [ref=e561]: We respect your privacy. Unsubscribe at any time.
+            - generic [ref=e562]:
+              - heading "FOLLOW US" [level=3] [ref=e563]
+              - generic [ref=e564]:
+                - link "facebook" [ref=e565] [cursor=pointer]:
+                  - /url: https://www.facebook.com/cyperusenterprise
+                  - generic [ref=e566] [cursor=pointer]: facebook
+                  - img [ref=e567] [cursor=pointer]
+                - link "twitter" [ref=e569] [cursor=pointer]:
+                  - /url: https://www.twitter.com/cyperusenterprise
+                  - generic [ref=e570] [cursor=pointer]: twitter
+                  - img [ref=e571] [cursor=pointer]
+                - link "instagram" [ref=e573] [cursor=pointer]:
+                  - /url: https://www.instagram.com/cyperusenterprise
+                  - generic [ref=e574] [cursor=pointer]: instagram
+                  - img [ref=e575] [cursor=pointer]
+                - link "linkedin" [ref=e577] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/cyperusenterprise
+                  - generic [ref=e578] [cursor=pointer]: linkedin
+                  - img [ref=e579] [cursor=pointer]
+          - generic:
+            - img "Tigernut Products"
+    - generic [ref=e582]:
+      - generic [ref=e583]:
+        - img "Logo" [ref=e584]
+        - generic [ref=e585]: Your one-stop-shop for nutty, yummy, nutritious, natural, sweet, and healthy tigernut products.
+        - generic [ref=e586]:
+          - img [ref=e588] [cursor=pointer]
+          - img [ref=e591] [cursor=pointer]
+          - img [ref=e594] [cursor=pointer]
+      - generic [ref=e596]:
+        - paragraph [ref=e597]: Contact Us
+        - generic [ref=e598]:
+          - img [ref=e599]
+          - generic [ref=e601]:
+            - paragraph [ref=e602]: "Location:"
+            - paragraph [ref=e603]: Armhia, dodowa Road
+        - generic [ref=e604]:
+          - img [ref=e605]
+          - generic [ref=e608]:
+            - paragraph [ref=e609]: "Email:"
+            - paragraph [ref=e610]: info@cyperus.com
+        - generic [ref=e611]:
+          - img [ref=e612]
+          - generic [ref=e614]:
+            - paragraph [ref=e615]: "Working Hours:"
+            - paragraph [ref=e616]: "Mon - Fri: 9am - 5pm"
+      - generic [ref=e617]:
+        - paragraph [ref=e618]: Our Call Support Team
+        - generic [ref=e619]:
+          - img [ref=e620]
+          - generic [ref=e623]:
+            - paragraph [ref=e624]: Esther Johnson
+            - paragraph [ref=e625]: +233 24 000 0000
+        - generic [ref=e628]:
+          - paragraph [ref=e629]: Esther Johnson
+          - paragraph [ref=e630]: +233 24 000 0000
+        - generic [ref=e633]:
+          - paragraph [ref=e634]: Esther Johnson
+          - paragraph [ref=e635]: +233 24 000 0000
+      - generic [ref=e637]:
+        - paragraph [ref=e638]: Follow Us On Instagram
+        - generic [ref=e640]:
+          - img "Instagram post 1" [ref=e643] [cursor=pointer]
+          - img "Instagram post 2" [ref=e646] [cursor=pointer]
+          - img "Instagram post 3" [ref=e649] [cursor=pointer]
+          - img "Instagram post 4" [ref=e652] [cursor=pointer]
+          - img "Instagram post 5" [ref=e655] [cursor=pointer]
+          - img "Instagram post 6" [ref=e658] [cursor=pointer]
+    - link "Chat on WhatsApp" [ref=e659] [cursor=pointer]:
+      - /url: https://wa.me/233240000000
+      - img [ref=e660] [cursor=pointer]
+      - paragraph [ref=e662] [cursor=pointer]: Hi, How may I help?
+    - region "Notifications alt+T"
+  - alert [ref=e663]
+  - button "Open Next.js Dev Tools" [ref=e669] [cursor=pointer]:
+    - img [ref=e670] [cursor=pointer]
+```

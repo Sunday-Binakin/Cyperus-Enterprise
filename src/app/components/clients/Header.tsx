@@ -97,9 +97,9 @@ export default function Header() {
               )}
 
               {/* Optional Orders link for guest */}
-              <Link href="/order-success" className="text-white hover:text-[#EFE554] transition-colors text-xs md:text-sm lg:text-base px-1 md:px-2">
+              {/* <Link href="/order-success" className="text-white hover:text-[#EFE554] transition-colors text-xs md:text-sm lg:text-base px-1 md:px-2">
                 ORDERS
-              </Link>
+              </Link> */}
             </ul>
           </div>
 
@@ -228,7 +228,7 @@ export default function Header() {
               ))}
               
               {/* Optional Orders link for guest */}
-              <li className="border-b border-white/20 pb-2">
+              {/* <li className="border-b border-white/20 pb-2">
                 <Link
                   href="/order-success"
                   className="block py-2 text-lg font-semibold hover:text-[#EFE554] transition-colors"
@@ -236,7 +236,7 @@ export default function Header() {
                 >
                   ORDERS
                 </Link>
-              </li>
+              </li> */}
               
               <li className="pt-4">
                 <button className="w-full bg-[#C2A83E] text-white font-semibold py-3 px-4 rounded hover:bg-[#55006F] transition-colors duration-300">

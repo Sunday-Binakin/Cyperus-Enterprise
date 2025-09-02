@@ -322,7 +322,7 @@ export default function CheckoutPage() {
                   <input
                     type="text"
                     placeholder="Address Line 2 (Optional)"
-                    value={shippingAddress.address_line_2}
+                    value={shippingAddress.address_line_2 || ''}
                     onChange={(e) => handleAddressChange('address_line_2', e.target.value)}
                     className="md:col-span-2 bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-[#EFE554] focus:outline-none"
                   />
@@ -343,7 +343,7 @@ export default function CheckoutPage() {
                   <input
                     type="text"
                     placeholder="Postal Code"
-                    value={shippingAddress.postal_code}
+                    value={shippingAddress.postal_code || ''}
                     onChange={(e) => handleAddressChange('postal_code', e.target.value)}
                     className="bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-[#EFE554] focus:outline-none"
                   />
