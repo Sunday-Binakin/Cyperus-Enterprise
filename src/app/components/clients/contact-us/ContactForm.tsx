@@ -2,8 +2,12 @@
 
 import { useState } from 'react';
 import { FaArrowRight } from 'react-icons/fa';
+import { sendContactInquiryEmail } from '@/app/actions/sendContactInquiry';
+import { toast } from 'sonner';
+import { Loader2 } from 'lucide-react';
 
 const ContactForm = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -20,10 +24,30 @@ const ContactForm = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
+    setIsSubmitting(true);
+
+    try {
+      const result = await sendContactInquiryEmail(formData);
+
+      if (result.success) {
+        toast.success('Thank you for your message! We will get back to you soon.');
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          phone: '',
+          message: ''
+        });
+      } else {
+        toast.error(result.message || 'Failed to send message. Please try again.');
+      }
+    } catch {
+      toast.error('An unexpected error occurred. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -96,10 +120,20 @@ const ContactForm = () => {
         <div className="flex justify-center">
           <button
             type="submit"
-            className="flex items-center justify-center px-10 py-4 bg-[#55006F] text-white font-medium rounded-lg hover:bg-[#F0B100] transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-900 text-lg w-full max-w-xs mx-auto"
+            disabled={isSubmitting}
+            className="flex items-center justify-center px-10 py-4 bg-[#55006F] text-white font-medium rounded-lg hover:bg-[#F0B100] transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-900 text-lg w-full max-w-xs mx-auto disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Send your message
-            <FaArrowRight className="ml-2" />
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                Sending...
+              </>
+            ) : (
+              <>
+                Send your message
+                <FaArrowRight className="ml-2" />
+              </>
+            )}
           </button>
         </div>
       </form>

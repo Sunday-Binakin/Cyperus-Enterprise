@@ -23,7 +23,7 @@ function useParallax() {
   return { mounted, scrollY };
 }
 
-export default function ParallaxCTA({
+export default function TigernutsCTA({
   backgroundImage = DEFAULT_IMAGE,
   className = ''
 }) {
@@ -37,20 +37,19 @@ export default function ParallaxCTA({
   return (
     <section
       className={`relative w-full min-h-[500px] md:min-h-[600px] flex items-center justify-center overflow-hidden ${className}`}
-      style={{ background: 'transparent' }}
     >
       {/* Parallax Background Image */}
       <div
         ref={bgRef}
-        className="absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat bg-transparent"
+        className="absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url(${backgroundImage})`,
           ...transformStyle,
           transition: `transform ${TRANSITION_DURATION} ease-out`,
-          backgroundColor: 'transparent',
         }}
         aria-hidden="true"
       />
+      <div className="absolute inset-0 bg-black/50" />
 
       {/* Overlay Content */}
       <div className="relative z-10 flex flex-col items-center justify-center w-full px-4 sm:px-6 lg:px-8 text-center">

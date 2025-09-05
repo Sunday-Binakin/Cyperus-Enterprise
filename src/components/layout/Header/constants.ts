@@ -24,18 +24,32 @@ export const RESOURCE_ITEMS: NavItemBase[] = [
   { label: 'Recipes', href: '/recipes' },
 ];
 
-export const storesItems: NavItemBase[] = [
-  { label: 'Contact Us', href: '/contact-us' },
-  { label: 'Export With Us', href: '/export-with-us' },
-];
+// export const storesItems: NavItemBase[] = [
+//   { label: 'Contact Us', href: '/contact-us' },
+//   { label: 'Export With Us', href: '/export-with-us' },
+// ];
 
-export const NAV_ITEMS: NavItem[] = [
-  { label: 'SHOP', dropdownItems: SHOP_ITEMS },
-  { label: 'EXPORTS', href: '/export-with-us' },
-  { label: 'STORES', dropdownItems: storesItems },
+export const NAV_ITEMS = [
+  {
+    label: 'SHOP',
+    dropdownItems: [
+      { label: 'Choconut', href: '/choconut' },
+      { label: 'Bitter Kola', href: '/bitter-kola' },
+      { label: 'Ginger', href: '/ginger' },
+      { label: 'All Products', href: '/products' }
+    ]
+  },
+  {
+    label: 'EXPORTS WITH US ',
+    dropdownItems: [
+      { label: 'Local Distributors', href: '/local-distributors' },
+      { label: 'International Distributors', href: '/international-distributors' }
+    ]
+  },
+  // { label: 'STORES', dropdownItems: storesItems },
   { label: 'ABOUT US', href: '/about-us' },
   { label: 'RESOURCE', dropdownItems: RESOURCE_ITEMS },
-  { label: 'CONTACT', href: '/contact-us' },
+  { label: 'CONTACT US', href: '/contact-us' },
   { label: 'MY ACCOUNT', href: '/my-account' },
 ];
 
@@ -44,4 +58,4 @@ export const THEME = {
     primary: '#55006F',
     accent: '#EFE554',
   }
-}; 
+};

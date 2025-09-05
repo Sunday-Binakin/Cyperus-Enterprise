@@ -23,11 +23,13 @@ export default function RecipesPage() {
       />
       
       {/* Scrollable Content */}
-      <div className="bg-black">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="space-y-16 py-16">
-              <FeaturedProducts />
+      <div className="relative z-10">
+        <div className="bg-black">
+          <div className="container mx-auto px-4">
+            <div className="max-w-6xl mx-auto">
+              <div className="space-y-16 py-16">
+                <FeaturedProducts />
+              </div>
             </div>
           </div>
         </div>
