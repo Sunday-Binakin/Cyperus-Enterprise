@@ -77,7 +77,7 @@ export default function InternationalDistributorsPage() {
       } else {
         toast.error(result.message || 'Something went wrong. Please try again.');
       }
-    } catch (error) {
+    } catch {
       toast.error('An unexpected error occurred. Please try again later.');
     } finally {
       setIsSubmitting(false);

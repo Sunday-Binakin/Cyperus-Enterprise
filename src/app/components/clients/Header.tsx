@@ -8,7 +8,6 @@ import { NAV_ITEMS, isNavItemWithDropdown } from "./header/constants";
 import Logo from "./header/Logo";
 import MobileMenuButton from "./header/MobileMenuButton";
 import { useCart } from "@/app/context/CartContext";
-import Link from "next/link";
 
 export default function Header() {
   const [showSearch, setShowSearch] = useState(true);
@@ -95,11 +94,6 @@ export default function Header() {
                   <NavItem key={index} label={item.label} href={item.href} />
                 )
               )}
-
-              {/* Optional Orders link for guest */}
-              {/* <Link href="/order-success" className="text-white hover:text-[#EFE554] transition-colors text-xs md:text-sm lg:text-base px-1 md:px-2">
-                ORDERS
-              </Link> */}
             </ul>
           </div>
 
@@ -226,17 +220,6 @@ export default function Header() {
                   )}
                 </li>
               ))}
-              
-              {/* Optional Orders link for guest */}
-              {/* <li className="border-b border-white/20 pb-2">
-                <Link
-                  href="/order-success"
-                  className="block py-2 text-lg font-semibold hover:text-[#EFE554] transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  ORDERS
-                </Link>
-              </li> */}
               
               <li className="pt-4">
                 <button className="w-full bg-[#C2A83E] text-white font-semibold py-3 px-4 rounded hover:bg-[#55006F] transition-colors duration-300">

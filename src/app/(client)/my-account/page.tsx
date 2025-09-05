@@ -1,4 +1,11 @@
-export default function MyAccountPage() {
-  // Guest-only mode: no account features for now
-  return null;
-}
+import Dashboard from "@/app/components/clients/my-account/dashboard";
+
+const MyAccountPage = () => {
+  return (
+    <main>
+      <Dashboard />
+    </main>
+  );
+};
+
+export default MyAccountPage;

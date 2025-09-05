@@ -43,7 +43,7 @@ const ContactForm = () => {
       } else {
         toast.error(result.message || 'Failed to send message. Please try again.');
       }
-    } catch (error) {
+    } catch {
       toast.error('An unexpected error occurred. Please try again later.');
     } finally {
       setIsSubmitting(false);
