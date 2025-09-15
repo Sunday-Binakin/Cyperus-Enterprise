@@ -40,12 +40,13 @@ export const NAV_ITEMS = [
     ]
   },
   {
-    label: 'EXPORTS WITH US ',
+    label: 'DISTRIBUTORS',
     dropdownItems: [
       { label: 'Local Distributors', href: '/local-distributors' },
       { label: 'International Distributors', href: '/international-distributors' }
     ]
   },
+  { label: 'EXPORT DEPARTMENT', href: '/export-department' },
   // { label: 'STORES', dropdownItems: storesItems },
   { label: 'ABOUT US', href: '/about-us' },
   { label: 'RESOURCE', dropdownItems: RESOURCE_ITEMS },
