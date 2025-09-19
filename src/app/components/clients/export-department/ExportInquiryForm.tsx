@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { toast } from 'sonner';
+import { sendExportInquiryEmail } from '@/app/actions/sendExportInquiry';
 
 export default function ExportInquiryForm() {
   const [formData, setFormData] = useState({
@@ -55,24 +56,27 @@ export default function ExportInquiryForm() {
     setIsSubmitting(true);
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Send actual email using Resend
+      const result = await sendExportInquiryEmail(formData);
       
-      // Show success message
-      toast.success('Export inquiry submitted successfully! We will contact you within 24 hours.');
-      
-      // Reset form
-      setFormData({
-        companyName: '',
-        contactPerson: '',
-        email: '',
-        phone: '',
-        country: '',
-        businessType: '',
-        productsInterested: [] as string[],
-        orderQuantity: '',
-        additionalInfo: ''
-      });
+      if (result.success) {
+        toast.success(result.message);
+        
+        // Reset form
+        setFormData({
+          companyName: '',
+          contactPerson: '',
+          email: '',
+          phone: '',
+          country: '',
+          businessType: '',
+          productsInterested: [] as string[],
+          orderQuantity: '',
+          additionalInfo: ''
+        });
+      } else {
+        toast.error(result.message);
+      }
     } catch (error) {
       console.error('Form submission error:', error);
       toast.error('Failed to submit inquiry. Please try again.');

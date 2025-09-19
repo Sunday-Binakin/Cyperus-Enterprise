@@ -1,26 +1,30 @@
 'use server';
 
 import { Resend } from 'resend';
-import ContactInquiryEmail from '@/app/components/emails/ContactInquiryEmail';
+import ExportInquiryEmail from '@/app/components/emails/ExportInquiryEmail';
 
-export interface ContactFormData {
-  name: string;
+export interface ExportFormData {
+  companyName: string;
+  contactPerson: string;
   email: string;
-  subject: string;
   phone: string;
-  message: string;
+  country: string;
+  businessType: string;
+  productsInterested: string[];
+  orderQuantity: string;
+  additionalInfo: string;
 }
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export const sendContactInquiryEmail = async (formData: ContactFormData) => {
+export const sendExportInquiryEmail = async (formData: ExportFormData) => {
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Cyperus Contact Form <onboarding@resend.dev>',
+      from: 'Cyperus Export Department <onboarding@resend.dev>',
       to: ['estherjohnson@gmail.com'],
       replyTo: formData.email,
-      subject: `New Contact Inquiry: ${formData.subject}`,
-      react: ContactInquiryEmail({ formData }),
+      subject: `New Export Inquiry: ${formData.companyName}`,
+      react: ExportInquiryEmail({ formData }),
     });
 
     if (error) {
@@ -29,7 +33,7 @@ export const sendContactInquiryEmail = async (formData: ContactFormData) => {
     }
 
     console.log('Email sent successfully:', data);
-    return { success: true, message: 'Message sent successfully!' };
+    return { success: true, message: 'Export inquiry sent successfully!' };
   } catch (exception) {
     console.error('Exception sending email:', exception);
     return { success: false, message: 'An unexpected error occurred.' };
