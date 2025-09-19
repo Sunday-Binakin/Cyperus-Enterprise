@@ -26,7 +26,7 @@ export const sendDistributorInquiryEmail = async (formData: DistributorFormData)
   try {
     const { data, error } = await resend.emails.send({
       from: 'Cyperus Website <onboarding@resend.dev>',
-      to: ['sundaydev4@gmail.com'], // Your email address
+      to: ['estherjohnson@gmail.com'], 
       subject: `New Distributor Inquiry: ${formData.companyName}`,
       react: DistributorInquiryEmail({ formData }),
     });

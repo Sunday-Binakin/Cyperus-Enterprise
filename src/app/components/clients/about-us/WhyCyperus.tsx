@@ -12,26 +12,34 @@ export const WhyCyperus = () => {
                     <div className='w-full lg:w-1/2 text-white order-2 lg:order-1'>
                         <div className='space-y-4 sm:space-y-6'>
                             <h2 className='text-xl sm:text-2xl lg:text-3xl font-bold text-[#EFE554] text-center lg:text-left'>
-                                We are Cyperus Enterprise
+                                About Us – Cyperus Enterprise
                             </h2>
-                            <h3 className='text-lg sm:text-xl lg:text-2xl text-white text-center lg:text-left'>
-                                Our mission is to provide the best quality of life to our customers
-                            </h3>
                         </div>
                         
                         {/* Responsive text content */}
                         <div className='space-y-4 mt-6 sm:mt-8'>
                             <p className='text-sm sm:text-base lg:text-lg text-gray-300 leading-relaxed text-center lg:text-left'>
-                                Tigernuts Republic Nigeria, is a 100% subsidiary of O&apos;ZIBANA Limited Nigeria, a company registered in Nigeria on April 2017.
+                                At Cyperus Enterprise, we are passionate about exploring the endless possibilities of tigernut. Our mission is to create high-quality, healthy products while supporting local farmers and communities. Our vision is to become a leading innovator in tigernut-based foods and beverages, serving both the local and export markets.
                             </p>
-                            <p className='text-sm sm:text-base lg:text-lg text-gray-300 leading-relaxed text-center lg:text-left'>
-                                Tigernuts Republic Nigeria, as the name connotes, is a one stop center for Tigernuts based products. We have since inception in March 2017 developed 21 variants of Tigernuts Milk and over 10 different food products from Tigernuts.
+                            
+                            <p className='text-sm sm:text-base lg:text-lg text-white font-semibold text-center lg:text-left'>
+                                We currently produce and export:
                             </p>
+                            
+                            <div className='space-y-3 pl-4'>
+                                <p className='text-sm sm:text-base lg:text-lg text-gray-300 leading-relaxed text-center lg:text-left'>
+                                    <span className='text-[#EFE554] font-semibold'>Beverages</span> – refreshing, natural, and full of goodness.
+                                </p>
+                                <p className='text-sm sm:text-base lg:text-lg text-gray-300 leading-relaxed text-center lg:text-left'>
+                                    <span className='text-[#EFE554] font-semibold'>Raw Tigernut</span> – available in black, brown, and golden dark brown varieties for both local and international markets.
+                                </p>
+                                <p className='text-sm sm:text-base lg:text-lg text-gray-300 leading-relaxed text-center lg:text-left'>
+                                    <span className='text-[#EFE554] font-semibold'>Poultry Feed</span> – nutritious by-products to support livestock farmers.
+                                </p>
+                            </div>
+                            
                             <p className='text-sm sm:text-base lg:text-lg text-gray-300 leading-relaxed text-center lg:text-left'>
-                                This has been done with our focus solely on using Tigernuts in a very dynamic way, such that every household is able to relate with at least one of our various innovative, nutritious and healthy products.
-                            </p>
-                            <p className='text-sm sm:text-base lg:text-lg text-gray-300 leading-relaxed text-center lg:text-left'>
-                                Tigernuts Republic Nigeria won the ACE AWARDS for Best Foods Produce Innovation in April 2018 and over its years of operations have set a niche for herself in the Food and Beverage industry in Nigeria.
+                                By harnessing the potential of tigernut, we aim to bring health, innovation, and economic growth to the communities we work with, while delivering quality products that customers love around the world.
                             </p>
                         </div>
                     </div>

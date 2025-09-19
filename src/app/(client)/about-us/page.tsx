@@ -5,7 +5,6 @@ import { HeroSection } from '@/app/components/shared/HeroSection';
 import { WhyCyperus } from '@/app/components/clients/about-us/WhyCyperus';
 import { PeopleMayAsk } from '@/app/components/clients/about-us/PeopleMayAsk';
 import OurStats from '@/app/components/clients/about-us/OurStats';
-import { MeetOurCeo } from '@/app/components/clients/about-us/MeetOurCeo';
 import InstagramGallery from '@/app/components/clients/contact-us/InstagramGallery';
 import Testimonials from '@/app/components/clients/Landing-Page/TestimonialsSection';
 import '@/app/components/clients/about-us/responsive.css';
@@ -58,9 +57,9 @@ export default function AboutUsPage() {
         </section>
         
         {/* CEO Section */}
-        <section className="mx-2 py-8 sm:py-12 lg:py-16">
+        {/* <section className="mx-2 py-8 sm:py-12 lg:py-16">
           <MeetOurCeo />
-        </section>
+        </section> */}
         
         {/* Testimonials Section */}
         <section className="mx-2">

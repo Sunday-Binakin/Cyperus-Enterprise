@@ -21,7 +21,7 @@ interface OrderConfirmationEmailProps {
 }
 
 const companyName = "Cyperus Enterprise";
-const companyUrl = "https://www.cyperus.com"; // Replace with your actual URL
+const companyUrl = "https://cyperus-enterprise.vercel.app/"; 
 
 export const OrderConfirmationEmail = ({ order }: OrderConfirmationEmailProps) => {
   const previewText = `Your ${companyName} Order #${order.order_number}`;
