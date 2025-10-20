@@ -62,7 +62,19 @@ class PaystackService {
   private scriptLoaded: boolean = false;
 
   constructor() {
-    this.publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || 'pk_test_136958e9da0c7d27ad6aec58947641796fac1ea8';
+    // Get public key from environment variable
+    const envKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY;
+    
+    if (!envKey) {
+      console.error('❌ PAYSTACK ERROR: NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY is not set in environment variables');
+      throw new Error('Paystack public key is required. Please check your .env.local file.');
+    }
+    
+    this.publicKey = envKey;
+    
+    // Log key type (without exposing the full key)
+    const keyType = envKey.startsWith('pk_live') ? '🟢 LIVE' : '🟡 TEST';
+    console.log(`Paystack initialized with ${keyType} key`);
   }
 
   /**

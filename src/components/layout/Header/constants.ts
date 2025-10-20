@@ -33,9 +33,12 @@ export const NAV_ITEMS = [
   {
     label: 'SHOP',
     dropdownItems: [
+      { label: 'Original', href: '/original' },
       { label: 'Choconut', href: '/choconut' },
       { label: 'Bitter Kola', href: '/bitter-kola' },
       { label: 'Ginger', href: '/ginger' },
+      { label: 'Lemon Grass', href: '/lemon-grass' },
+      { label: 'Citrus Limon & Clove', href: '/citrus-limon-clove' },
       { label: 'All Products', href: '/products' }
     ]
   },

@@ -56,9 +56,24 @@ export function ProductInfo({ product }: ProductInfoProps) {
     <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
       <h1 className="text-3xl font-bold tracking-tight text-white">{product.name}</h1>
       
-      <p className="text-3xl tracking-tight text-white mt-4">
-        ${product.price.toFixed(2)}
-      </p>
+      <div className="mt-4 flex items-center gap-4">
+        <p className="text-3xl tracking-tight text-white">
+          ${product.price.toFixed(2)}
+        </p>
+        {product.netWeight && (
+          <span className="text-lg text-gray-400 border-l border-gray-600 pl-4">
+            {product.netWeight}
+          </span>
+        )}
+      </div>
+
+      {product.description && (
+        <div className="mt-6">
+          <p className="text-base text-gray-300 leading-relaxed">
+            {product.description}
+          </p>
+        </div>
+      )}
 
       <div className="mt-8 border-t border-gray-700 pt-6">
         <div className="flex items-center justify-between">

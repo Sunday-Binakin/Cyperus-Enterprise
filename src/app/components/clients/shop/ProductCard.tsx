@@ -75,9 +75,21 @@ export default function ProductCard({ product, categoryPath = 'bitter-kola' }: P
         <h3 className="text-white text-lg font-semibold text-center h-[60px] m-2 line-clamp-2">
           {product.name}
         </h3>
-        <p className="text-[#EFE554] text-xl font-bold text-center mt-2">
-          {formattedPrice}
-        </p>
+        {product.description && (
+          <p className="text-gray-400 text-sm text-center line-clamp-2 px-2 min-h-[40px]">
+            {product.description}
+          </p>
+        )}
+        <div className="flex flex-col items-center gap-1">
+          <p className="text-[#EFE554] text-xl font-bold text-center">
+            {formattedPrice}
+          </p>
+          {product.netWeight && (
+            <p className="text-gray-400 text-sm">
+              {product.netWeight}
+            </p>
+          )}
+        </div>
         <button 
           onClick={handleAddToCart}
           disabled={product.stock === 0 || isAdding}
