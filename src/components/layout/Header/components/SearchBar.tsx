@@ -14,7 +14,6 @@ export default function SearchBar() {
     searchQuery,
     setSearchQuery,
     searchResults,
-    isSearching,
   } = useProductSearch();
 
   // Close search results when clicking outside
@@ -89,7 +88,7 @@ export default function SearchBar() {
       {/* Search Results */}
       <SearchResults
         results={searchResults.slice(0, 8)} // Limit to 8 results
-        isVisible={isFocused && isSearching}
+        isVisible={isFocused && searchQuery.trim().length > 0}
         onClose={() => setIsFocused(false)}
       />
     </div>

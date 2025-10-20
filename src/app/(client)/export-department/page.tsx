@@ -1,12 +1,12 @@
 "use client";
 
 import React from 'react';
-import { HeroSection } from '@/app/components/clients/contact-us/HeroSection';
-import ExportInfoSection from '@/app/components/clients/export-department/ExportInfoSection';
-import ExportOfferingsSection from '@/app/components/clients/export-department/ExportOfferingsSection';
-import WhyChooseUsSection from '@/app/components/clients/export-department/WhyChooseUsSection';
-import PartnershipSection from '@/app/components/clients/export-department/PartnershipSection';
-import ExportInquiryForm from '@/app/components/clients/export-department/ExportInquiryForm';
+import { HeroSection } from '@/components/features/pages/HeroSection';
+import ExportInfoSection from '@/components/features/pages/ExportInfoSection';
+import ExportOfferingsSection from '@/components/features/pages/ExportOfferingsSection';
+import WhyChooseUsSection from '@/components/features/pages/WhyChooseUsSection';
+import PartnershipSection from '@/components/features/pages/PartnershipSection';
+import ExportInquiryForm from '@/components/features/pages/ExportInquiryForm';
 
 export default function ExportDepartmentPage() {
   const breadcrumbItems = [

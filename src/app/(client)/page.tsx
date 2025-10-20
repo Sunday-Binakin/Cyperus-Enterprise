@@ -1,13 +1,13 @@
 import React from 'react';
-import Slideshow from '../components/clients/Landing-Page/hero/Slideshow';
-import ProductShowcase from '../components/clients/Landing-Page/products/ProductShowcase';
-import FeaturedProducts from '../components/clients/Landing-Page/featured/FeaturedProducts';
-import WhyChoose from '../components/clients/Landing-Page/why-choose/WhyChoose';
-import Categories from '../components/clients/Landing-Page/categories/Categories';
-import BlogSection from '../components/clients/Landing-Page/blogSection/BlogSection';
-import TestimonialsSection from '../components/clients/Landing-Page/TestimonialsSection';
-import SubscribeSection from '../components/clients/Landing-Page/products/SubscribeSection';
-import ScrollReveal from '../components/animation/ScrollReveal';
+import Slideshow from '@/components/features/home/hero/Slideshow';
+import ProductShowcase from '@/components/features/home/products/ProductShowcase';
+import FeaturedProducts from '@/components/features/home/featured/FeaturedProducts';
+import WhyChoose from '@/components/features/home/why-choose/WhyChoose';
+import Categories from '@/components/features/home/categories/Categories';
+import BlogSection from '@/components/features/home/blogSection/BlogSection';
+import TestimonialsSection from '@/components/features/home/TestimonialsSection';
+import SubscribeSection from '@/components/features/home/products/SubscribeSection';
+import ScrollReveal from '@/components/ui/ScrollReveal';
 
 export default function Home() {
   return (

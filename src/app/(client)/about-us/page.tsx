@@ -2,12 +2,12 @@
 
 import React from 'react';
 import { HeroSection } from '@/app/components/shared/HeroSection';
-import { WhyCyperus } from '@/app/components/clients/about-us/WhyCyperus';
-import { PeopleMayAsk } from '@/app/components/clients/about-us/PeopleMayAsk';
-import OurStats from '@/app/components/clients/about-us/OurStats';
-import InstagramGallery from '@/app/components/clients/contact-us/InstagramGallery';
-import Testimonials from '@/app/components/clients/Landing-Page/TestimonialsSection';
-import '@/app/components/clients/about-us/responsive.css';
+import { WhyCyperus } from '@/components/features/pages/WhyCyperus';
+import { PeopleMayAsk } from '@/components/features/pages/PeopleMayAsk';
+import OurStats from '@/components/features/pages/OurStats';
+import InstagramGallery from '@/components/features/pages/InstagramGallery';
+import Testimonials from '@/components/features/home/TestimonialsSection';
+import '@/components/features/pages/responsive.css';
 
 
 export default function AboutUsPage() {

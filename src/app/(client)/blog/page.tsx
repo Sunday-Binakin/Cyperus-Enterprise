@@ -1,9 +1,9 @@
  "use client";
 
 import React from 'react';
-import { HeroSection } from '@/app/components/clients/contact-us/HeroSection';
-import BlogSection from '@/app/components/clients/Landing-Page/blogSection/BlogSection';
-import SubscribeSection from '@/app/components/clients/blog/SubscribeSection';
+import { HeroSection } from '@/components/features/pages/HeroSection';
+import BlogSection from '@/components/features/home/blogSection/BlogSection';
+import SubscribeSection from '@/components/features/blog/SubscribeSection';
 
 export default function BlogPage() {
   const breadcrumbItems = [

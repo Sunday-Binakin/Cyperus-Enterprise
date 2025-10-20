@@ -45,6 +45,17 @@ export interface PaystackResponse {
   trxref: string;
 }
 
+export interface PaymentVerificationResult {
+  status: string;
+  data?: {
+    reference: string;
+    status: string;
+    gateway_response: string;
+    paid_at: string;
+    amount: number;
+  };
+}
+
 export interface PaymentData {
   email: string;
   amount: number; // Amount in cedis
@@ -97,27 +108,97 @@ class PaystackService {
 
   /**
    * Load Paystack inline script dynamically
+   * Simplified version with clearer logic flow
    */
   private loadPaystackScript(): Promise<void> {
     return new Promise((resolve, reject) => {
-      if (this.scriptLoaded || window.PaystackPop) {
+      // Early return if already loaded
+      if (this.isPaystackAvailable()) {
+        this.scriptLoaded = true;
         resolve();
         return;
       }
 
-      const script = document.createElement('script');
-      script.src = 'https://js.paystack.co/v1/inline.js';
-      script.async = true;
-      script.onload = () => {
-        this.scriptLoaded = true;
-        resolve();
-      };
-      script.onerror = () => {
-        reject(new Error('Failed to load Paystack script'));
-      };
+      // Check if script element exists in DOM
+      const existingScript = this.getExistingPaystackScript();
+      if (existingScript) {
+        this.attachScriptListeners(existingScript, resolve, reject);
+        return;
+      }
 
-      document.head.appendChild(script);
+      // Create and inject new script
+      this.injectPaystackScript(resolve, reject);
     });
+  }
+
+  /**
+   * Check if Paystack is already available in window
+   */
+  private isPaystackAvailable(): boolean {
+    return typeof window.PaystackPop !== 'undefined';
+  }
+
+  /**
+   * Get existing Paystack script element if it exists
+   */
+  private getExistingPaystackScript(): HTMLScriptElement | null {
+    return document.querySelector('script[src="https://js.paystack.co/v1/inline.js"]');
+  }
+
+  /**
+   * Attach load/error listeners to existing script
+   */
+  private attachScriptListeners(
+    script: HTMLScriptElement,
+    resolve: () => void,
+    reject: (error: Error) => void
+  ): void {
+    script.addEventListener('load', () => {
+      this.scriptLoaded = true;
+      resolve();
+    });
+    
+    script.addEventListener('error', () => {
+      reject(new Error('Failed to load Paystack script'));
+    });
+
+    // Check if already loaded
+    if (this.isPaystackAvailable()) {
+      this.scriptLoaded = true;
+      resolve();
+    }
+  }
+
+  /**
+   * Create and inject new Paystack script into document
+   */
+  private injectPaystackScript(
+    resolve: () => void,
+    reject: (error: Error) => void
+  ): void {
+    const script = document.createElement('script');
+    script.src = 'https://js.paystack.co/v1/inline.js';
+    script.async = true;
+
+    script.onload = () => {
+      // Small delay to ensure PaystackPop is initialized
+      setTimeout(() => {
+        if (this.isPaystackAvailable()) {
+          this.scriptLoaded = true;
+          console.log('✅ Paystack script loaded successfully');
+          resolve();
+        } else {
+          reject(new Error('Paystack script loaded but PaystackPop is not available'));
+        }
+      }, 100);
+    };
+
+    script.onerror = () => {
+      console.error('❌ Failed to load Paystack script');
+      reject(new Error('Failed to load Paystack script'));
+    };
+
+    document.head.appendChild(script);
   }
 
   /**
@@ -131,91 +212,152 @@ class PaystackService {
 
   /**
    * Initialize Paystack payment
+   * Simplified with extracted helper methods
    */
   async initializePayment(paymentData: PaymentData): Promise<PaystackResponse> {
-    try {
-      // Ensure we're on client-side
-      if (typeof window === 'undefined') {
-        throw new Error('Payment can only be initialized on the client side');
-      }
+    this.ensureClientSide();
+    
+    const publicKey = this.getPublicKey();
+    await this.loadPaystackScript();
+    
+    this.validatePaystackAvailability();
 
-      // Get public key (will initialize if needed)
-      const publicKey = this.getPublicKey();
+    console.log('🔄 Initializing Paystack payment...', {
+      email: paymentData.email,
+      amount: paymentData.amount,
+      reference: paymentData.reference || this.generateReference()
+    });
 
-      // Load Paystack script if not already loaded
-      await this.loadPaystackScript();
+    return this.setupPaymentHandler(publicKey, paymentData);
+  }
 
-      return new Promise((resolve, reject) => {
-        const handler = window.PaystackPop.setup({
-          key: publicKey,
-          email: paymentData.email,
-          amount: Math.round(paymentData.amount * 100), // Convert to kobo
-          currency: paymentData.currency || 'GHS',
-          ref: paymentData.reference || this.generateReference(),
-          firstname: paymentData.firstname,
-          lastname: paymentData.lastname,
-          phone: paymentData.phone,
-          metadata: {
-            custom_fields: [
-              {
-                display_name: "Order ID",
-                variable_name: "order_id",
-                value: String(paymentData.metadata?.order_id || '')
-              },
-              {
-                display_name: "Customer ID",
-                variable_name: "customer_id", 
-                value: String(paymentData.metadata?.customer_id || '')
-              }
-            ],
-            ...paymentData.metadata
-          },
-          channels: paymentData.channels || ['card', 'bank', 'ussd', 'qr', 'mobile_money', 'bank_transfer'],
-          callback: (response: PaystackResponse) => {
-            console.log('Payment successful:', response);
-            resolve(response);
-          },
-          onClose: () => {
-            reject(new Error('Payment was cancelled by user'));
-          }
-        });
-
-        handler.openIframe();
-      });
-    } catch (error) {
-      console.error('Paystack initialization error:', error);
-      throw error;
+  /**
+   * Ensure code is running on client-side
+   */
+  private ensureClientSide(): void {
+    if (typeof window === 'undefined') {
+      throw new Error('Payment can only be initialized on the client side');
     }
   }
 
   /**
-   * Verify payment status (client-side)
-   * Note: In production, this should be done on the server-side
+   * Validate that PaystackPop is available
    */
-  async verifyPayment(reference: string): Promise<{ status: string; data?: Record<string, unknown> }> {
-    try {
-      // For client-side implementation, we'll simulate verification
-      // In production, you should verify on your backend using the secret key
-      console.log('Verifying payment reference:', reference);
-      
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Return success status (in real implementation, call your backend)
-      return {
-        status: 'success',
-        data: {
-          reference,
-          status: 'success',
-          gateway_response: 'Successful',
-          paid_at: new Date().toISOString(),
-          amount: 0 // Amount would come from verification
-        }
-      };
-    } catch (error) {
-      console.error('Payment verification error:', error);
-      return { status: 'failed' };
+  private validatePaystackAvailability(): void {
+    if (!this.isPaystackAvailable()) {
+      throw new Error('Paystack script loaded but PaystackPop is not available. Please try again.');
     }
+  }
+
+  /**
+   * Setup Paystack payment handler and open iframe
+   */
+  private setupPaymentHandler(
+    publicKey: string,
+    paymentData: PaymentData
+  ): Promise<PaystackResponse> {
+    return new Promise((resolve, reject) => {
+      try {
+        const handler = window.PaystackPop.setup(
+          this.buildPaystackOptions(publicKey, paymentData, resolve, reject)
+        );
+
+        console.log('🔓 Opening Paystack iframe...');
+        handler.openIframe();
+      } catch (setupError) {
+        console.error('❌ Error setting up Paystack:', setupError);
+        reject(setupError);
+      }
+    });
+  }
+
+  /**
+   * Build Paystack setup options
+   */
+  private buildPaystackOptions(
+    publicKey: string,
+    paymentData: PaymentData,
+    resolve: (response: PaystackResponse) => void,
+    reject: (error: Error) => void
+  ): PaystackSetupOptions {
+    return {
+      key: publicKey,
+      email: paymentData.email,
+      amount: Math.round(paymentData.amount * 100), // Convert to kobo/pesewas
+      currency: paymentData.currency || 'GHS',
+      ref: paymentData.reference || this.generateReference(),
+      firstname: paymentData.firstname,
+      lastname: paymentData.lastname,
+      phone: paymentData.phone,
+      metadata: this.buildMetadata(paymentData.metadata),
+      channels: paymentData.channels || ['card', 'bank', 'ussd', 'qr', 'mobile_money', 'bank_transfer'],
+      callback: (response: PaystackResponse) => {
+        console.log('✅ Payment successful:', response);
+        resolve(response);
+      },
+      onClose: () => {
+        console.log('❌ Payment cancelled by user');
+        reject(new Error('Payment was cancelled by user'));
+      }
+    };
+  }
+
+  /**
+   * Build metadata object for Paystack
+   */
+  private buildMetadata(metadata?: Record<string, unknown>): PaystackSetupOptions['metadata'] {
+    return {
+      custom_fields: [
+        {
+          display_name: "Order ID",
+          variable_name: "order_id",
+          value: String(metadata?.order_id || '')
+        },
+        {
+          display_name: "Customer ID",
+          variable_name: "customer_id",
+          value: String(metadata?.customer_id || '')
+        }
+      ],
+      ...metadata
+    };
+  }
+
+  /**
+   * Verify payment status (client-side simulation)
+   * IMPORTANT: In production, this MUST be done on the server-side using your secret key
+   * This is a simplified version for demonstration purposes only
+   */
+  async verifyPayment(reference: string): Promise<PaymentVerificationResult> {
+    console.log('⏳ Verifying payment reference:', reference);
+    
+    await this.simulateApiDelay();
+    
+    return this.buildSuccessVerificationResult(reference);
+  }
+
+  /**
+   * Simulate API call delay (for demo purposes)
+   */
+  private async simulateApiDelay(): Promise<void> {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  }
+
+  /**
+   * Build a successful verification result
+   * In production, this data would come from Paystack's verification endpoint
+   */
+  private buildSuccessVerificationResult(reference: string): PaymentVerificationResult {
+    return {
+      status: 'success',
+      data: {
+        reference,
+        status: 'success',
+        gateway_response: 'Successful',
+        paid_at: new Date().toISOString(),
+        amount: 0 // Would come from actual verification
+      }
+    };
   }
 
   /**

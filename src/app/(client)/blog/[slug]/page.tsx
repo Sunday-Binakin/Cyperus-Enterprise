@@ -1,5 +1,5 @@
 import React from 'react';
-import BlogPostPageClient from '@/app/components/clients/BlogPostPage';
+import BlogPostPageClient from '@/components/features/blog/BlogPostPage';
 
 // Blog data (in a real app, this would come from a CMS or database)
 const blogPosts = [

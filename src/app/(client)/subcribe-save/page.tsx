@@ -1,8 +1,8 @@
 "use client";
 
 import React from 'react';
-import { HeroSection } from '../../components/clients/subcribe-save/HeroSection';
-import { SubscriptionPlans } from '../../components/clients/subcribe-save/SubscriptionPlans';
+import { HeroSection } from '@/components/features/pages/HeroSection';
+import { SubscriptionPlans } from '@/components/features/pages/SubscriptionPlans';
 
 export default function SubscribeAndSavePage() {
   const breadcrumbItems = [

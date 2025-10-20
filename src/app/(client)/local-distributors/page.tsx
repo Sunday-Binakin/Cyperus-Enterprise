@@ -1,4 +1,4 @@
-import { HeroSection } from '@/app/components/clients/contact-us/HeroSection';
+import { HeroSection } from '@/components/features/pages/HeroSection';
 
 export default function LocalDistributorsPage() {
     return (

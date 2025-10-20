@@ -288,11 +288,11 @@ export default function OrderTrackingPage() {
         {/* Header */}
         <div className="mb-8">
           <Link 
-            href="/my-account"
+            href="/"
             className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-4"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Account
+            Back to Home
           </Link>
           
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

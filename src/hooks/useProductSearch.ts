@@ -1,33 +1,37 @@
 import { useState, useEffect, useMemo } from 'react';
-import { mockProducts, Product } from '@/app/lib/mock-data';
-import { FEATURED_PRODUCTS } from '@/app/components/clients/Landing-Page/featured/constants';
+import { ORIGINAL_PRODUCTS } from '@/app/data/products/original';
+import { CHOCONUT_PRODUCTS } from '@/app/data/products/choconut';
+import { BITTER_KOLA_PRODUCTS } from '@/app/data/products/bitterKola';
+import { GINGER_PRODUCTS } from '@/app/data/products/ginger';
+import { LEMON_GRASS_PRODUCTS } from '@/app/data/products/lemonGrass';
+import { CITRUS_LIMON_CLOVE_PRODUCTS } from '@/app/data/products/citrusLimonClove';
+import type { Product } from '@/app/types/product';
+
+// Category path mapping for navigation
+const CATEGORY_PATH_MAP: Record<string, string> = {
+  'Original': 'original',
+  'Choconut': 'choconut',
+  'Bitter Kola': 'bitter-kola',
+  'Ginger': 'ginger',
+  'Lemon Grass': 'lemon-grass',
+  'Citrus Limon & Clove': 'citrus-limon-clove',
+};
 
 export function useProductSearch() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
 
-  // Convert featured products to match Product interface
-  const convertedFeaturedProducts: Product[] = useMemo(() => 
-    FEATURED_PRODUCTS.map(product => ({
-      id: product.id.toString(),
-      name: product.name,
-      description: product.name, // Use name as description for now
-      category: product.name.split(':')[0].trim(), // Extract category from name
-      price: product.price * 100, // Convert cedis to pesewas to match mockProducts format
-      image_url: product.image,
-      is_active: true,
-      stock_quantity: 50, // Default stock
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    })), 
-    []
-  );
-
-  // Combine all products: mock products + featured products
-  const ALL_PRODUCTS = useMemo(() => {
-    const activeeMockProducts = mockProducts.filter(product => product.is_active);
-    return [...activeeMockProducts, ...convertedFeaturedProducts];
-  }, [convertedFeaturedProducts]);
+  // Combine all products from all categories
+  const ALL_PRODUCTS: Product[] = useMemo(() => {
+    return [
+      ...ORIGINAL_PRODUCTS,
+      ...CHOCONUT_PRODUCTS,
+      ...BITTER_KOLA_PRODUCTS,
+      ...GINGER_PRODUCTS,
+      ...LEMON_GRASS_PRODUCTS,
+      ...CITRUS_LIMON_CLOVE_PRODUCTS,
+    ];
+  }, []);
 
   // Filter products based on search query
   const searchResults = useMemo(() => {
@@ -40,7 +44,8 @@ export function useProductSearch() {
     return ALL_PRODUCTS.filter(product => 
       product.name.toLowerCase().includes(query) ||
       product.description.toLowerCase().includes(query) ||
-      product.category.toLowerCase().includes(query)
+      product.category.toLowerCase().includes(query) ||
+      (product.netWeight && product.netWeight.toLowerCase().includes(query))
     );
   }, [searchQuery, ALL_PRODUCTS]);
 
@@ -55,5 +60,6 @@ export function useProductSearch() {
     searchResults,
     isSearching,
     hasResults: searchResults.length > 0,
+    getCategoryPath: (category: string) => CATEGORY_PATH_MAP[category] || 'products',
   };
 }

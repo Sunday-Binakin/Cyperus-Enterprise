@@ -3,7 +3,7 @@ import FloatingWhatsApp from "@/components/shared/FloatingWhatsAppButton";
 import { Toaster } from "sonner";
 import { geist } from '@/app/fonts';
 import Providers from "@/components/shared/Providers";
-import ClientOnlyHeader from "../components/clients/ClientOnlyHeader";
+import ClientOnlyHeader from "@/components/shared/ClientOnlyHeader";
 
 export default function ClientLayout({
   children,

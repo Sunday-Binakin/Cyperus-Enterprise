@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { HeroSection } from '@/app/components/clients/contact-us/HeroSection';
+import { HeroSection } from '@/components/features/pages/HeroSection';
 import { sendDistributorInquiryEmail } from '@/app/actions/sendDistributorInquiry';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';

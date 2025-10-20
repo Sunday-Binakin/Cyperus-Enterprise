@@ -54,7 +54,7 @@ export const NAV_ITEMS = [
   { label: 'ABOUT US', href: '/about-us' },
   { label: 'RESOURCE', dropdownItems: RESOURCE_ITEMS },
   { label: 'CONTACT US', href: '/contact-us' },
-  { label: 'MY ACCOUNT', href: '/my-account' },
+  // { label: 'MY ACCOUNT', href: '/my-account' }, // Removed - no auth system
 ];
 
 export const THEME = {

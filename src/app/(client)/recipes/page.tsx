@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { HeroSection } from '@/app/components/clients/contact-us/HeroSection';
-import FeaturedProducts from '@/app/components/clients/Landing-Page/featured/FeaturedProducts';
-import TigernutsCTA from '@/app/components/clients/recipes/TigernutsCTA';
+import { HeroSection } from '@/components/features/pages/HeroSection';
+import FeaturedProducts from '@/components/features/home/featured/FeaturedProducts';
+import TigernutsCTA from '@/components/features/pages/TigernutsCTA';
 
 export default function RecipesPage() {
   const breadcrumbItems = [

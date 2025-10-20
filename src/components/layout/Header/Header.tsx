@@ -7,7 +7,7 @@ import CartPopover from "./components/CartPopover";
 import { NAV_ITEMS, isNavItemWithDropdown } from "./constants";
 import Logo from "./components/Logo";
 import MobileMenuButton from "./components/MobileMenuButton";
-import { useCart } from "@/app/context/CartContext";
+import { useCart } from "@/store/cartHooks";
 import Link from "next/link";
 
 export default function Header() {

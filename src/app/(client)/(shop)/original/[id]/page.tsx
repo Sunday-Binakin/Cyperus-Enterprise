@@ -2,13 +2,13 @@
 
 import { notFound, useParams } from 'next/navigation';
 import { ORIGINAL_PRODUCTS } from '@/app/data/products/original';
-import { ClientOnly } from '@/app/components/clients/ClientOnly';
-import { Breadcrumb } from '@/app/components/clients/shop/product-detail/Breadcrumb';
-import { ProductImage } from '@/app/components/clients/shop/product-detail/ProductImage';
-import { ProductInfo } from '@/app/components/clients/shop/product-detail/ProductInfo';
-import { ProductTabs } from '@/app/components/clients/shop/product-detail/ProductTabs';
-import { RelatedProducts } from '@/app/components/clients/shop/product-detail/RelatedProducts';
-import { ProductDetailSkeleton } from '@/app/components/clients/shop/product-detail/ProductDetailSkeleton';
+import { ClientOnly } from '@/components/shared/ClientOnly';
+import { Breadcrumb } from '@/components/features/product/product-detail/Breadcrumb';
+import { ProductImage } from '@/components/features/product/product-detail/ProductImage';
+import { ProductInfo } from '@/components/features/product/product-detail/ProductInfo';
+import { ProductTabs } from '@/components/features/product/product-detail/ProductTabs';
+import { RelatedProducts } from '@/components/features/product/product-detail/RelatedProducts';
+import { ProductDetailSkeleton } from '@/components/features/product/product-detail/ProductDetailSkeleton';
 
 // This is the client component that renders the product page
 function ProductDetailContent() {

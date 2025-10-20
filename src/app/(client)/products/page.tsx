@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { Home, ChevronRight } from 'lucide-react';
-import ProductGrid from '@/app/components/clients/shop/ProductGrid';
+import ProductGrid from '@/components/features/product/ProductGrid';
 import { ORIGINAL_PRODUCTS } from '@/app/data/products/original';
 import { CHOCONUT_PRODUCTS } from '@/app/data/products/choconut';
 import { BITTER_KOLA_PRODUCTS } from '@/app/data/products/bitterKola';
