@@ -58,11 +58,27 @@ export interface PaymentData {
 }
 
 class PaystackService {
-  private readonly publicKey: string;
+  private publicKey: string | null = null;
   private scriptLoaded: boolean = false;
 
   constructor() {
-    // Get public key from environment variable
+    // Don't initialize in constructor to avoid build-time errors
+    // Initialize when needed on client-side
+  }
+
+  /**
+   * Get or initialize the public key
+   */
+  private getPublicKey(): string {
+    if (this.publicKey) {
+      return this.publicKey;
+    }
+
+    // Only access environment variables on client-side
+    if (typeof window === 'undefined') {
+      throw new Error('Paystack can only be initialized on the client side');
+    }
+
     const envKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY;
     
     if (!envKey) {
@@ -75,6 +91,8 @@ class PaystackService {
     // Log key type (without exposing the full key)
     const keyType = envKey.startsWith('pk_live') ? '🟢 LIVE' : '🟡 TEST';
     console.log(`Paystack initialized with ${keyType} key`);
+    
+    return this.publicKey;
   }
 
   /**
@@ -116,12 +134,20 @@ class PaystackService {
    */
   async initializePayment(paymentData: PaymentData): Promise<PaystackResponse> {
     try {
+      // Ensure we're on client-side
+      if (typeof window === 'undefined') {
+        throw new Error('Payment can only be initialized on the client side');
+      }
+
+      // Get public key (will initialize if needed)
+      const publicKey = this.getPublicKey();
+
       // Load Paystack script if not already loaded
       await this.loadPaystackScript();
 
       return new Promise((resolve, reject) => {
         const handler = window.PaystackPop.setup({
-          key: this.publicKey,
+          key: publicKey,
           email: paymentData.email,
           amount: Math.round(paymentData.amount * 100), // Convert to kobo
           currency: paymentData.currency || 'GHS',
